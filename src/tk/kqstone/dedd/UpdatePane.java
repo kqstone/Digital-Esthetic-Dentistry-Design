@@ -36,7 +36,7 @@ public class UpdatePane extends JDialog {
 	private static final String ADDR = "kqstone.myqnapcloud.com";
 	private static final int PORT = 12021;
 	private static final String USER_NAME = "ftp_user";
-	private static final String USER_PWD = "ftp_qnap";
+	private static final String USER_PWD = "ftp_415703";
 	private static final String REMOTE_PATH = "//dedd";
 	private static final String TMP_PATH = "tmp";
 	private static final String BIN_FILE = "dedd.bin";

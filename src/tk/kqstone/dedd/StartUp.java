@@ -151,8 +151,12 @@ public final class StartUp extends JFrame {
 	public static void startUI() {
 		if (!unexpiredFile.exists()) {
 			if (!expirationDate(EXPIRE_DATE)) {
-				JOptionPane.showMessageDialog(null, Constant.EXPIRE_MESSAGE, Constant.PROG_NAME,
-						JOptionPane.INFORMATION_MESSAGE);
+				int r = JOptionPane.showConfirmDialog(null, Constant.EXPIRE_MESSAGE, Constant.PROG_NAME, JOptionPane.YES_NO_OPTION);
+				if (r == JOptionPane.YES_OPTION) {
+				
+				UpdatePane up = new UpdatePane(null);
+				up.checkUpdate();				
+				}
 				return;
 			}
 		}

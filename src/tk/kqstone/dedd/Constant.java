@@ -6,7 +6,7 @@ import javax.swing.Icon;
 
 public final class Constant {
 
-	public static final String VERSION = "v3.6.5.20211118";
+	public static final String VERSION = "v3.6.6.20220320";
 	public static final String VERSION_NAME = "版本";
 	public static final String PROG_NAME = "数字化美学牙科分析与设计";
 	public static final String PROG_NAME_ENG = "Digital Esthetic Dentistry Design System";
@@ -16,7 +16,7 @@ public final class Constant {
 
 	public static final String PROG_AUTHOR = "作者: Dr. Kqstone";
 	public static final String PROG_EMAIL = "邮箱: kqstone@qq.com";
-	public final static String EXPIRE_MESSAGE = "软件版本已过期，请联系软件作者：kqstone@163.com";
+	public final static String EXPIRE_MESSAGE = "软件版本已过期，将不可继续使用，是否尝试更新？";
 
 	public static final String ACCEPT = "接受";
 	public static final String REFUSE = "拒绝";
