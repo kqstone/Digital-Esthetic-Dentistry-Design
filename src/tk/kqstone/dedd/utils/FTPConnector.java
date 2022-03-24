@@ -58,7 +58,7 @@ public abstract class FTPConnector {
 		}
 	}
 
-	public boolean downloadFile(String remotePath, String remoteFileName, String localPath, String localFileName) {
+	public boolean downloadFile(String remotePath, String remoteFileName, String localPath, String localFileName, boolean showState) {
 		boolean result = false;
 		CountOutputStream countingoutputStream = null;
 		File file = null;
@@ -85,19 +85,22 @@ public abstract class FTPConnector {
 					OutputStream os = new FileOutputStream(file);
 					BufferedOutputStream bos = new BufferedOutputStream(os, 1024 * 512);
 					countingoutputStream = new CountOutputStream(bos);
-					countingoutputStream.addWriteByteListener(new WriteByteListener() {
+					if (showState) {
+						countingoutputStream.addWriteByteListener(new WriteByteListener() {
 
-						@Override
-						public void byteWrited(long count) {
-							FTPConnector.this.downloading((int) (100 * count / ftpFileSize));
-						}
+							@Override
+							public void byteWrited(long count) {
+								FTPConnector.this.downloading((int) (100 * count / ftpFileSize));
+							}
 
-					});
-					FTPConnector.this.downloadBegain();
+						});
+						FTPConnector.this.downloadBegain();
+					}
 					result = ftpClient.retrieveFile(ftpFile.getName(), countingoutputStream);
 					if (result) {
 						countingoutputStream.flush();
-						FTPConnector.this.downloadFinished();
+						if(showState)
+							FTPConnector.this.downloadFinished();
 					}
 
 				}

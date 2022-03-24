@@ -183,7 +183,7 @@ public class UpdatePane extends JDialog {
 		if(!connector.connect())
 			return null;
 		String date = null;
-		connector.downloadFile(REMOTE_PATH, "build_prop", TMP_PATH, "build_prop");
+		connector.downloadFile(REMOTE_PATH, "build_prop", TMP_PATH, "build_prop", false);
 		Properties prop = new Properties();
 		InputStream is = null;
 		try {
@@ -249,7 +249,7 @@ public class UpdatePane extends JDialog {
 					public void run() {
 						boolean result = false;
 						if (connector.connect()) {
-							result = connector.downloadFile(REMOTE_PATH, BIN_FILE, TMP_PATH, BIN_FILE);
+							result = connector.downloadFile(REMOTE_PATH, BIN_FILE, TMP_PATH, BIN_FILE, true);
 							connector.disconnect();
 						}
 
