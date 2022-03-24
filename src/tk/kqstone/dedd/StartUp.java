@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public final class StartUp extends JFrame {
-	private final static LocalDate EXPIRE_DATE = LocalDate.of(2021, 5, 31);
+	private final static LocalDate EXPIRE_DATE = LocalDate.of(2022, 5, 31);
 
 	private static final String AGREMENT_FILE_PATH = "/text/aggrement";
 	private static final File configFile = new File("config" + File.separator + "aggrement.xml");
