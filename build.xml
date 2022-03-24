@@ -9,7 +9,7 @@
 	<property name="dir.classes" value="${dir.buildfile}/bin" />
 	<property name="dir.jarfile" value="//kqstone-nas/ftp/dedd"/>
 	<target name="create_run_jar" depends = "gen_build_info">
-		<copy todir="${dir.classes}" file="${dir.src}/build_prop" />
+		<copy todir="${dir.classes}" file="${dir.buildfile}/build_prop" />
 		<copydir src="${dir.src}/img" dest="${dir.classes}/img"></copydir>
 		<jar destfile="${dir.jarfile}/dedd.bin" filesetmanifest="mergewithoutmain">
 			<manifest>
@@ -19,7 +19,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/commons-net-3.7.1.jar"/>
 			<fileset dir="${dir.buildfile}/bin"/>
 		</jar>
-		<copy todir="${dir.jarfile}" file="${dir.src}/build_prop" />
+		<copy todir="${dir.jarfile}" file="${dir.buildfile}/build_prop" />
 	</target>
 
 	<target name="gen_build_info" depends = "compile">

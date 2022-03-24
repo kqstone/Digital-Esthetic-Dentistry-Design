@@ -16,21 +16,22 @@ import tk.kqstone.dedd.Constant;
 public class BuildInfo {
 	
 	public static final String KEY_BUILD_VERSION = "build_version";
-	public static final String BUILD_INFO_PATH = "src/build_prop";
+	public static final String BUILD_INFO_PATH = "build_prop";
 	public static final String KEY_BUILD_DATE = "build_date";
 	
 	public static String getBuildDate() {
 		String buildDate = null;
-		File buildInfoFile = new File(BUILD_INFO_PATH);
-		InputStream os = null;
+//		File buildInfoFile = new File(BUILD_INFO_PATH);
+		
+		InputStream os = BuildInfo.class.getResourceAsStream("/"+BUILD_INFO_PATH);
 		try {
-			os = new FileInputStream(buildInfoFile);
+//			os = new FileInputStream(buildInfoFile);
 			Properties prop = new Properties();
 			prop.load(os);
 			buildDate = String.valueOf(prop.get(KEY_BUILD_DATE));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
