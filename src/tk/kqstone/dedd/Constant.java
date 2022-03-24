@@ -6,7 +6,7 @@ import javax.swing.Icon;
 
 public final class Constant {
 
-	public static final String VERSION = "v3.6.6.20220320";
+	public static final String VERSION = "v3.6";
 	public static final String VERSION_NAME = "版本";
 	public static final String PROG_NAME = "数字化美学牙科分析与设计";
 	public static final String PROG_NAME_ENG = "Digital Esthetic Dentistry Design System";

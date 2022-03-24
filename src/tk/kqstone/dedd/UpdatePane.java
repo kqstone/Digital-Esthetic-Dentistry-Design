@@ -9,13 +9,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
-import java.awt.Window.Type;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
 
 import javax.swing.BoxLayout;
 import java.awt.Component;
@@ -24,11 +28,8 @@ import java.awt.Frame;
 
 import javax.swing.border.EmptyBorder;
 
-import org.apache.commons.net.ftp.FTPClient;
-
+import tk.kqstone.dedd.build.BuildInfo;
 import tk.kqstone.dedd.utils.FTPConnector;
-import tk.kqstone.dedd.utils.LogUtils;
-
 import javax.swing.Box;
 import java.awt.Color;
 
@@ -52,6 +53,8 @@ public class UpdatePane extends JDialog {
 	private FTPConnector connector;
 
 	private String latestVersion;
+	
+	private String currentVersion = BuildInfo.getVersion();
 
 	public UpdatePane(Frame owner) {
 		super(owner);
@@ -86,7 +89,7 @@ public class UpdatePane extends JDialog {
 		Component verticalStrut = Box.createVerticalStrut(12);
 		panel.add(verticalStrut);
 
-		JLabel lblCurrentVer = new JLabel(Constant.CURRENT_VERSION + Constant.VERSION);
+		JLabel lblCurrentVer = new JLabel(Constant.CURRENT_VERSION + currentVersion);
 		lblCurrentVer.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblCurrentVer);
 
@@ -148,7 +151,8 @@ public class UpdatePane extends JDialog {
 
 			@Override
 			public void run() {
-				if (!connector.connect()) {
+				String remoteBuildDate = getRemoteBuildDate();
+				if (remoteBuildDate == null) {
 					SwingUtilities.invokeLater(new Runnable() {
 
 						@Override
@@ -161,31 +165,63 @@ public class UpdatePane extends JDialog {
 					});
 					return;
 				}
-				String latestName = connector.getLatestFTPFile(REMOTE_PATH, BIN_FILE);
-				connector.disconnect();
-				if (latestName != null) {
-					latestVersion = latestName.substring(BIN_FILE.length());
-					try {
-						hasUpdate = isNew(latestVersion, Constant.VERSION);
-					} catch (Exception e) {
-						e.printStackTrace();
+				hasUpdate = isNew();
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						lblLatestVer.setText(Constant.LATEST_VERSION + latestVersion);
+						setUpdateableState(hasUpdate);
 					}
-
-					SwingUtilities.invokeLater(new Runnable() {
-
-						@Override
-						public void run() {
-							lblLatestVer.setText(Constant.LATEST_VERSION + latestVersion);
-							setUpdateableState(hasUpdate);
-						}
-
-					});
-				}
+				});
 			}
 
 		}).start();
 	}
+	
+	private String getRemoteBuildDate() {
+		if(!connector.connect())
+			return null;
+		String date = null;
+		connector.downloadFile(REMOTE_PATH, "build_prop", TMP_PATH, "build_prop");
+		Properties prop = new Properties();
+		InputStream is = null;
+		try {
+			is = new FileInputStream(TMP_PATH + File.separator + "build_prop");
+			prop.load(is);
+			date = prop.getProperty(BuildInfo.KEY_BUILD_DATE);
+			latestVersion = prop.getProperty(BuildInfo.KEY_BUILD_VERSION);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			connector.disconnect();
+		}
+		
+		return date;
+		
+	}
+	
 
+	private boolean isNew() {
+		boolean is = false;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String currentBuild=BuildInfo.getBuildDate();
+		try {
+			Date currentBuildDate = sdf.parse(currentBuild);
+			Date remoteBuildDate = sdf.parse(getRemoteBuildDate());
+			is = remoteBuildDate.after(currentBuildDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return is;
+	}
+
+	@Deprecated
 	private static boolean isNew(String latestVersion, String currentVersion) throws Exception {
 		latestVersion = latestVersion.substring(1);
 		currentVersion = currentVersion.substring(1);
@@ -213,7 +249,7 @@ public class UpdatePane extends JDialog {
 					public void run() {
 						boolean result = false;
 						if (connector.connect()) {
-							result = connector.downloadFile(REMOTE_PATH, BIN_FILE + latestVersion, TMP_PATH, BIN_FILE);
+							result = connector.downloadFile(REMOTE_PATH, BIN_FILE, TMP_PATH, BIN_FILE);
 							connector.disconnect();
 						}
 

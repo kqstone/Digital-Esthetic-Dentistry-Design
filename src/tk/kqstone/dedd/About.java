@@ -26,6 +26,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+
+import tk.kqstone.dedd.build.BuildInfo;
+
 import java.awt.Component;
 import javax.swing.Box;
 
@@ -85,7 +88,7 @@ public final class About extends JFrame {
 		Component verticalStrut_1 = Box.createVerticalStrut(8);
 		upperPanel.add(verticalStrut_1);
 
-		JLabel progVersion = new JLabel(Constant.VERSION_NAME + ": " + Constant.VERSION);
+		JLabel progVersion = new JLabel(Constant.VERSION_NAME + ": " + BuildInfo.getVersion());
 		progVersion.setFont(new Font("等线", Font.PLAIN, 13));
 		upperPanel.add(progVersion);
 

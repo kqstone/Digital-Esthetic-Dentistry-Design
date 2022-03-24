@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project Digital Esthetic Dentistry Design">
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+	<!--define folder properties-->
+	<property name="dir.buildfile" value="."/>
+	<property name="dir.workspace" value="D:/Users/kqstone/eclipse-workspace"/>
+	<property name="dir.src" value="${dir.buildfile}/src" />
+	<property name="dir.classes" value="${dir.buildfile}/bin" />
+	<property name="dir.jarfile" value="//kqstone-nas/ftp/dedd"/>
+	<target name="create_run_jar" depends = "gen_build_info">
+		<copy todir="${dir.classes}" file="${dir.src}/build_prop" />
+		<copydir src="${dir.src}/img" dest="${dir.classes}/img"></copydir>
+		<jar destfile="${dir.jarfile}/dedd.bin" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="tk.kqstone.dedd.Splash"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+			<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/commons-net-3.7.1.jar"/>
+			<fileset dir="${dir.buildfile}/bin"/>
+		</jar>
+		<copy todir="${dir.jarfile}" file="${dir.src}/build_prop" />
+	</target>
+
+	<target name="gen_build_info" depends = "compile">
+		<java fork="true" classname="tk.kqstone.dedd.build.BuildInfo">
+			<classpath>
+				<pathelement path="bin"/>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="compile" depends = "init" description="compile the source files">
+		<mkdir dir="${dir.classes}"/>
+		<javac srcdir="${dir.src}" destdir="${dir.classes}" target="1.8" source="8">
+			<classpath>
+				<fileset dir="${dir.buildfile}/lib">
+					<include name="commons-net-3.7.1.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="init">
+		<delete dir="${dir.classes}"/>
+	</target>
+</project>

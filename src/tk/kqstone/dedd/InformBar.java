@@ -10,6 +10,9 @@ import java.awt.Graphics;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import tk.kqstone.dedd.build.BuildInfo;
+
 import javax.swing.BoxLayout;
 import java.awt.Component;
 
@@ -47,7 +50,7 @@ public class InformBar extends JPanel {
 
 		add(Box.createHorizontalGlue());
 
-		version = new JLabel(Constant.VERSION_NAME + ": " + Constant.VERSION);
+		version = new JLabel(Constant.VERSION_NAME + ": " + BuildInfo.getVersion());
 		this.add(version);
 	}
 
