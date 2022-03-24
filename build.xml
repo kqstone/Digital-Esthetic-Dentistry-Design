@@ -11,6 +11,7 @@
 	<target name="create_run_jar" depends = "gen_build_info">
 		<copy todir="${dir.classes}" file="${dir.buildfile}/build_prop" />
 		<copydir src="${dir.src}/img" dest="${dir.classes}/img"></copydir>
+		<copydir src="${dir.src}/text" dest="${dir.classes}/text"></copydir>
 		<jar destfile="${dir.jarfile}/dedd.bin" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="tk.kqstone.dedd.Splash"/>
