@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="upload_to_server" name="Create Runnable Jar for Project Digital Esthetic Dentistry Design and upload to remote server">
-	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+<project default="upload_to_server">
 	<!--ANT 1.7 is required                                        -->
 	<!--define folder properties-->
 	<property name="dir.buildfile" value="." />
@@ -10,17 +9,24 @@
 	<property name="dir.export" value="${dir.buildfile}/export" />
 	<property name="dir.remote" value="//kqstone-nas/ftp/dedd" />
 
-	<target name="upload_to_server" depends="create_run_jar">
+	<target name="upload_to_server" depends="obfuscate">
 		<copydir src="${dir.export}" dest="${dir.remote}" />
 		<delete dir="${dir.export}" />
 	</target>
 
+	<target name="obfuscate" depends="create_run_jar">
+		<taskdef resource="proguard/ant/task.properties" classpath="${dir.buildfile}/proguard/lib/proguard-ant.jar" />
+		<proguard configuration="${dir.buildfile}/proguard/config/applications.pro" />
+		<rename src="${dir.export}/dedd_pg.jar" dest="${dir.export}/dedd.bin"/>
+		<delete file="${dir.export}/dedd.jar"></delete>
+	</target>
+	
 	<target name="create_run_jar" depends="gen_build_info">
 		<copydir src="${dir.src}/img" dest="${dir.classes}/img">
 		</copydir>
 		<copydir src="${dir.src}/text" dest="${dir.classes}/text">
 		</copydir>
-		<jar destfile="${dir.export}/dedd.bin" filesetmanifest="mergewithoutmain">
+		<jar destfile="${dir.export}/dedd.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="tk.kqstone.dedd.Splash" />
 				<attribute name="Class-Path" value="." />
@@ -28,7 +34,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/commons-net-3.7.1.jar" />
 			<fileset dir="${dir.buildfile}/bin" />
 		</jar>
-		<copy todir="${dir.export}" file="${dir.buildfile}/build_prop" />
+		<copy todir="${dir.export}" file="${dir.classes}/build_prop" />
 		<delete dir="${dir.classes}" />
 	</target>
 
@@ -38,7 +44,7 @@
 				<pathelement path="${dir.classes}" />
 			</classpath>
 		</java>
-		<copy todir="${dir.classes}" file="${dir.buildfile}/build_prop" />
+		<move todir="${dir.classes}" file="${dir.buildfile}/build_prop" />
 	</target>
 
 	<target name="compile" depends="init" description="compile the source files">
