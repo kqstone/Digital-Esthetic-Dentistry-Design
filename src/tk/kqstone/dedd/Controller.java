@@ -41,10 +41,11 @@ public class Controller implements IController {
 		new Controller();
 	}
 
-	public static void main(String[] args) {
-		start();
-
-	}
+	/*
+	 * public static void main(String[] args) { start();
+	 * 
+	 * }
+	 */
 
 	@Override
 	public void saveData() throws IOException {

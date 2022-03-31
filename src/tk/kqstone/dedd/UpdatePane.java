@@ -298,9 +298,9 @@ public class UpdatePane extends JDialog {
 		btnUpdate.setText(Constant.RETRY);
 	}
 
-	public static void main(String[] args) {
-		UpdatePane up = new UpdatePane(null);
-		up.checkUpdate();
-	}
+	/*
+	 * public static void main(String[] args) { UpdatePane up = new
+	 * UpdatePane(null); up.checkUpdate(); }
+	 */
 
 }
