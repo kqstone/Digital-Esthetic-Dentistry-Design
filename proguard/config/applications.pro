@@ -8,8 +8,8 @@
 
 # Specify the input jars, output jars, and library jars.
 
--injars  ../../export/dedd.jar
--outjars ../../export/dedd_pg.jar
+-injars  ../../.export/dedd.jar
+-outjars ../../.export/dedd_pg.jar
 
 # Before Java 9, the runtime classes were packaged in a single jar file.
 #-libraryjars <java.home>/lib/rt.jar
@@ -28,7 +28,7 @@
 # tables to get line numbers in the stack traces.
 # You can comment this out if you're not interested in stack traces.
 
--printmapping out.map
+#-printmapping out.map
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 

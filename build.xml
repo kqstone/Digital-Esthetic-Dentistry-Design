@@ -5,8 +5,8 @@
 	<property name="dir.buildfile" value="." />
 	<property name="dir.workspace" value="D:/Users/kqstone/eclipse-workspace" />
 	<property name="dir.src" value="${dir.buildfile}/src" />
-	<property name="dir.classes" value="${dir.buildfile}/bin" />
-	<property name="dir.export" value="${dir.buildfile}/export" />
+	<property name="dir.classes" value="${dir.buildfile}/.bin" />
+	<property name="dir.export" value="${dir.buildfile}/.export" />
 	<property name="dir.remote" value="//kqstone-nas/ftp/dedd" />
 
 	<target name="upload_to_server" depends="obfuscate">
@@ -32,7 +32,7 @@
 				<attribute name="Class-Path" value="." />
 			</manifest>
 			<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/commons-net-3.7.1.jar" />
-			<fileset dir="${dir.buildfile}/bin" />
+			<fileset dir="${dir.classes}" />
 		</jar>
 		<copy todir="${dir.export}" file="${dir.classes}/build_prop" />
 		<delete dir="${dir.classes}" />
