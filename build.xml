@@ -31,7 +31,7 @@
 				<attribute name="Main-Class" value="tk.kqstone.dedd.Splash" />
 				<attribute name="Class-Path" value="." />
 			</manifest>
-			<zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/commons-net-3.7.1.jar" />
+			<zipfileset excludes="META-INF/**/*" src="${dir.buildfile}/lib/commons-net-3.7.1.jar" />
 			<fileset dir="${dir.classes}" />
 		</jar>
 		<copy todir="${dir.export}" file="${dir.classes}/build_prop" />
