@@ -12,6 +12,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 
 import javax.swing.Box;
@@ -42,8 +46,11 @@ public final class StartUp extends JFrame {
 	private final static LocalDate EXPIRE_DATE = LocalDate.of(2022, 5, 31);
 
 	private static final String AGREMENT_FILE_PATH = "/text/aggrement";
-	private static final File configFile = new File("config" + File.separator + "aggrement.xml");
-	private static final File unexpiredFile = new File("config" + File.separator + "unexpired_dedd");
+	private static final String CONFIG_DIR = "config";
+	private static final String AGGREMENT_FILE_NAME = "aggrement.xml";
+	private static final File AGGREMENT_FILE = new File(CONFIG_DIR + File.separator + AGGREMENT_FILE_NAME);
+	
+	private static final String HASHCODE_UNEXPIRED_FILE_NAME = "e57875bfd30099af4eaf236dc6fd20cffd3e2596a298cb904ec7208d68c70dae";
 
 	public StartUp() {
 		super();
@@ -69,7 +76,7 @@ public final class StartUp extends JFrame {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				File dir = configFile.getParentFile();
+				File dir = AGGREMENT_FILE.getParentFile();
 				if (!dir.exists())
 					dir.mkdir();
 
@@ -86,7 +93,7 @@ public final class StartUp extends JFrame {
 					TransformerFactory tff = TransformerFactory.newInstance();
 					Transformer tf = tff.newTransformer();
 					tf.setOutputProperty(OutputKeys.INDENT, "yes");
-					tf.transform(new DOMSource(doc), new StreamResult(configFile));
+					tf.transform(new DOMSource(doc), new StreamResult(AGGREMENT_FILE));
 				} catch (ParserConfigurationException | TransformerException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -149,23 +156,22 @@ public final class StartUp extends JFrame {
 	}
 
 	public static void startUI() {
-		if (!unexpiredFile.exists()) {
-			if (!expirationDate(EXPIRE_DATE)) {
-				int r = JOptionPane.showConfirmDialog(null, Constant.EXPIRE_MESSAGE, Constant.PROG_NAME, JOptionPane.YES_NO_OPTION);
-				if (r == JOptionPane.YES_OPTION) {
-				
+		if (!expirationDate(EXPIRE_DATE) && !unexpired()) {
+			int r = JOptionPane.showConfirmDialog(null, Constant.EXPIRE_MESSAGE, Constant.PROG_NAME,
+					JOptionPane.YES_NO_OPTION);
+			if (r == JOptionPane.YES_OPTION) {
+
 				UpdatePane up = new UpdatePane(null);
-				up.checkUpdate();				
-				}
-				return;
+				up.checkUpdate();
 			}
+			return;
 		}
 		boolean agreed = false;
-		if (configFile.exists()) {
+		if (AGGREMENT_FILE.exists()) {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			try {
 				DocumentBuilder db = dbf.newDocumentBuilder();
-				Document doc = db.parse(configFile);
+				Document doc = db.parse(AGGREMENT_FILE);
 				NodeList nodelist = doc.getElementsByTagName("user_agreement").item(0).getChildNodes();
 				for (int i = 0; i < nodelist.getLength(); i++) {
 					if (nodelist.item(i).getNodeName().equals("agreed")) {
@@ -196,5 +202,32 @@ public final class StartUp extends JFrame {
 		}
 
 	}
+	
+	private static String getHashCode(String input) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(input.getBytes("UTF-8"));
+        byte[] result = md.digest(); 
+        return new BigInteger(1, result).toString(16);
+	}
+	
+	private static boolean unexpired() {
+		boolean unexpired = false;
+		String[] filenames = new File(CONFIG_DIR).list();		
+		for (String s:filenames) {
+			if (s != "aggrement.xml") {
+					String hashcode;
+					try {
+						hashcode = getHashCode(s);
+						unexpired = hashcode.equals(HASHCODE_UNEXPIRED_FILE_NAME);
+					} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+			}	
+		}
+		return unexpired;
+	}
+
 
 }
