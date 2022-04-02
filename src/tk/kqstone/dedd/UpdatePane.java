@@ -115,6 +115,7 @@ public class UpdatePane extends JDialog {
 					@Override
 					public void run() {
 						lblUpdate.setText(Constant.UPDATE_PERCENT + "0%");
+						btnUpdate.setEnabled(false);
 					}
 
 				});
@@ -293,11 +294,13 @@ public class UpdatePane extends JDialog {
 		lblUpdate.setText(Constant.UPDATE_SUCCESS);
 		btnUpdate.setVisible(false);
 		btnCancel.setText(Constant.OK);
+		this.pack();
 	}
 
 	private void setFailState() {
 		lblUpdate.setText(Constant.UPDATE_FAIL);
 		btnUpdate.setText(Constant.RETRY);
+		this.pack();
 	}
 
 	/*
