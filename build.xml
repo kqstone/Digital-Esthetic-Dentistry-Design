@@ -2,11 +2,10 @@
 <project default="upload_to_server">
 	<!--ANT 1.7 is required                                        -->
 	<!--define folder properties-->
-	<property name="dir.buildfile" value="." />
-	<property name="dir.workspace" value="D:/Users/kqstone/eclipse-workspace" />
-	<property name="dir.src" value="${dir.buildfile}/src" />
-	<property name="dir.classes" value="${dir.buildfile}/bin" />
-	<property name="dir.export" value="${dir.buildfile}/.export" />
+	<property name="dir.root" value="." />
+	<property name="dir.src" value="${dir.root}/src" />
+	<property name="dir.classes" value="${dir.root}/bin" />
+	<property name="dir.export" value="${dir.root}/.export" />
 	<property name="dir.remote" value="//kqstone-nas/ftp/dedd" />
 
 	<target name="upload_to_server" depends="obfuscate">
@@ -15,8 +14,8 @@
 	</target>
 
 	<target name="obfuscate" depends="create_run_jar">
-		<taskdef resource="proguard/ant/task.properties" classpath="${dir.buildfile}/proguard/lib/proguard-ant.jar" />
-		<proguard configuration="${dir.buildfile}/proguard/config/applications.pro" />
+		<taskdef resource="proguard/ant/task.properties" classpath="${dir.root}/proguard/lib/proguard-ant.jar" />
+		<proguard configuration="${dir.root}/proguard/config/applications.pro" />
 		<rename src="${dir.export}/dedd_pg.jar" dest="${dir.export}/dedd.bin"/>
 		<delete file="${dir.export}/dedd.jar"></delete>
 	</target>
@@ -31,7 +30,7 @@
 				<attribute name="Main-Class" value="tk.kqstone.dedd.Splash" />
 				<attribute name="Class-Path" value="." />
 			</manifest>
-			<zipfileset excludes="META-INF/**/*" src="${dir.buildfile}/lib/commons-net-3.7.1.jar" />
+			<zipfileset excludes="META-INF/**/*" src="${dir.root}/lib/commons-net-3.7.1.jar" />
 			<fileset dir="${dir.classes}" />
 		</jar>
 		<copy todir="${dir.export}" file="${dir.classes}/build_prop" />
@@ -44,14 +43,14 @@
 				<pathelement path="${dir.classes}" />
 			</classpath>
 		</java>
-		<move todir="${dir.classes}" file="${dir.buildfile}/build_prop" />
+		<move todir="${dir.classes}" file="${dir.root}/build_prop" />
 	</target>
 
 	<target name="compile" depends="init" description="compile the source files">
 		<mkdir dir="${dir.classes}" />
 		<javac srcdir="${dir.src}" destdir="${dir.classes}" target="1.7">
 			<classpath>
-				<fileset dir="${dir.buildfile}/lib">
+				<fileset dir="${dir.root}/lib">
 					<include name="commons-net-3.7.1.jar" />
 				</fileset>
 			</classpath>
