@@ -10,31 +10,33 @@ public class ZoomableJPanel extends JPanel implements IZoomable{
 	
 	private ZoomInvoker zoomInvoker;
 	private MouseWheelListener mouseWheelListener;
+	private float proportion = 1f;
+	private int offsetX = 0;
+	private int offsetY = 0;
+	float scale = 0.5f;
 	
 	public ZoomableJPanel() {
 		super();
 		mouseWheelListener = new MouseWheelListener(){
-			final float scale = 1f;
-			int clicks = 0;
-			Point point = new Point(0, 0);
 
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				System.out.println("Mouse Moved!!!!!!!!!!!");
-				clicks += e.getWheelRotation();
-				if (clicks < 0) {
-					clicks = 0;
-				} else if (clicks > 3) {
-					clicks = 3;
+				int rotation = e.getWheelRotation();
+				Point point = e.getPoint();
+				float f = proportion + scale*rotation;
+				if (f <=6.0f && f >=1.0f) {
+					
+					if (f < 1.5f) {
+						offsetX = 0;
+						offsetY = 0;
+					} else {
+						offsetX = Math.round((offsetX-point.x)*f/proportion+point.x);
+						offsetY = Math.round((offsetY-point.y)*f/proportion+point.y);
+					}
+					proportion = f;
 				}
-				if (clicks == 1 && e.getWheelRotation() == 1) {
-					point = e.getPoint();
-				}
-				float proportion = 1 + (clicks) * scale;
-				int offsetX = Math.round(point.x * (1 - proportion));
-				int offsetY = Math.round(point.y * (1 - proportion));
-//				if (zoomInvoker != null)
-					zoomInvoker.excuteZoom(proportion, offsetX, offsetY);
+				zoomInvoker.excuteZoom(proportion, offsetX, offsetY);
 			}
 		};
 		this.addMouseWheelListener(mouseWheelListener);
