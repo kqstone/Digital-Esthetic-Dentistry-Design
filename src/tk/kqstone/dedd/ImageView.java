@@ -23,7 +23,7 @@ import javax.swing.JPanel;
  * @author kqstone
  *
  */
-public class ImageView extends JPanel {
+public class ImageView extends ZoomableJPanel {
 	public final static int SCALE_ADAPT_WIDTH = 1;
 	public final static int SCALE_ADAPT_HEIGHT = 2;
 	public final static int SCALE_STRETCH = 0;
@@ -189,6 +189,7 @@ public class ImageView extends JPanel {
 		}
 	}
 
+	@Override
 	public void zoom(float proportion, int offsetX, int offsetY) {
 		this.proportion = proportion;
 		this.offsetX = offsetX;

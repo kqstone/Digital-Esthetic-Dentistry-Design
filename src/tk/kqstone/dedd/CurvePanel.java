@@ -14,7 +14,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-public class CurvePanel extends JPanel {
+public class CurvePanel extends ZoomableJPanel {
 	private static final int PT_RADIUS = 5;
 	private static final Color DEFAULT_COLOR = Color.GREEN;
 	private List<Point> points;
@@ -58,6 +58,7 @@ public class CurvePanel extends JPanel {
 		return outputPath;
 	}
 
+	@Override
 	public void zoom(float proportion, int offsetX, int offsetY) {
 
 		for (Point p : points) {

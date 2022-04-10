@@ -92,6 +92,7 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 		this.showTextLength = visable;
 	}
 
+	@Override
 	public void zoom(float proportion, int offsetX, int offsetY) {
 		for (int i = 0; i < listPanelTooth.size(); i++) {
 			DrawableBorderRect dbr = listPanelTooth.get(i);

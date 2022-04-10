@@ -16,7 +16,7 @@ import javax.swing.JPanel;
  * @author kqstone
  *
  */
-public abstract class BasicDrawablePanel extends JPanel {
+public abstract class BasicDrawablePanel extends ZoomableJPanel {
 	private List<DrawableBorderRect> listDrawableBorderRect;
 	private int panelWidth;
 	private int panelHeight;

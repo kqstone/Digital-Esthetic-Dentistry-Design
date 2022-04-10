@@ -42,6 +42,8 @@ public class WorkPanel extends Container {
 	protected List<Tooth> markedTeeth;
 
 	private int status;
+	
+	private ZoomInvoker zoomInvoker;
 
 	public WorkPanel() {
 		super();
@@ -104,30 +106,18 @@ public class WorkPanel extends Container {
 		}
 
 		status = WorkPanel.STATUS_LOADIMAGE;
-
-		this.addMouseWheelListener(new MouseWheelListener() {
-			final float scale = 1f;
-			int clicks = 0;
-			Point point = new Point(0, 0);
-
-			@Override
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				clicks += e.getWheelRotation();
-				if (clicks < 0) {
-					clicks = 0;
-				} else if (clicks > 3) {
-					clicks = 3;
-				}
-				if (clicks == 1 && e.getWheelRotation() == 1) {
-					point = e.getPoint();
-				}
-				float proportion = 1 + (clicks) * scale;
-				int offsetX = Math.round(point.x * (1 - proportion));
-				int offsetY = Math.round(point.y * (1 - proportion));
-				zoom(proportion, offsetX, offsetY);
-
-			}
-		});
+		
+		zoomInvoker = new ZoomInvoker();
+		zoomInvoker.addReceiver(imageView);
+		zoomInvoker.addReceiver(markLipPanel);
+		zoomInvoker.addReceiver(markPanel);
+		zoomInvoker.addReceiver(adjustPanel);
+		imageView.setZoomInvoker(zoomInvoker);
+		if (markLipPanel != null) {
+			markLipPanel.setZoomInvoker(zoomInvoker);
+		}
+		markPanel.setZoomInvoker(zoomInvoker);
+		adjustPanel.setZoomInvoker(zoomInvoker);
 
 	}
 

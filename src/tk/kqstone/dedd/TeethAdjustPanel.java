@@ -26,7 +26,7 @@ import javax.swing.JPanel;
  * @author kqstone
  *
  */
-public class TeethAdjustPanel extends JPanel {
+public class TeethAdjustPanel extends ZoomableJPanel {
 	public static final int MODE_CONTOUR = 0;
 	public static final int MODE_REAL = 1;
 	private Map<Integer, BufferedImage> teethContourImage;
@@ -255,6 +255,7 @@ public class TeethAdjustPanel extends JPanel {
 			this.add(mask);
 			this.setComponentZOrder(mask, 0);
 			mask.setBounds(0, 0, this.getWidth(), this.getHeight());
+			mask.disableFocusable();
 		}
 		mask.setImage(image);
 	}
@@ -378,6 +379,7 @@ public class TeethAdjustPanel extends JPanel {
 		}
 	}
 
+	@Override
 	public void zoom(float proportion, int offsetX, int offsetY) {
 		for (ToothPanel tp : teethPanel) {
 			Rect2D rect = tp.getSimpleDrawableBorderRect();
