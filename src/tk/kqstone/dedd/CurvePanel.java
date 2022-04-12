@@ -59,7 +59,7 @@ public class CurvePanel extends ZoomableJPanel {
 	}
 
 	@Override
-	public synchronized void zoom(float proportion, int offsetX, int offsetY) {
+	public void zoom(float proportion, int offsetX, int offsetY) {
 
 		for (Point p : points) {
 			int x = Math.round((p.x - this.offsetX) / this.proportion * proportion + offsetX);

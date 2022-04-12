@@ -190,7 +190,7 @@ public class ImageView extends ZoomableJPanel {
 	}
 
 	@Override
-	public synchronized void zoom(float proportion, int offsetX, int offsetY) {
+	public void zoom(float proportion, int offsetX, int offsetY) {
 
 		this.proportion = proportion;
 		this.offsetX = offsetX;

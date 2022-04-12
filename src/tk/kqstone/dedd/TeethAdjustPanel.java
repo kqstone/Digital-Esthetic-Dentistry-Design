@@ -380,7 +380,7 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 	}
 
 	@Override
-	public synchronized void zoom(float proportion, int offsetX, int offsetY) {
+	public void zoom(float proportion, int offsetX, int offsetY) {
 		for (ToothPanel tp : teethPanel) {
 			Rect2D rect = tp.getSimpleDrawableBorderRect();
 			rect.zoom(this.proportion, this.offsetX, this.offsetY, proportion, offsetX, offsetY);

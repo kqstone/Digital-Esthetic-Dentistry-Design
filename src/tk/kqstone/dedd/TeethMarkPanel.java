@@ -93,7 +93,7 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 	}
 
 	@Override
-	public synchronized void zoom(float proportion, int offsetX, int offsetY) {
+	public void zoom(float proportion, int offsetX, int offsetY) {
 		for (int i = 0; i < listPanelTooth.size(); i++) {
 			DrawableBorderRect dbr = listPanelTooth.get(i);
 			float x1 = ((float) dbr.getX1() - this.offsetX) / this.proportion * proportion + offsetX;
