@@ -15,12 +15,16 @@ import java.util.List;
  *
  */
 public class DragRectsAdapter extends MouseAdapter {
+	public static int FUNCTION_NULL = 0;
+	public static int FUNCTION_DRAG = 1;
+	public static int FUNCTION_REMOVE = 2;
 	BasicDrawablePanel content;
 	private List<DrawableBorderRect> listRects;
 	Point start;
 	Point end;
 	int index = 0;
 	int flag;
+	int function = FUNCTION_NULL;
 
 	// initial position for rect
 	Point2D p1;
@@ -35,6 +39,9 @@ public class DragRectsAdapter extends MouseAdapter {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		if (e.getButton() != MouseEvent.BUTTON1)
+			return;
+		function = FUNCTION_DRAG;
 		flag = BorderRect.POINT_OUT_RECT;
 		start = e.getPoint();
 		int size = listRects.size();
@@ -66,6 +73,8 @@ public class DragRectsAdapter extends MouseAdapter {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if (function != FUNCTION_DRAG)
+			return;
 		end = e.getPoint();
 		// if end point is coincide with start point, and out of rect, remove it
 		if (start.equals(end)) {
@@ -74,10 +83,13 @@ public class DragRectsAdapter extends MouseAdapter {
 				content.rectRemoved(index);
 			}
 		}
+		function = FUNCTION_NULL;
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		if (function != FUNCTION_DRAG)
+			return;
 		Point tmp = e.getPoint();
 		DrawableBorderRect bdp = listRects.get(index);
 		float x1 = 0, y1 = 0, x2 = 0, y2 = 0;
