@@ -158,6 +158,7 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 				break;
 			}
 		}
+		
 		Rect2D rect = tooth.rect();
 		float x1 = (float) rect.getX1() * proportion + offsetX;
 		float x2 = (float) rect.getX2() * proportion + offsetX;
@@ -167,6 +168,9 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 		tp.setSite(site);
 		tp.getSimpleDrawableBorderRect().setPoint(new Point2D.Float(x1, y1), new Point2D.Float(x2, y2));
 		tp.setScale(tooth.scale());
+		tp.setProportion(proportion);
+		tp.setOffsetX(offsetX);
+		tp.setOffsetY(offsetY);
 
 		BufferedImage image;
 		boolean showBorder;
@@ -282,6 +286,9 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 							float y2 = (float) rect.getY2() * proportion + offsetY;
 							tp.getSimpleDrawableBorderRect().setRect(new Rect2D.Float(x1, y1, x2, y2));
 							tp.setBounds2();
+							tp.setProportion(proportion);
+							tp.setOffsetX(offsetX);
+							tp.setOffsetY(offsetY);
 						}
 					}
 				}
@@ -378,7 +385,14 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 	@Override
 	public void zoom(float proportion, int offsetX, int offsetY) {
 		for (ToothPanel tp : teethPanel) {
-			tp.zoom(proportion, offsetX, offsetY);
+			Rect2D rect = tp.getSimpleDrawableBorderRect();
+			rect.zoom(this.proportion, this.offsetX, this.offsetY, proportion, offsetX, offsetY);
+			tp.setBoundsWithBinded(false);
+			Rect2D initRect = tp.getInitRect();
+			initRect.zoom(this.proportion, this.offsetX, this.offsetY, proportion, offsetX, offsetY);
+			tp.setProportion(proportion);
+			tp.setOffsetX(offsetX);
+			tp.setOffsetY(offsetY);
 		}
 		if (mask != null)
 			mask.zoom(proportion, offsetX, offsetY);
