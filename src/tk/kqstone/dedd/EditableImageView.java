@@ -437,11 +437,11 @@ public class EditableImageView extends ImageView implements IImageBinder {
 			Point p3 = this.getMarkPanel().point3;
 			Point p4 = this.getMarkPanel().point4;
 			if (p3 != null)
-				p3.setLocation((p3.x - super.offsetX) * proportion / super.proportion + offsetX,
-						(p3.y - super.offsetY) * proportion / super.proportion + offsetY);
+				p3.setLocation((p3.x - this.offsetX) * proportion / this.proportion + offsetX,
+						(p3.y - this.offsetY) * proportion / this.proportion + offsetY);
 			if (p4 != null)
-				p4.setLocation((p4.x - super.offsetX) * proportion / super.proportion + offsetX,
-						(p4.y - super.offsetY) * proportion / super.proportion + offsetY);
+				p4.setLocation((p4.x - this.offsetX) * proportion / this.proportion + offsetX,
+						(p4.y - this.offsetY) * proportion / this.proportion + offsetY);
 			this.markPanel.repaint();
 		}
 		super.zoom(proportion, offsetX, offsetY);

@@ -22,10 +22,6 @@ public class CurvePanel extends ZoomableJPanel {
 	private GeneralPath path;
 	private GeneralPath outputPath;
 
-	private float proportion;
-	private int offsetX;
-	private int offsetY;
-
 	public CurvePanel() {
 		this.setOpaque(false);
 		points = new ArrayList<>();
@@ -68,9 +64,7 @@ public class CurvePanel extends ZoomableJPanel {
 		}
 		genCtlPoints();
 		genPath();
-		this.proportion = proportion;
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
+		super.zoom(proportion, offsetX, offsetY);
 	}
 
 	@Override

@@ -16,11 +16,7 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 	private List<TextField> listTextLength;
 	private List<DrawableBorderRect> listPanelTooth;
 
-	private boolean showTextLength = true;;
-
-	private float proportion = 1.0f;
-	private int offsetX = 0;
-	private int offsetY = 0;
+	private boolean showTextLength = true;
 
 	public TeethMarkPanel() {
 		super();
@@ -104,10 +100,7 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 			dbr.setRect(tmpRect);
 			this.setTextFieldLocation(i, tmpRect);
 		}
-		this.proportion = proportion;
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
-		this.repaint();
+		super.zoom(proportion, offsetX, offsetY);
 	}
 
 	@Deprecated

@@ -18,6 +18,15 @@ public class ZoomInvoker {
 			}
 		}
 	}
+	
+	public void excuteSmoothZoom(float oriProportion, int oriOffsetX, int oriOffsetY, float proportion, int offsetX,
+			int offsetY) {
+		for (IZoomable zoomable : listZoomable) {
+			if (zoomable != null) {
+				zoomable.smoothZoom(oriProportion, oriOffsetX, oriOffsetY, proportion, offsetX, offsetY);
+			}
+		}
+	}
 
 	public void addReceiver(IZoomable zoomable) {
 		listZoomable.add(zoomable);

@@ -41,10 +41,6 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 	private int bright;
 	private int yellow;
 
-	private float proportion = 1.0f;
-	private int offsetX = 0;
-	private int offsetY = 0;
-
 	public TeethAdjustPanel() {
 		super();
 		this.setLayout(null);
@@ -390,9 +386,7 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 		}
 		if (mask != null)
 			mask.zoom(proportion, offsetX, offsetY);
-		this.proportion = proportion;
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
+		super.zoom(proportion, offsetX, offsetY);
 	}
 
 	public void bind(TeethAdjustPanel adjustPanel) {

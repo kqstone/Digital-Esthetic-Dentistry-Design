@@ -28,9 +28,6 @@ public class ImageView extends ZoomableJPanel {
 	public final static int SCALE_ADAPT_HEIGHT = 2;
 	public final static int SCALE_STRETCH = 0;
 	private BufferedImage image;
-	protected float proportion = 1.0f;
-	protected int offsetX = 0;
-	protected int offsetY = 0;
 
 	private String text;
 	private double scale = 1.0d;
@@ -187,15 +184,6 @@ public class ImageView extends ZoomableJPanel {
 				g.drawString(text, (this.getWidth() - fw) / 2, (this.getHeight() - fh) / 2);
 			}
 		}
-	}
-
-	@Override
-	public void zoom(float proportion, int offsetX, int offsetY) {
-
-		this.proportion = proportion;
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
-		this.repaint();
 	}
 
 }

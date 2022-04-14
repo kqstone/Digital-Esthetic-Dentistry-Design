@@ -15,23 +15,25 @@ public abstract class ZoomableJPanel extends JPanel implements IZoomable{
 	
 	private ZoomInvoker zoomInvoker;
 	private MouseAdapter mouseListener;
-	private float proportion = 1.0f;
+	protected float proportion = 1.0f;
 	private final static float MAX_PROPORTION = 6.0f; 
-	private int offsetX = 0;
-	private int offsetY = 0;
+	protected int offsetX = 0;
+	protected int offsetY = 0;
 	private final static float SCALE = 0.5f;
 	
 	private final static int INTERVAL = 5;
-	private float oriProportion ;
-	private int oriOffsetX ;
-	private int oriOffsetY ;
+	private float oriProportion = 1.0f ;
+	private int oriOffsetX = 0;
+	private int oriOffsetY = 0;
+	private final ExecutorService executor;
 	
 	public ZoomableJPanel() {
 		super();
+		executor = Executors.newSingleThreadExecutor();
 		mouseListener = new MouseAdapter() {
 			private boolean isButton3Drag = false;
 			private Point start;
-			private ExecutorService executor = Executors.newSingleThreadExecutor();
+			
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
@@ -68,11 +70,9 @@ public abstract class ZoomableJPanel extends JPanel implements IZoomable{
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON3) {
+				if (e.getButton() == MouseEvent.BUTTON2) {
 					isButton3Drag = true;
 					start = e.getPoint();
-					oriOffsetX = offsetX;
-					oriOffsetY = offsetY;
 				}
 
 			}
@@ -82,76 +82,34 @@ public abstract class ZoomableJPanel extends JPanel implements IZoomable{
 				if (isButton3Drag) {
 					start = null;
 					isButton3Drag = false;
+					oriOffsetX = offsetX;
+					oriOffsetY = offsetY;
 				}
 			}
 			
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				System.out.println("Mouse Moved!!!!!!!!!!!");
-				oriProportion = proportion;
-				oriOffsetX = offsetX;
-				oriOffsetY = offsetY;
+				float f;
+				int x = oriOffsetX, y = oriOffsetY;
 				int rotation = e.getWheelRotation();
 				Point point = e.getPoint();
-				float f = proportion + SCALE * rotation;
-				if (f <= MAX_PROPORTION && f >= 1.0f) {
-
-					if (f < 1.5f) {
-						offsetX = 0;
-						offsetY = 0;
-					} else {
-						offsetX = Math.round((offsetX - point.x) * f / proportion + point.x);
-						offsetY = Math.round((offsetY - point.y) * f / proportion + point.y);
-					}
-					proportion = f;
-				}
-				if (proportion == oriProportion && offsetX == oriOffsetX && offsetY == oriOffsetY)
+				f = oriProportion - SCALE * rotation;
+				if (f > MAX_PROPORTION || f < 1.0f) {
+					f = oriProportion;
 					return;
-				System.out.println(oriProportion);
-
-				Thread thread = new Thread(new Runnable() {
-					float cp = proportion;
-					float op = oriProportion;
-					int cx = offsetX;
-					int ox = oriOffsetX;
-					int cy = offsetY;
-					int oy = oriOffsetY;
-
-					public void run() {
-
-						int count = 0;
-
-						while (count < INTERVAL) {
-							count++;
-							try {
-								Thread.sleep(10);
-								final float p = op + (cp - op) * count / INTERVAL;
-								final int x = ox + (cx - ox) * count / INTERVAL;
-								final int y = oy + (cy - oy) * count / INTERVAL;
-								System.out.println(Thread.currentThread());
-								System.out.println(cp);
-								System.out.println(p);
-								SwingUtilities.invokeLater(new Runnable() {
-
-									@Override
-									public void run() {
-
-										zoomInvoker.excuteZoom(p, x, y);
-
-									}
-								});
-
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-						}
-
+				} else {
+					if (f < 1.5f) {
+						x = 0;
+						y = 0;
+					} else {
+						x = Math.round((x - point.x) * f / oriProportion + point.x);
+						y = Math.round((y - point.y) * f / oriProportion + point.y);
 					}
-				});
-				executor.submit(thread);
-				
+				}
+				System.out.println(oriProportion);
+				zoomInvoker.excuteSmoothZoom(oriProportion, oriOffsetX, oriOffsetY, f, x, y);
+//				smoothZoom(oriProportion, oriOffsetX, oriOffsetY, f, x, y);
 			}
 
 		};
@@ -173,6 +131,54 @@ public abstract class ZoomableJPanel extends JPanel implements IZoomable{
 	
 
 	@Override
-	public abstract void zoom(float proportion, int offsetX, int offsetY);
+	public void zoom(float proportion, int offsetX, int offsetY) {
+		this.proportion = proportion;
+		this.offsetX = offsetX;
+		this.offsetY = offsetY;
+		this.repaint();
+	}
+	
+	@Override
+	public void smoothZoom(final float oriProportion, final int oriOffsetX, final int oriOffsetY,
+			final float proportion, final int offsetX, final int offsetY) {
+		Thread thread = new Thread(new Runnable() {
+
+			public void run() {
+
+				int count = 0;
+
+				while (count < INTERVAL) {
+					count++;
+					try {
+						Thread.sleep(10);
+						final float p = oriProportion + (proportion - oriProportion) * count / INTERVAL;
+						final int x = oriOffsetX + (offsetX - oriOffsetX) * count / INTERVAL;
+						final int y = oriOffsetY + (offsetY - oriOffsetY) * count / INTERVAL;
+						System.out.println(Thread.currentThread());
+						System.out.println(p);
+						SwingUtilities.invokeLater(new Runnable() {
+
+							@Override
+							public void run() {
+
+								zoom(p, x, y);
+
+							}
+						});
+
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+
+			}
+		});
+		executor.submit(thread);
+		this.oriProportion = proportion;
+		this.oriOffsetX = offsetX;
+		this.oriOffsetY = offsetY;
+	}
 
 }
