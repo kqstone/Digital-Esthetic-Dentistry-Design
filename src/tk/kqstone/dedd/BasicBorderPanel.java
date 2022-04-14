@@ -137,6 +137,8 @@ public class BasicBorderPanel extends JPanel {
 		Point2D p2;
 		Point2D p3;
 		Point2D p4;
+		
+		boolean inDrag = false;
 
 		DragAdapter(Container content) {
 			this.content = content;
@@ -144,6 +146,9 @@ public class BasicBorderPanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			if(e.getButton() != MouseEvent.BUTTON1)
+				return;
+			inDrag = true;
 			start = e.getLocationOnScreen();
 			int border = simpleDrawableBorderRect.getBorder();
 
@@ -161,11 +166,16 @@ public class BasicBorderPanel extends JPanel {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			end = e.getPoint();
+			if (inDrag) {
+				end = e.getPoint();
+				inDrag = false;
+			}
 		}
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			if (!inDrag)
+				return;
 			Point tmp = e.getLocationOnScreen();
 			int offsetx = tmp.x - start.x;
 			int offsety = tmp.y - start.y;
