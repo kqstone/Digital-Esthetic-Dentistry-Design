@@ -38,13 +38,14 @@ public abstract class ZoomableJPanel extends JPanel implements IZoomable{
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				if (isButton3Drag) {
-					
+					final int x;
+					final int y;
 					Point now = e.getPoint();
 					int xChange = start.x - now.x;
 					int yChange = start.y - now.y;
 					
-					offsetX = oriOffsetX - xChange;
-					offsetY = oriOffsetY - yChange;
+					x = oriOffsetX - xChange;
+					y = oriOffsetY - yChange;
 					Thread thread = new Thread(new Runnable() {
 
 						@Override
@@ -53,15 +54,13 @@ public abstract class ZoomableJPanel extends JPanel implements IZoomable{
 
 								@Override
 								public void run() {
-									SwingUtilities.invokeLater(new Runnable() {
 
-										@Override
-										public void run() {
-											zoomInvoker.excuteZoom(proportion, offsetX, offsetY);
-										}}); 
-								}});
+									zoomInvoker.excuteZoom(proportion, x, y);
+								}
+							});
 							
-						}});
+						}
+					});
 					thread.start();
 					
 				}
@@ -73,6 +72,8 @@ public abstract class ZoomableJPanel extends JPanel implements IZoomable{
 				if (e.getButton() == MouseEvent.BUTTON2) {
 					isButton3Drag = true;
 					start = e.getPoint();
+					oriOffsetX = offsetX;
+					oriOffsetY = offsetY;
 				}
 
 			}
