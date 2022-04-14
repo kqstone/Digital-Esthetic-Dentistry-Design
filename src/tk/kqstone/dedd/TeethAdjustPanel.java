@@ -378,11 +378,7 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 	@Override
 	public void zoom(float proportion, int offsetX, int offsetY) {
 		for (ToothPanel tp : teethPanel) {
-			Rect2D rect = tp.getSimpleDrawableBorderRect();
-			rect.zoom(this.proportion, this.offsetX, this.offsetY, proportion, offsetX, offsetY);
-			tp.setBoundsWithBinded(false);
-			Rect2D initRect = tp.getInitRect();
-			initRect.zoom(this.proportion, this.offsetX, this.offsetY, proportion, offsetX, offsetY);
+			tp.zoom(proportion, offsetX, offsetY);
 		}
 		if (mask != null)
 			mask.zoom(proportion, offsetX, offsetY);

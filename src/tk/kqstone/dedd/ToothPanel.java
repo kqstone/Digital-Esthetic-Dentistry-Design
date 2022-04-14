@@ -29,6 +29,10 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 	private ToothPanel bindedToothPanelHR;
 
 	private boolean labelVisable;
+	
+	private float proportion;
+	private int offsetX;
+	private int offsetY;
 
 	public ToothPanel() {
 		super();
@@ -38,6 +42,9 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 		this.add(toothLength);
 		this.add(toothRatio);
 		labelVisable = true;
+		proportion = 1.0f;
+		offsetX = 0;
+		offsetY = 0;
 	}
 
 	public void setScale(double scale) {
@@ -74,9 +81,10 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 	}
 
 	private void setText() {
-		float length = (float) getSimpleDrawableBorderRect().getHeight();
+		float pxLength = (float) getSimpleDrawableBorderRect().getHeight();
+		float length = pxLength/proportion;
 
-		float ratio = (float) getSimpleDrawableBorderRect().getWidth() / length;
+		float ratio = (float) (getSimpleDrawableBorderRect().getWidth() / pxLength);
 		if (scale != 0d) {
 			length = (float) (length * scale);
 		}
@@ -197,6 +205,17 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 
 	public Rect2D getInitRect() {
 		return initRect;
+	}
+	
+	public void zoom(float proportion, int offsetX, int offsetY) {
+		Rect2D rect = this.getSimpleDrawableBorderRect();
+		rect.zoom(this.proportion, this.offsetX, this.offsetY, proportion, offsetX, offsetY);
+		this.setBoundsWithBinded(false);
+		Rect2D initRect = this.getInitRect();
+		initRect.zoom(this.proportion, this.offsetX, this.offsetY, proportion, offsetX, offsetY);
+		this.proportion = proportion;
+		this.offsetX = offsetX;
+		this.offsetY = offsetY;
 	}
 
 }
