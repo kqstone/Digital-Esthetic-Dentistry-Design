@@ -17,16 +17,18 @@ import javax.swing.JPanel;
 public class CurvePanel extends ZoomableJPanel {
 	private static final int PT_RADIUS = 5;
 	private static final Color DEFAULT_COLOR = Color.GREEN;
-	private List<Point> points;
+	private List<Point> points; //实际拖拽点
+	private List<Point> showPoints; //显示拖拽点，随缩放和位移变化
 	private List<Point[]> controlPoints;
-	private GeneralPath path;
+	private List<Point[]> showControlPoints;
+	private GeneralPath path; //实际路径
+	private GeneralPath showPath; //显示路径，随缩放和位移变化
 	private GeneralPath outputPath;
 
 	public CurvePanel() {
 		this.setOpaque(false);
 		points = new ArrayList<>();
-		controlPoints = new ArrayList<>();
-		path = new GeneralPath();
+		showPoints = new ArrayList<>();
 		MouseAdapter adapter = new MouseActionAdapter();
 		this.addMouseListener(adapter);
 		this.addMouseMotionListener(adapter);
@@ -36,14 +38,15 @@ public class CurvePanel extends ZoomableJPanel {
 	}
 
 	public GeneralPath getPath() {
-		zoom(1.0f, 0, 0);
+		genPath();
 		return path;
 	}
 
 	public GeneralPath getLowerClosedPath() {
 		if (points.size() < 2)
 			return null;
-		zoom(1.0f, 0, 0);
+		genCtlPoints();
+		genPath();
 		outputPath = (GeneralPath) path.clone();
 		int x1 = points.get(0).x;
 		int x2 = points.get(points.size() - 1).x;
@@ -56,14 +59,10 @@ public class CurvePanel extends ZoomableJPanel {
 
 	@Override
 	public void zoom(float proportion, int offsetX, int offsetY) {
-
-		for (Point p : points) {
-			int x = Math.round((p.x - this.offsetX) / this.proportion * proportion + offsetX);
-			int y = Math.round((p.y - this.offsetY) / this.proportion * proportion + offsetY);
-			p.setLocation(x, y);
-		}
-		genCtlPoints();
-		genPath();
+		
+		showPoints = zoomPoints(points, proportion, offsetX, offsetY);
+		genShowCtlPoints();
+		genShowPath();
 		super.zoom(proportion, offsetX, offsetY);
 	}
 
@@ -77,7 +76,7 @@ public class CurvePanel extends ZoomableJPanel {
 //		g2d.translate(-offsetX, -offsetY);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setColor(DEFAULT_COLOR);
-		for (Point p : points) {
+		for (Point p : showPoints) {
 //			int x = p.x * proportion +offsetX;
 //			int y = p.y * proportion + offsetY;
 			g.fillOval(p.x - PT_RADIUS, p.y - PT_RADIUS, PT_RADIUS * 2, PT_RADIUS * 2);
@@ -89,13 +88,13 @@ public class CurvePanel extends ZoomableJPanel {
 //			g.fillOval(ps[1].x - PT_RADIUS, ps[1].y - PT_RADIUS, PT_RADIUS * 2, PT_RADIUS * 2);
 //		}
 
-		g2d.draw(path);
+		g2d.draw(showPath);
 //		g2d.scale(proportion, proportion);
 //		g2d.translate(offsetX, offsetY);
 	}
 
 	@Deprecated
-	private List<Point[]> genCtlPoints(List<Point> points) {
+	private static List<Point[]> genCtlPoints(List<Point> points) {
 		List<Point[]> ctlPoints = new ArrayList<>();
 		if (points.size() < 3)
 			return ctlPoints;
@@ -135,23 +134,38 @@ public class CurvePanel extends ZoomableJPanel {
 	private void genCtlPoints() {
 		this.controlPoints = genCtlPoints(points);
 	}
-
-	private void genPath() {
-		path.reset();
+	
+	private void genShowCtlPoints() {
+		this.showControlPoints = genCtlPoints(showPoints);
+	}
+	
+	private static GeneralPath genPath(List<Point> points, List<Point[]> controlPoints) {
+		GeneralPath path = new GeneralPath();
 		int size = points.size();
-		if (size < 2)
-			return;
-		path.moveTo(points.get(0).x, points.get(0).y);
-		if (size == 2) {
-			path.lineTo(points.get(1).x, points.get(1).y);
-		} else {
-			for (int i = 0; i < points.size() - 1; i++) {
-				Point c0 = controlPoints.get(i)[0];
-				Point c1 = controlPoints.get(i)[1];
-				Point p1 = points.get(i + 1);
-				path.curveTo(c0.x, c0.y, c1.x, c1.y, p1.x, p1.y);
+		if (size >= 2) {
+			path.moveTo(points.get(0).x, points.get(0).y);
+			if (size == 2) {
+				path.lineTo(points.get(1).x, points.get(1).y);
+			} else {
+				for (int i = 0; i < points.size() - 1; i++) {
+					Point c0 = controlPoints.get(i)[0];
+					Point c1 = controlPoints.get(i)[1];
+					Point p1 = points.get(i + 1);
+					path.curveTo(c0.x, c0.y, c1.x, c1.y, p1.x, p1.y);
+				}
 			}
 		}
+		return path;
+	}
+
+
+	private void genPath() {
+		path = genPath(points, controlPoints);
+
+	}
+	
+	private void genShowPath() {		
+		showPath = genPath(showPoints, showControlPoints);
 	}
 
 	class MouseActionAdapter extends MouseAdapter {
@@ -165,35 +179,37 @@ public class CurvePanel extends ZoomableJPanel {
 			Point point = e.getPoint();
 			switch (button) {
 			case MouseEvent.BUTTON1:
-				if (points.size() == 0) {
+				if (showPoints.size() == 0) {
 					paintMode = true;
-					points.add(point);
+					showPoints.add(point);
+					points.add(restoreZoomPoint(point, proportion, offsetX, offsetY));
 				} else {
 					for (int i = 0; i < points.size() - 1; i++) {
-						if (points.get(i).distance(point) < PT_RADIUS) {
+						if (showPoints.get(i).distance(point) < PT_RADIUS) {
 							return;
 						}
 					}
-					if (points.get(points.size() - 1).distance(point) < PT_RADIUS) {
+					if (showPoints.get(showPoints.size() - 1).distance(point) < PT_RADIUS) {
 						paintMode = true;
 					}
-					genCtlPoints();
+					genShowCtlPoints();
 				}
-				genPath();
+				genShowPath();
 				repaint();
-				pointIndex = points.size();
+				pointIndex = showPoints.size();
 				break;
 			case MouseEvent.BUTTON3:
 				if (paintMode) {
 					paintMode = false;
 
 				} else {
-
-					for (Point p : points) {
-						if (p.distance(point) < PT_RADIUS) {
-							points.remove(p);
-							genCtlPoints();
-							genPath();
+					
+					for(int i=0; i<showPoints.size(); i++) {
+						if (showPoints.get(i).distance(point) < PT_RADIUS) {
+							showPoints.remove(i);
+							points.remove(i);
+							genShowCtlPoints();
+							genShowPath();
 							repaint();
 							break;
 						}
@@ -212,7 +228,7 @@ public class CurvePanel extends ZoomableJPanel {
 				return;
 			Point point = e.getPoint();
 			for (int i = 0; i < points.size(); i++) {
-				if (points.get(i).distance(point) < PT_RADIUS) {
+				if (showPoints.get(i).distance(point) < PT_RADIUS) {
 					pointIndex = i;
 				}
 			}
@@ -233,9 +249,10 @@ public class CurvePanel extends ZoomableJPanel {
 			if (pointIndex == -1)
 				return;
 			Point point = e.getPoint();
-			points.get(pointIndex).setLocation(point);
-			genCtlPoints();
-			genPath();
+			showPoints.get(pointIndex).setLocation(point);
+			points.get(pointIndex).setLocation(restoreZoomPoint(point, proportion, offsetX, offsetY));
+			genShowCtlPoints();
+			genShowPath();
 			repaint();
 		}
 
@@ -245,11 +262,13 @@ public class CurvePanel extends ZoomableJPanel {
 				return;
 			Point point = e.getPoint();
 			if (pointIndex >= points.size()) {
-				points.add(point);
+				showPoints.add(point);
+				points.add(restoreZoomPoint(point, proportion, offsetX, offsetY));
 			}
-			points.get(pointIndex).setLocation(point);
-			genCtlPoints();
-			genPath();
+			showPoints.get(pointIndex).setLocation(point);
+			points.get(pointIndex).setLocation(restoreZoomPoint(point, proportion, offsetX, offsetY));
+			genShowCtlPoints();
+			genShowPath();
 			repaint();
 		}
 
@@ -257,17 +276,39 @@ public class CurvePanel extends ZoomableJPanel {
 
 	public void setPoints(List<Point> points) {
 		this.points = points;
+		this.showPoints = zoomPoints(points, proportion, offsetX, offsetY);
+		genShowCtlPoints();
 		genCtlPoints();
-		genPath();
+		genShowPath();
 		repaint();
 	}
 
 	public List<Point> getPoints() {
 		if (this.points == null || points.size() == 0)
 			return null;
-		zoom(1.0f, 0, 0);
 		return this.points;
 
+	}
+	
+	private static Point zoomPoint(Point point ,float proportion, int offsetX, int offsetY) {
+		int x = Math.round(point.x * proportion + offsetX);
+		int y = Math.round(point.y * proportion + offsetY);
+		return new Point(x,y);		
+	}
+	
+	private static Point restoreZoomPoint(Point point ,float proportion, int offsetX, int offsetY) {
+		int x = Math.round((point.x - offsetX) / proportion);
+		int y = Math.round((point.y - offsetY) / proportion);
+		return new Point(x,y);		
+	}
+	
+	private static List<Point> zoomPoints(List<Point> points ,float proportion, int offsetX, int offsetY) {
+		List<Point> outputPoint = new ArrayList<>();
+		for (Point p : points) {
+			Point tmpPoint = zoomPoint(p, proportion, offsetX, offsetY);
+			outputPoint.add(tmpPoint);
+		}
+		return outputPoint;		
 	}
 
 }

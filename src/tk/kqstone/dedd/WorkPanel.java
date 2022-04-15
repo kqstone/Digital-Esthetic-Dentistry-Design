@@ -344,19 +344,10 @@ public class WorkPanel extends Container {
 	public void addMaskToAdjustPanel() {
 		if (this.markLipPanel == null)
 			return;
-		zoom(1.0f, 0, 0);
 		Shape path = this.markLipPanel.getLowerClosedPath();
 		if (path == null)
 			return;
-		BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = image.createGraphics();
-		imageView.print(g);
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_ATOP, 0f));
-		Color color = new Color(255, 0, 0, 0);
-		g.setColor(color);
-		g.fill(path);
-		g.dispose();
+		BufferedImage image = imageView.genImageFromView(path);
 		this.adjustPanel.setMask(image);
 	}
 

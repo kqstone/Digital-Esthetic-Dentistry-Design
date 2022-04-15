@@ -1,5 +1,6 @@
 package tk.kqstone.dedd;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -8,6 +9,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
@@ -137,6 +139,25 @@ public class ImageView extends ZoomableJPanel {
 		this.imageChangeListener = listener;
 	}
 
+	
+	public BufferedImage genImageFromView(Shape path) {
+		float f = this.proportion;
+		int x = this.offsetX;
+		int y = this.offsetY;
+		zoom(1.0f, 0, 0);
+		BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = image.createGraphics();
+		this.print(g);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_ATOP, 0f));
+		Color color = new Color(255, 0, 0, 0);
+		g.setColor(color);
+		g.fill(path);
+		g.dispose();
+		zoom(f, x, y);
+		return image;
+	}
+	
 	/**
 	 * show full image with correct ratio, without stretch or crop
 	 */
