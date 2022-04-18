@@ -58,6 +58,8 @@ public abstract class BasicDrawablePanel extends ZoomableJPanel {
 
 	protected abstract void rectMoved(int index, int x1, int y1, int x2, int y2);
 
+	protected abstract void finishAction();
+
 //	/**
 //	 * set bounds
 //	 */

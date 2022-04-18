@@ -3,6 +3,8 @@ package tk.kqstone.dedd;
 import java.awt.Container;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,13 +22,16 @@ import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 
-public class WorkSpace extends Container {
+public class WorkSpace extends Container implements IMenmento{
 	private WorkPanel basePanel;
 	private WorkPanel frontPanel;
 
 	private List<Tooth> baseMarkedTeeth;
 	private List<Tooth> frontMarkedTeeth;
 
+
+	private TeethMarkDataMemento teethMarkDataMemento = TeethMarkDataMemento.getInstance();
+	
 	class PanelContainer extends JPanel {
 		public PanelContainer() {
 			super();
@@ -53,7 +58,7 @@ public class WorkSpace extends Container {
 
 		leftPanel.add(frontPanel);
 		rightPanel.add(basePanel);
-
+		
 	}
 
 	public WorkPanel getBasePanel() {
@@ -162,6 +167,8 @@ public class WorkSpace extends Container {
 	public void init() {
 		basePanel.init();
 		frontPanel.init();
+		basePanel.getMarkPanel().setMenmento(this);
+		frontPanel.getMarkPanel().setMenmento(this);
 	}
 
 	public void load() {
@@ -321,6 +328,30 @@ public class WorkSpace extends Container {
 			return basePanel.getImageView().getDrawRect();
 		}
 		return null;
+	}
+
+	@Override
+	public void storeCurrent() {
+		TeethMarkData tmd = new TeethMarkData();
+		basePanel.getMarkPanel().collectTeethMarkData(tmd);
+		frontPanel.getMarkPanel().collectTeethMarkData(tmd);
+		teethMarkDataMemento.add(tmd);
+	}
+
+	@Override
+	public void undo() {
+		TeethMarkData tmd = teethMarkDataMemento.getPrevious();
+		basePanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+		frontPanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+		
+	}
+
+	@Override
+	public void redo() {
+		TeethMarkData tmd = teethMarkDataMemento.getNext();
+		basePanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+		frontPanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+		
 	}
 
 }

@@ -84,6 +84,7 @@ public class DragRectsAdapter extends MouseAdapter {
 			}
 		}
 		function = FUNCTION_NULL;
+		content.finishAction();
 	}
 
 	@Override

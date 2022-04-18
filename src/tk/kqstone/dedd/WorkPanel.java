@@ -60,6 +60,10 @@ public class WorkPanel extends Container {
 		return viewId;
 	}
 
+	public TeethMarkPanel getMarkPanel() {
+		return markPanel;
+	}
+
 	public EditableImageView getImageView() {
 		return imageView;
 	}
@@ -84,11 +88,7 @@ public class WorkPanel extends Container {
 			this.add(markLipPanel, 0);
 		}
 		markPanel = new TeethMarkPanel();
-		if (viewId == WorkPanel.BASE_VIEW) {
-			markPanel.setTextLengthVisable(true);
-		} else {
-			markPanel.setTextLengthVisable(false);
-		}
+		markPanel.setViewId(viewId);
 		markPanel.setBounds(0, 0, this.getWidth(), this.getHeight());
 		this.add(markPanel, 0);
 		if (viewId == WorkPanel.BASE_VIEW) {
