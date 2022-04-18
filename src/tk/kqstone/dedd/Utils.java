@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -120,6 +125,26 @@ public class Utils {
 			if (zis != null)
 				zis.close();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends Serializable> T deepCloneObject(Object object) throws IOException {
+		T deepClone = null;
+		ObjectInputStream ois = null;
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(baos);) {
+			oos.writeObject(object);
+			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			ois = new ObjectInputStream(bais);
+			deepClone = (T) ois.readObject();
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if (ois != null) {
+				ois.close();
+			}
+		}
+		return deepClone;
 	}
 
 }

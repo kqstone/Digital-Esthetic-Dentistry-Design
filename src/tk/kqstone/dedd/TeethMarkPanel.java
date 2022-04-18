@@ -2,11 +2,15 @@ package tk.kqstone.dedd;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+
+import tk.kqstone.dedd.TeethMarkData.MarkDatum;
 
 public class TeethMarkPanel extends BasicDrawablePanel {
 	private static final int TEXT_FIELD_WIDTH = 50;
@@ -17,6 +21,8 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 	private List<DrawableBorderRect> listPanelTooth;
 
 	private boolean showTextLength = true;
+	
+	private TeethMarkDataMemento teethMarkDataMemento = TeethMarkDataMemento.getInstance();
 
 	public TeethMarkPanel() {
 		super();
@@ -24,12 +30,39 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 		listTextTooth = new ArrayList<>();
 		listTextLength = new ArrayList<>();
 		listPanelTooth = super.getBorderPanelList();
-	}
+		this.addMouseListener(new MouseListener() {
 
-	@Deprecated
-	public void initFromData() {
-		List<Tooth> teeth = TeethData.getInstance().getTeeth();
-		initialize(teeth);
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton() == MouseEvent.BUTTON3) {
+					System.out.print("Right Click in MarkTeethPanel!!!!!!!! ");
+					undo();
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}});
 	}
 
 	public void initialize(List<Tooth> teeth) {
@@ -58,15 +91,6 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 			this.setTextFieldLocation(i, tmpRect);
 		}
 		this.repaint();
-	}
-
-	@Deprecated
-	public void collectdata() {
-		TeethData teethData = TeethData.getInstance();
-		List<Tooth> teeth = this.getTeeth();
-		for (Tooth t : teeth) {
-			teethData.add(t);
-		}
 	}
 
 	public List<Tooth> getTeeth() {
@@ -184,6 +208,7 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 		listTextLength.add(textLength);
 		this.add(textTooth);
 		this.add(textLength);
+		
 	}
 
 	@Override
@@ -199,6 +224,62 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 	@Override
 	protected void rectMoved(int index, int x1, int y1, int x2, int y2) {
 		setTextFieldLocation(index, new Rect(x1, y1, x2, y2));
+//		teethMarkData.setBaseTeeth(getTeeth());
+//		teethMarkDataMemento.add();
 	}
+	
+	public void undo() {
+		TeethMarkData tmd = teethMarkDataMemento.getPrevious();
+		this.listPanelTooth.clear();
+		for(int i=0; i<listTextLength.size();i++) {
+			this.remove(listTextTooth.get(i));
+			this.remove(listTextLength.get(i));
+		}
+		this.listTextLength.clear();
+		this.listTextTooth.clear();
+		List<MarkDatum> markData = tmd.getBaseData();
+		for (int i = 0; i < markData.size(); i++) {
+			Rect2D rect = markData.get(i).rect;
+			float x1 = (float) rect.getX1() * proportion + offsetX;
+			float x2 = (float) rect.getX2() * proportion + offsetX;
+			float y1 = (float) rect.getY1() * proportion + offsetY;
+			float y2 = (float) rect.getY2() * proportion + offsetY;
+			Rect2D.Float tmpRect = new Rect2D.Float(x1, y1, x2, y2);
+			DrawableBorderRect dbr = new DrawableBorderRect();
+			dbr.setRect(tmpRect);
+			listPanelTooth.add(dbr);
+//
+			TextField tt = new TextTooth();
+			listTextTooth.add(tt);
+			tt.setText(String.valueOf(markData.get(i).site));
+			TextField tl = new TextLength();
+			listTextLength.add(tl);
+			tl.setText(String.valueOf(markData.get(i).length));
+			this.add(tt);
+			this.add(tl);
+			this.setTextFieldLocation(i, tmpRect);
+		}
+		this.repaint();
+	}
+
+	@Override
+	protected void finishAction() {
+		TeethMarkData tmd = new TeethMarkData();
+		List<MarkDatum> markData = new ArrayList<>();
+		for (int i = 0; i < listPanelTooth.size(); i++) {
+			MarkDatum md = new MarkDatum();
+			float x1 = ((float) listPanelTooth.get(i).getX1() - offsetX) / proportion;
+			float x2 = ((float) listPanelTooth.get(i).getX2() - offsetX) / proportion;
+			float y1 = ((float) listPanelTooth.get(i).getY1() - offsetY) / proportion;
+			float y2 = ((float) listPanelTooth.get(i).getY2() - offsetY) / proportion;
+			md.rect = new Rect2D.Float(x1, y1, x2, y2);
+			md.site = ((TextTooth) listTextTooth.get(i)).getSite();
+			md.length =  ((TextLength) listTextLength.get(i)).getLength();
+			markData.add(md);
+		}
+		tmd.setBaseData(markData);;
+		teethMarkDataMemento.add(tmd);
+	}
+	
 
 }

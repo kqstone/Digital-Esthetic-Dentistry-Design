@@ -2,8 +2,9 @@ package tk.kqstone.dedd;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
+import java.io.Serializable;
 
-public abstract class Rect2D {
+public abstract class Rect2D implements Serializable {
 	/**
 	 * NorthWest point flag
 	 */
