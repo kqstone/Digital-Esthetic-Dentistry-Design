@@ -148,6 +148,8 @@ public class MainUI extends JFrame {
 
 			@Override
 			public void eventDispatched(AWTEvent event) {
+				if (!workspace.isVisible())
+					return;
 				
 				if (((KeyEvent)event).getID() == KeyEvent.KEY_PRESSED) {
 					if((((KeyEvent)event).getModifiersEx() & InputEvent.CTRL_DOWN_MASK) !=0) {

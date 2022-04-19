@@ -2,6 +2,8 @@ package tk.kqstone.dedd;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -9,6 +11,10 @@ import java.util.List;
 
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 import tk.kqstone.dedd.TeethMarkData.MarkDatum;
 
@@ -17,8 +23,8 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 	private static final int TEXT_FIELD_HEIGHT = 40;
 
 	private int viewId;
-	private List<TextField> listTextTooth;
-	private List<TextField> listTextLength;
+	private List<NumberField> listTextTooth;
+	private List<NumberField> listTextLength;
 	private List<DrawableBorderRect> listPanelTooth;
 	
 	private IMenmento menmento;
@@ -46,10 +52,10 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 			dbr.setRect(tmpRect);
 			listPanelTooth.add(dbr);
 
-			TextField tt = new TextTooth();
+			NumberField tt = new TextTooth();
 			tt.setText(String.valueOf(t.site()));
 			listTextTooth.add(tt);
-			TextField tl = new TextLength();
+			NumberField tl = new TextLength();
 			tl.setText(String.valueOf(t.realLength()));
 			listTextLength.add(tl);
 			this.add(tt);
@@ -161,7 +167,7 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 			DrawableBorderRect dbr = new DrawableBorderRect();
 			dbr.setRect(tmpRect);
 			listPanelTooth.add(dbr);
-			TextField tt = new TextTooth();
+			NumberField tt = new TextTooth();
 			listTextTooth.add(tt);
 			int site = markData.get(i).site;
 			if (site != 0) {
@@ -169,7 +175,7 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 			}
 			this.add(tt);
 			
-			TextField tl = new TextLength();
+			NumberField tl = new TextLength();
 			listTextLength.add(tl);
 			float length = markData.get(i).length;
 			if (length != 0.0f)
@@ -181,25 +187,66 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 		this.repaint();
 	}
 
-	class TextField extends JTextField {
-		public TextField() {
+	class NumberField extends JTextField {
+		private boolean dotEnable = false;
+		
+		public NumberField() {
 			super();
 			this.setOpaque(false);
+			this.addKeyListener(new KeyAdapter() {
+				public void keyTyped(KeyEvent e) {
+					int keyChar = e.getKeyChar();
+					if (!((keyChar >= KeyEvent.VK_0 && keyChar <= KeyEvent.VK_9)
+							|| (dotEnable && keyChar == KeyEvent.VK_PERIOD))) {
+						e.consume();
+					}
+				}
+			});
+
+			Document document = this.getDocument();
+			document.addDocumentListener(new DocumentListener() {
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					if (NumberField.this.isFocusOwner())
+						menmento.storeCurrent();
+
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+
+				}
+			});
 
 		}
 
-		public TextField(String title) {
+		public NumberField(String title) {
 			this();
 
 			this.setBorder(new TitledBorder(title));
 		}
+		
+		public NumberField(String title, boolean dotEnable) {
+			this();
+
+			this.setBorder(new TitledBorder(title));
+			this.dotEnable = dotEnable;
+		}
 
 	}
 
-	class TextLength extends TextField {
+	class TextLength extends NumberField {
 
 		public TextLength() {
-			super(Constant.TOOTH_LENGTH);
+			super(Constant.TOOTH_LENGTH, true);
 
 		}
 
@@ -212,9 +259,9 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 		}
 	}
 
-	class TextTooth extends TextField {
+	class TextTooth extends NumberField {
 		public TextTooth() {
-			super(Constant.TOOTH_SITE);
+			super(Constant.TOOTH_SITE, false);
 
 		}
 
@@ -229,9 +276,9 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 
 	@Override
 	protected void rectAdded() {
-		TextField textTooth = new TextTooth();
+		NumberField textTooth = new TextTooth();
 		listTextTooth.add(textTooth);
-		TextField textLength = new TextLength();
+		NumberField textLength = new TextLength();
 		listTextLength.add(textLength);
 		this.add(textTooth);
 		this.add(textLength);
@@ -240,8 +287,8 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 
 	@Override
 	protected void rectRemoved(int index) {
-		TextField textTooth = listTextTooth.get(index);
-		TextField textLength = listTextLength.get(index);
+		NumberField textTooth = listTextTooth.get(index);
+		NumberField textLength = listTextLength.get(index);
 		this.remove(textTooth);
 		this.remove(textLength);
 		listTextTooth.remove(index);
