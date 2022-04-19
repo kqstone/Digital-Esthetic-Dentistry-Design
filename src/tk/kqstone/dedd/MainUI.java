@@ -653,5 +653,6 @@ public class MainUI extends JFrame {
 		tabPanel.setVisible(false);
 		infoBar.clear();
 		this.setProjFile(null);
+		TeethMarkDataMemento.getInstance().clear();
 	}
 }
