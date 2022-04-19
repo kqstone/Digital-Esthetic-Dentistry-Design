@@ -182,6 +182,7 @@ public class DragRectsAdapter extends MouseAdapter {
 		if (index != -1) {
 			listRects.remove(index);
 			content.rectRemoved(index);
+			content.finishAction();
 			content.repaint();
 		}
 	}
