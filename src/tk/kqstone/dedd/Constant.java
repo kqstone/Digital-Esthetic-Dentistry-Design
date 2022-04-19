@@ -85,5 +85,8 @@ public final class Constant {
 	public static final String UNKNOW = "未知";
 	public static final String CHECKING = "检测中...";
 	public static final String CONNECT_FAIL = "服务器连接失败，请检查网络连接！";
+	public static final String MENU_EDIT = "编辑";
+	public static final String REDO = "重做";
+	public static final String UNDO = "撤销";
 
 }

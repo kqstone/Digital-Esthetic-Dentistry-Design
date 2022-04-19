@@ -13,6 +13,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -82,6 +85,8 @@ public class MainUI extends JFrame {
 	private JMenuItem readFromMenuItem;
 	private JMenuItem closeMenuItem;
 	private JMenuItem updateMenuItem;
+	private JMenuItem redoMenuItem;
+	private JMenuItem undoMenuItem;
 
 	private IController controller;
 
@@ -136,14 +141,52 @@ public class MainUI extends JFrame {
 		MyListener listener = new MyListener();
 		tabPanel.addTabStateChangeListener(listener);
 		tabPanel.setVisible(false);
+		
+
+		this.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				int mod = e.getModifiersEx();
+				if ((mod & InputEvent.CTRL_DOWN_MASK) !=0) {
+					System.out.print("MainUI: " + "Ctrl pressed!!!!!!!!!!!!!");
+					int keychar = e.getKeyChar();
+					switch(keychar) {
+					case 26:
+						System.out.print("MainUI: " + "Ctrl + Z pressed!!!!!!!!!!!!!");
+						workspace.undo();
+						break;
+					case 25:
+						workspace.redo();
+						break;
+						default:
+							break;
+					}
+					
+				}
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}});
 	}
 
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu(Constant.MENU_FILE);
+		JMenu editMenu = new JMenu(Constant.MENU_EDIT);
 		JMenu aboutMenu = new JMenu(Constant.MENU_ABOUT);
 		menuBar.add(fileMenu);
-		menuBar.add(aboutMenu);
+		menuBar.add(editMenu);
+		menuBar.add(aboutMenu);		
 		newMenuItem = new JMenuItem(Constant.NEW);
 		saveMenuItem = new JMenuItem(Constant.SAVE);
 		saveMenuItem.setEnabled(false);
@@ -153,6 +196,10 @@ public class MainUI extends JFrame {
 		closeMenuItem = new JMenuItem(Constant.CLOSE);
 		closeMenuItem.setEnabled(false);
 		updateMenuItem = new JMenuItem(Constant.CHECK_UPDATE);
+		redoMenuItem = new JMenuItem(Constant.REDO);
+		redoMenuItem.setEnabled(false);
+		undoMenuItem = new JMenuItem(Constant.UNDO);
+		undoMenuItem.setEnabled(false);
 		fileMenu.add(newMenuItem);
 		fileMenu.add(readFromMenuItem);
 		fileMenu.add(saveMenuItem);
@@ -161,6 +208,8 @@ public class MainUI extends JFrame {
 		fileMenu.add(exitMenuItem);
 		aboutMenu.add(updateMenuItem);
 		aboutMenu.add(aboutMenuItem);
+		editMenu.add(undoMenuItem);
+		editMenu.add(redoMenuItem);
 
 		MenuListener l = new MenuListener();
 		newMenuItem.addActionListener(l);
@@ -170,6 +219,8 @@ public class MainUI extends JFrame {
 		saveMenuItem.addActionListener(l);
 		closeMenuItem.addActionListener(l);
 		updateMenuItem.addActionListener(l);
+		undoMenuItem.addActionListener(l);
+		redoMenuItem.addActionListener(l);
 
 	}
 
@@ -316,6 +367,8 @@ public class MainUI extends JFrame {
 				workspace.mark();
 				if (resultPanel.isVisible())
 					resultPanel.setVisible(false);
+				redoMenuItem.setEnabled(true);
+				undoMenuItem.setEnabled(true);
 				break;
 			case Constant.ADJUSTTEETH:
 				if (!workspace.isVisible()) {
@@ -360,6 +413,10 @@ public class MainUI extends JFrame {
 			case Constant.MARKLIP:
 				workspace.addLipMaskToAdjustPanel();
 				break;
+			case Constant.MARKTEETH:
+				redoMenuItem.setEnabled(false);
+				undoMenuItem.setEnabled(false);
+				break;
 			}
 
 		}
@@ -391,6 +448,10 @@ public class MainUI extends JFrame {
 				}
 			} else if (source.equals(updateMenuItem)) {
 				checkUpdate();
+			} else if (source.equals(redoMenuItem)) {
+				workspace.redo();
+			} else if (source.equals(undoMenuItem)) {
+				workspace.undo();
 			}
 
 		}

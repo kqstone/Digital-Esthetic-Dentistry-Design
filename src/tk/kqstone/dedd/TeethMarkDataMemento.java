@@ -47,9 +47,10 @@ public class TeethMarkDataMemento {
 	}
 	
 	public TeethMarkData getNext() throws IndexOutOfBoundsException{
-		index++;
-		if (index >= listTeethMarkData.size())
+		
+		if (index >= listTeethMarkData.size() - 1)
 			throw new IndexOutOfBoundsException();
+		index++;
 		return listTeethMarkData.get(index);
 	}
 

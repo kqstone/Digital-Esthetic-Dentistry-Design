@@ -340,17 +340,27 @@ public class WorkSpace extends Container implements IMenmento{
 
 	@Override
 	public void undo() {
-		TeethMarkData tmd = teethMarkDataMemento.getPrevious();
-		basePanel.getMarkPanel().setDataFromTeethMarkData(tmd);
-		frontPanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+		try {
+			TeethMarkData tmd = teethMarkDataMemento.getPrevious();
+			basePanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+			frontPanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+		} catch (IndexOutOfBoundsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void redo() {
-		TeethMarkData tmd = teethMarkDataMemento.getNext();
-		basePanel.getMarkPanel().setDataFromTeethMarkData(tmd);
-		frontPanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+		try {
+			TeethMarkData tmd = teethMarkDataMemento.getNext();
+			basePanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+			frontPanel.getMarkPanel().setDataFromTeethMarkData(tmd);
+		} catch (IndexOutOfBoundsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
