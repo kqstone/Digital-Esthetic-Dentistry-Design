@@ -1,5 +1,6 @@
 package tk.kqstone.dedd;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -11,6 +12,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -142,41 +144,31 @@ public class MainUI extends JFrame {
 		tabPanel.addTabStateChangeListener(listener);
 		tabPanel.setVisible(false);
 		
-
-		this.addKeyListener(new KeyListener() {
+		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
 
 			@Override
-			public void keyTyped(KeyEvent e) {
-				int mod = e.getModifiersEx();
-				if ((mod & InputEvent.CTRL_DOWN_MASK) !=0) {
-					System.out.print("MainUI: " + "Ctrl pressed!!!!!!!!!!!!!");
-					int keychar = e.getKeyChar();
-					switch(keychar) {
-					case 26:
-						System.out.print("MainUI: " + "Ctrl + Z pressed!!!!!!!!!!!!!");
-						workspace.undo();
-						break;
-					case 25:
-						workspace.redo();
-						break;
-						default:
+			public void eventDispatched(AWTEvent event) {
+				
+				if (((KeyEvent)event).getID() == KeyEvent.KEY_PRESSED) {
+					if((((KeyEvent)event).getModifiersEx() & InputEvent.CTRL_DOWN_MASK) !=0) {
+						System.out.println("MainUI: " + "Ctrl pressed!!!!!!!!!!!!!");
+						MainUI.this.requestFocus();
+						switch(((KeyEvent)event).getKeyCode()) {
+						case KeyEvent.VK_Z:
+							workspace.undo();
 							break;
+						case KeyEvent.VK_Y:
+							workspace.redo();
+							break;
+							default:
+								break;
+						}
 					}
 					
 				}
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
 				
-			}
+			}}, AWTEvent.KEY_EVENT_MASK);
 
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}});
 	}
 
 	private void initMenuBar() {
