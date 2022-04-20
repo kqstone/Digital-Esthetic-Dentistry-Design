@@ -33,6 +33,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -53,6 +54,7 @@ import tk.kqstone.dedd.ui.IMethod;
 import tk.kqstone.dedd.ui.SuspendTip;
 import tk.kqstone.dedd.ui.TabEvent;
 import tk.kqstone.dedd.ui.TabPanel;
+import tk.kqstone.dedd.ui.TabPanel.IconButton;
 import tk.kqstone.dedd.ui.TabStateChangeListener;
 import tk.kqstone.dedd.ui.TitleBar;
 
@@ -70,6 +72,10 @@ import java.awt.Toolkit;
  */
 public class MainUI extends JFrame {
 	private final static String ICON = "/img/icon.png";
+	private final static String URL_REDO = "/img/redo.png";
+	private final static String URL_UNDO = "/img/undo.png";
+	private final static String URL_AUTOADJUST = "/img/auto_adjust.png";
+	private final static String URL_REGENADJUST = "/img/regen_adjust.png";
 
 	private JMenuBar menuBar;
 	private Container root; // Root Container
@@ -92,6 +98,10 @@ public class MainUI extends JFrame {
 	private JMenuItem autoAdjustMenuItem;
 	private JMenuItem regenAdjustMenuItem;
 	
+	private IconButton undoButton;
+	private IconButton redoButton;
+	private IconButton autoAdjustButton;
+	private IconButton regenAdjustButton;
 
 	private IController controller;
 
@@ -146,6 +156,8 @@ public class MainUI extends JFrame {
 		MyListener listener = new MyListener();
 		tabPanel.addTabStateChangeListener(listener);
 		tabPanel.setVisible(false);
+		
+		initIconButton();
 		
 		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
 
@@ -229,6 +241,42 @@ public class MainUI extends JFrame {
 		autoAdjustMenuItem.addActionListener(l);
 		regenAdjustMenuItem.addActionListener(l);
 
+	}
+	
+	private void initIconButton() {
+		autoAdjustButton = new IconButton(Constant.AUTO_ADJUST,
+				new ImageIcon(this.getClass().getResource(URL_AUTOADJUST)));
+		autoAdjustButton.setVisible(false);
+		regenAdjustButton = new IconButton(Constant.RE_ADJUST,
+				new ImageIcon(this.getClass().getResource(URL_REGENADJUST)));
+		regenAdjustButton.setVisible(false);
+		undoButton = new IconButton(Constant.UNDO, new ImageIcon(this.getClass().getResource(URL_UNDO)));
+		undoButton.setVisible(false);
+		redoButton = new IconButton(Constant.REDO, new ImageIcon(this.getClass().getResource(URL_REDO)));
+		redoButton.setVisible(false);
+		tabPanel.addIconButton(autoAdjustButton).addIconButton(regenAdjustButton).addIconButton(undoButton)
+				.addIconButton(redoButton);
+		MouseListener listener = new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Object source = e.getSource();
+				if (source.equals(undoButton)) {
+					workspace.undo();
+				} else if (source.equals(redoButton)) {
+					workspace.redo();
+				} else if (source.equals(autoAdjustButton)) {
+					workspace.autoAdjust();
+				} else if (source.equals(regenAdjustButton)) {
+					workspace.reGenAdjustTeeth();
+				}
+			}
+
+		};
+		autoAdjustButton.addMouseListener(listener);
+		regenAdjustButton.addMouseListener(listener);
+		undoButton.addMouseListener(listener);
+		redoButton.addMouseListener(listener);
 	}
 
 	public File getProjFile() {
@@ -376,6 +424,8 @@ public class MainUI extends JFrame {
 					resultPanel.setVisible(false);
 				redoMenuItem.setEnabled(true);
 				undoMenuItem.setEnabled(true);
+				undoButton.setVisible(true);
+				redoButton.setVisible(true);
 				break;
 			case Constant.ADJUSTTEETH:
 				if (!workspace.isVisible()) {
@@ -386,6 +436,8 @@ public class MainUI extends JFrame {
 					resultPanel.setVisible(false);
 				autoAdjustMenuItem.setEnabled(true);
 				regenAdjustMenuItem.setEnabled(true);
+				autoAdjustButton.setVisible(true);
+				regenAdjustButton.setVisible(true);
 				break;
 			case Constant.EXPORTDESIGN:
 				resultPanel.setName(basicInfo.name);
@@ -425,10 +477,14 @@ public class MainUI extends JFrame {
 			case Constant.MARKTEETH:
 				redoMenuItem.setEnabled(false);
 				undoMenuItem.setEnabled(false);
+				undoButton.setVisible(false);
+				redoButton.setVisible(false);
 				break;
 			case Constant.ADJUSTTEETH:
 				autoAdjustMenuItem.setEnabled(false);
 				regenAdjustMenuItem.setEnabled(false);
+				autoAdjustButton.setVisible(false);
+				regenAdjustButton.setVisible(false);
 				break;
 			}
 

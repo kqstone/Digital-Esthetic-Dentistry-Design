@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Stroke;
@@ -24,6 +25,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Box;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 public class TabPanel extends Container {
 	public static final int DEFAULT_TAB_WIDTH = 90;
@@ -36,6 +40,7 @@ public class TabPanel extends Container {
 	private TabMouseAdapter tabMouseAdapter;
 
 	private Container tabCtn;
+	private Container iconButtonCtn;
 	private ContentPanel content;
 	private TabStateChangeListener listener;
 
@@ -64,7 +69,19 @@ public class TabPanel extends Container {
 		tabCtn.setLayout(layout);
 		Component horizontalStrut = Box.createHorizontalStrut(radius * 2);
 		tabCtn.add(horizontalStrut);
-		this.add(tabCtn, BorderLayout.NORTH);
+		
+		iconButtonCtn = new Container();
+		FlowLayout layout2 = new FlowLayout();
+		layout2.setAlignment(FlowLayout.RIGHT);
+		layout2.setHgap(5);
+		layout2.setVgap(0);
+		iconButtonCtn.setLayout(layout2);
+		
+		Container ctn = new Container();
+		ctn.setLayout(new BorderLayout());
+		ctn.add(tabCtn,BorderLayout.CENTER);
+		ctn.add(iconButtonCtn,BorderLayout.EAST);
+		this.add(ctn, BorderLayout.NORTH);
 		this.add(content, BorderLayout.CENTER);
 
 		tabs = new ArrayList<>();
@@ -119,6 +136,11 @@ public class TabPanel extends Container {
 
 	public void removeContent(Component component) {
 		this.content.remove(component);
+	}
+	
+	public TabPanel addIconButton(IconButton iconButton) {
+		this.iconButtonCtn.add(iconButton);
+		return this;
 	}
 
 	class TabMouseAdapter extends MouseAdapter {
@@ -264,6 +286,27 @@ public class TabPanel extends Container {
 			g2d.drawRoundRect(0, 0, width, height, radius * 2, radius * 2);
 		}
 
+	}
+	
+	public static class IconButton extends JButton {
+
+		private static final int SIZE = 25;
+
+		public IconButton() {
+			super();
+		}
+
+		public IconButton(Icon icon) {
+			this();
+			this.setPreferredSize(new Dimension(SIZE, SIZE));
+			this.setIcon(new ImageIcon(
+					((ImageIcon) icon).getImage().getScaledInstance(SIZE - 5, SIZE - 5, Image.SCALE_SMOOTH)));
+		}
+
+		public IconButton(String tip, Icon icon) {
+			this(icon);
+			this.setToolTipText(tip);
+		}
 	}
 
 }
