@@ -89,6 +89,7 @@ public class MainUI extends JFrame {
 	private JMenuItem updateMenuItem;
 	private JMenuItem redoMenuItem;
 	private JMenuItem undoMenuItem;
+	private JMenuItem autoAdjustMenuItem;
 
 	private IController controller;
 
@@ -177,9 +178,11 @@ public class MainUI extends JFrame {
 		menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu(Constant.MENU_FILE);
 		JMenu editMenu = new JMenu(Constant.MENU_EDIT);
+		JMenu designMenu = new JMenu(Constant.MENU_DESIGN);
 		JMenu aboutMenu = new JMenu(Constant.MENU_ABOUT);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
+		menuBar.add(designMenu);
 		menuBar.add(aboutMenu);		
 		newMenuItem = new JMenuItem(Constant.NEW);
 		saveMenuItem = new JMenuItem(Constant.SAVE);
@@ -194,6 +197,8 @@ public class MainUI extends JFrame {
 		redoMenuItem.setEnabled(false);
 		undoMenuItem = new JMenuItem(Constant.UNDO);
 		undoMenuItem.setEnabled(false);
+		autoAdjustMenuItem = new JMenuItem(Constant.AUTO_ADJUST);
+		autoAdjustMenuItem.setEnabled(false);
 		fileMenu.add(newMenuItem);
 		fileMenu.add(readFromMenuItem);
 		fileMenu.add(saveMenuItem);
@@ -204,6 +209,7 @@ public class MainUI extends JFrame {
 		aboutMenu.add(aboutMenuItem);
 		editMenu.add(undoMenuItem);
 		editMenu.add(redoMenuItem);
+		designMenu.add(autoAdjustMenuItem);
 
 		MenuListener l = new MenuListener();
 		newMenuItem.addActionListener(l);
@@ -215,6 +221,7 @@ public class MainUI extends JFrame {
 		updateMenuItem.addActionListener(l);
 		undoMenuItem.addActionListener(l);
 		redoMenuItem.addActionListener(l);
+		autoAdjustMenuItem.addActionListener(l);
 
 	}
 
@@ -371,6 +378,7 @@ public class MainUI extends JFrame {
 				workspace.adjust();
 				if (resultPanel.isVisible())
 					resultPanel.setVisible(false);
+				autoAdjustMenuItem.setEnabled(true);
 				break;
 			case Constant.EXPORTDESIGN:
 				resultPanel.setName(basicInfo.name);
@@ -411,6 +419,9 @@ public class MainUI extends JFrame {
 				redoMenuItem.setEnabled(false);
 				undoMenuItem.setEnabled(false);
 				break;
+			case Constant.ADJUSTTEETH:
+				autoAdjustMenuItem.setEnabled(false);
+				break;
 			}
 
 		}
@@ -446,6 +457,8 @@ public class MainUI extends JFrame {
 				workspace.redo();
 			} else if (source.equals(undoMenuItem)) {
 				workspace.undo();
+			} else if (source.equals(autoAdjustMenuItem)) {
+				workspace.autoAdjust();
 			}
 
 		}

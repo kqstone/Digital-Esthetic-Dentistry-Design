@@ -363,5 +363,14 @@ public class WorkSpace extends Container implements IMenmento{
 		}
 		
 	}
+	
+	public void autoAdjust() {
+		TeethAdjustPanel baseAdjustPanel = basePanel.getAdjustPanel();
+		TeethAdjustPanel frontAdjustPanel = frontPanel.getAdjustPanel();
+		if (baseAdjustPanel != null)
+			baseAdjustPanel.optimize();
+		if (frontAdjustPanel != null)
+			frontAdjustPanel.align();
+	}
 
 }

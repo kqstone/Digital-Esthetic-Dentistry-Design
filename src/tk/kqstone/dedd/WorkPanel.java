@@ -101,9 +101,6 @@ public class WorkPanel extends Container {
 
 		adjustPanel.setBounds(0, 0, this.getWidth(), this.getHeight());
 		this.add(adjustPanel, 0);
-		if (viewId == WorkPanel.BASE_VIEW) {
-			adjustPanel.addAutoAdjustButton();
-		}
 
 		status = WorkPanel.STATUS_LOADIMAGE;
 		

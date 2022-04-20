@@ -32,7 +32,6 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 	private Map<Integer, BufferedImage> teethContourImage;
 	private Map<Integer, BufferedImage> teethRealImage;
 	private List<ToothPanel> teethPanel;
-	private JButton btnAutoAdjust;
 	private ImageView mask;
 	private int showMode;
 	private boolean showBorderAndText;
@@ -260,43 +259,6 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 		mask.setImage(image);
 	}
 
-	public void addAutoAdjustButton() {
-		this.btnAutoAdjust = new JButton(Constant.AUTO_ADJUST);
-
-		this.add(btnAutoAdjust);
-		btnAutoAdjust.setBounds(5, 5, 90, 20);
-		;
-		btnAutoAdjust.setVisible(true);
-		btnAutoAdjust.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				IOptimizer op = new TeethOptimizer();
-				op.setSrc(getCurrentTeeth());
-				op.analysis();
-				op.optimize();
-				List<Tooth> tmp = (List<Tooth>) op.getDst();
-				for (Tooth t : tmp) {
-					for (ToothPanel tp : teethPanel) {
-						if (t.site() == tp.getSite()) {
-							Rect2D rect = t.rect();
-							float x1 = (float) rect.getX1() * proportion + offsetX;
-							float x2 = (float) rect.getX2() * proportion + offsetX;
-							float y1 = (float) rect.getY1() * proportion + offsetY;
-							float y2 = (float) rect.getY2() * proportion + offsetY;
-							tp.getSimpleDrawableBorderRect().setRect(new Rect2D.Float(x1, y1, x2, y2));
-							tp.setBounds2();
-							tp.setProportion(proportion);
-							tp.setOffsetX(offsetX);
-							tp.setOffsetY(offsetY);
-						}
-					}
-				}
-//				repaint();
-			}
-		});
-	}
-
 	@Deprecated
 	private void changeBrightness(int brightChange) {
 		if (brightChange == 0 || this.showMode != MODE_REAL)
@@ -465,6 +427,58 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 
 	public int getAdjustTeethYellow() {
 		return this.yellow;
+	}
+	
+	public void optimize() {
+		IOptimizer op = new TeethOptimizer();
+		op.setSrc(getCurrentTeeth());
+		op.analysis();
+		op.optimize();
+		List<Tooth> tmp = (List<Tooth>) op.getDst();
+		for (Tooth t : tmp) {
+			for (ToothPanel tp : teethPanel) {
+				if (t.site() == tp.getSite()) {
+					Rect2D rect = t.rect();
+					float x1 = (float) rect.getX1() * proportion + offsetX;
+					float x2 = (float) rect.getX2() * proportion + offsetX;
+					float y1 = (float) rect.getY1() * proportion + offsetY;
+					float y2 = (float) rect.getY2() * proportion + offsetY;
+					rect = new Rect2D.Float(x1, y1, x2, y2);
+					tp.getSimpleDrawableBorderRect().setRect(rect);
+					tp.setBounds2();
+					tp.setProportion(proportion);
+					tp.setOffsetX(offsetX);
+					tp.setOffsetY(offsetY);
+					tp.setInitRect(rect);
+				}
+			}
+		}
+	}
+	
+	public void align() {
+		IOptimizer op = new TeethOptimizer();
+		op.setSrc(getCurrentTeeth());
+		op.analysis();
+		op.align();
+		List<Tooth> tmp = (List<Tooth>) op.getDst();
+		for (Tooth t : tmp) {
+			for (ToothPanel tp : teethPanel) {
+				if (t.site() == tp.getSite()) {
+					Rect2D rect = t.rect();
+					float x1 = (float) rect.getX1() * proportion + offsetX;
+					float x2 = (float) rect.getX2() * proportion + offsetX;
+					float y1 = (float) rect.getY1() * proportion + offsetY;
+					float y2 = (float) rect.getY2() * proportion + offsetY;
+					rect = new Rect2D.Float(x1, y1, x2, y2);
+					tp.getSimpleDrawableBorderRect().setRect(rect);
+					tp.setBounds2();
+					tp.setProportion(proportion);
+					tp.setOffsetX(offsetX);
+					tp.setOffsetY(offsetY);
+					tp.setInitRect(rect);
+				}
+			}
+		}
 	}
 
 }

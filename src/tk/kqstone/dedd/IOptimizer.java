@@ -20,4 +20,6 @@ public interface IOptimizer {
 
 	void optimize();
 
+	void align();
+
 }
