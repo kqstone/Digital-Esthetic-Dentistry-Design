@@ -480,5 +480,13 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 			}
 		}
 	}
+	
+	public void clearTeeth() {
+		for (ToothPanel tp: teethPanel) {
+			this.remove(tp);
+		}
+		teethPanel.clear();
+		this.repaint();
+	}
 
 }

@@ -89,5 +89,6 @@ public final class Constant {
 	public static final String REDO = "重做";
 	public static final String UNDO = "撤销";
 	public static final String MENU_DESIGN = "设计";
+	public static final String RE_ADJUST = "重新设计";
 
 }

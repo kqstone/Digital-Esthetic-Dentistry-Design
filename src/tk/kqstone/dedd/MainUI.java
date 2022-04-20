@@ -90,6 +90,8 @@ public class MainUI extends JFrame {
 	private JMenuItem redoMenuItem;
 	private JMenuItem undoMenuItem;
 	private JMenuItem autoAdjustMenuItem;
+	private JMenuItem regenAdjustMenuItem;
+	
 
 	private IController controller;
 
@@ -199,6 +201,8 @@ public class MainUI extends JFrame {
 		undoMenuItem.setEnabled(false);
 		autoAdjustMenuItem = new JMenuItem(Constant.AUTO_ADJUST);
 		autoAdjustMenuItem.setEnabled(false);
+		regenAdjustMenuItem = new JMenuItem(Constant.RE_ADJUST);
+		regenAdjustMenuItem.setEnabled(false);
 		fileMenu.add(newMenuItem);
 		fileMenu.add(readFromMenuItem);
 		fileMenu.add(saveMenuItem);
@@ -210,6 +214,7 @@ public class MainUI extends JFrame {
 		editMenu.add(undoMenuItem);
 		editMenu.add(redoMenuItem);
 		designMenu.add(autoAdjustMenuItem);
+		designMenu.add(regenAdjustMenuItem);
 
 		MenuListener l = new MenuListener();
 		newMenuItem.addActionListener(l);
@@ -222,6 +227,7 @@ public class MainUI extends JFrame {
 		undoMenuItem.addActionListener(l);
 		redoMenuItem.addActionListener(l);
 		autoAdjustMenuItem.addActionListener(l);
+		regenAdjustMenuItem.addActionListener(l);
 
 	}
 
@@ -379,6 +385,7 @@ public class MainUI extends JFrame {
 				if (resultPanel.isVisible())
 					resultPanel.setVisible(false);
 				autoAdjustMenuItem.setEnabled(true);
+				regenAdjustMenuItem.setEnabled(true);
 				break;
 			case Constant.EXPORTDESIGN:
 				resultPanel.setName(basicInfo.name);
@@ -421,6 +428,7 @@ public class MainUI extends JFrame {
 				break;
 			case Constant.ADJUSTTEETH:
 				autoAdjustMenuItem.setEnabled(false);
+				regenAdjustMenuItem.setEnabled(false);
 				break;
 			}
 
@@ -459,6 +467,8 @@ public class MainUI extends JFrame {
 				workspace.undo();
 			} else if (source.equals(autoAdjustMenuItem)) {
 				workspace.autoAdjust();
+			} else if (source.equals(regenAdjustMenuItem)) {
+				workspace.reGenAdjustTeeth();
 			}
 
 		}
