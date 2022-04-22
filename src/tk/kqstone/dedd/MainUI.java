@@ -151,7 +151,7 @@ public class MainUI extends JFrame {
 		root.add(tabPanel, BorderLayout.CENTER);
 		root.add(Box.createHorizontalStrut(4), BorderLayout.WEST);
 		root.add(Box.createHorizontalStrut(4), BorderLayout.EAST);
-		tabPanel.addTab(Constant.LOADPICT).addTab(Constant.EDITPICT).addTab(Constant.MARKLIP).addTab(Constant.MARKTEETH)
+		tabPanel.addTab(Constant.EDITPICT).addTab(Constant.UNIFYPLAN).addTab(Constant.MARKLIP).addTab(Constant.MARKTEETH)
 				.addTab(Constant.ADJUSTTEETH).addTab(Constant.EXPORTDESIGN);
 		MyListener listener = new MyListener();
 		tabPanel.addTabStateChangeListener(listener);
@@ -390,18 +390,18 @@ public class MainUI extends JFrame {
 		public void onFocused(TabEvent e) {
 			String cmd = e.getTabLabel();
 			switch (cmd) {
-			case Constant.LOADPICT:
-				if (!workspace.isVisible())
-					workspace.setVisible(true);
-				workspace.load();
-				if (resultPanel.isVisible())
-					resultPanel.setVisible(false);
-				break;
 			case Constant.EDITPICT:
 				if (!workspace.isVisible())
 					workspace.setVisible(true);
-
 				workspace.edit();
+				if (resultPanel.isVisible())
+					resultPanel.setVisible(false);
+				break;
+			case Constant.UNIFYPLAN:
+				if (!workspace.isVisible())
+					workspace.setVisible(true);
+
+				workspace.unify();
 				if (resultPanel.isVisible())
 					resultPanel.setVisible(false);
 				break;
@@ -645,7 +645,7 @@ public class MainUI extends JFrame {
 		tabPanel.addContent(workspace);
 		tabPanel.addContent(resultPanel);
 		workspace.init();
-		workspace.load();
+		workspace.edit();
 		resultPanel.init();
 		tabPanel.revalidate();
 		tabPanel.repaint();

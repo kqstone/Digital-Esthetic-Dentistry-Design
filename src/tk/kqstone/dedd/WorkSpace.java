@@ -171,16 +171,19 @@ public class WorkSpace extends Container implements IMenmento{
 		frontPanel.getMarkPanel().setMenmento(this);
 	}
 
-	public void load() {
-		basePanel.load();
-		frontPanel.load();
-	}
-
 	public void edit() {
 		basePanel.edit();
 		frontPanel.edit();
+		basePanel.getImageView().unbind();
+		frontPanel.getImageView().unbind();
+	}
+
+	public void unify() {
+		basePanel.unify();
+		frontPanel.unify();
 		basePanel.getImageView().bind(frontPanel.getImageView());
 		frontPanel.getImageView().bind(basePanel.getImageView());
+		basePanel.getImageView().setbinded(true);
 	}
 
 	public void marklip() {

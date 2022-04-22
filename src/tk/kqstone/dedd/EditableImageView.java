@@ -48,12 +48,14 @@ public class EditableImageView extends ImageView implements IImageBinder {
 
 	private MarkPanel markPanel;
 
-	private IImageBinder imageBinder;
+	private IImageBinder imageBinder;	
+	private boolean binded;
 
+	private boolean unifiable;
 	private boolean editable;
-	private boolean loadable;
-	private MouseAdapter mouseAdapter;
+	private MouseAdapter editableMouseAdapter;
 	private MouseAdapter doubleClickAdapter;
+	private MouseAdapter unifiablemouseAdapter;
 	private EditableKeyAdapter keyAdapter;
 
 	private boolean escPressed;
@@ -61,64 +63,75 @@ public class EditableImageView extends ImageView implements IImageBinder {
 	public EditableImageView() {
 		super();
 		this.setLayout(new BorderLayout());
+		markPanel = new MarkPanel();
+		markPanel.setBounds(0, 0, this.getWidth(), this.getHeight());
+		this.add(markPanel);
+		binded = false;
+		unifiable = false;
 		editable = false;
-		loadable = false;
 		escPressed = false;
 	}
 
 	public void bind(IImageBinder imageBinder) {
 		this.imageBinder = imageBinder;
 	}
-
-	public void setLoadable(boolean loadable) {
-		if (this.loadable == loadable)
-			return;
-		if (loadable) {
-			if (doubleClickAdapter == null) {
-				doubleClickAdapter = new MouseDoubleClickAdapter();
-			}
-			this.addMouseListener(doubleClickAdapter);
-		} else {
-			this.removeMouseListener(doubleClickAdapter);
-		}
-		this.loadable = loadable;
+	
+	public void unbind() {
+		this.imageBinder = null;
+	}
+	
+	public void setbinded(boolean binded) {
+		this.binded = binded;
 	}
 
 	public void setEditable(boolean editable) {
 		if (this.editable == editable)
 			return;
 		if (editable) {
-			if (markPanel == null) {
-				markPanel = new MarkPanel();
+			if (doubleClickAdapter == null) {
+				doubleClickAdapter = new MouseDoubleClickAdapter();
 			}
-			markPanel.setBounds(0, 0, this.getWidth(), this.getHeight());
-			this.add(markPanel);
-			markPanel.repaint();
-
-			if (mouseAdapter == null) {
-				mouseAdapter = new EditableMouseAdaper(this);
+			this.addMouseListener(doubleClickAdapter);
+			if (editableMouseAdapter == null) {
+				editableMouseAdapter = new EditableMouseAdapter(this);				
 			}
-			if (keyAdapter == null) {
+			this.addMouseListener(editableMouseAdapter);
+			this.addMouseMotionListener(editableMouseAdapter);
+			if (keyAdapter ==null) {
 				keyAdapter = new EditableKeyAdapter();
 			}
-			this.addMouseListener(mouseAdapter);
-			this.addMouseMotionListener(mouseAdapter);
 			this.addKeyListener(keyAdapter);
-//			this.requestFocus(true);
+			markPanel.clear();
+				
 		} else {
-			this.remove(markPanel);
-			this.repaint();
-			this.removeMouseListener(mouseAdapter);
-			this.removeMouseMotionListener(mouseAdapter);
+			this.removeMouseListener(doubleClickAdapter);
+			this.removeMouseListener(editableMouseAdapter);
+			this.removeMouseMotionListener(editableMouseAdapter);
 			this.removeKeyListener(keyAdapter);
-			this.requestFocus(false);
 		}
-
 		this.editable = editable;
 	}
 
-	public boolean isEditable() {
-		return this.editable;
+	public void setUnifiable(boolean unifiable) {
+		if (this.unifiable == unifiable)
+			return;
+		if (unifiable) {
+
+			if (unifiablemouseAdapter == null) {
+				unifiablemouseAdapter = new UnifiableMouseAdapter();
+			}
+			this.addMouseListener(unifiablemouseAdapter);
+			this.addMouseMotionListener(unifiablemouseAdapter);
+		} else {
+			this.removeMouseListener(unifiablemouseAdapter);
+			this.removeMouseMotionListener(unifiablemouseAdapter);
+		}
+
+		this.unifiable = unifiable;
+	}
+
+	public boolean isUnifiable() {
+		return this.unifiable;
 	}
 
 	@Override
@@ -129,32 +142,24 @@ public class EditableImageView extends ImageView implements IImageBinder {
 //		removeMouseListener(doubleClickAdapter);
 	}
 
-	class EditableMouseAdaper extends MouseAdapter {
+	class EditableMouseAdapter extends MouseAdapter {
 		private ImageView panel;
 		Point start;
-		private int index;
 
-		EditableMouseAdaper(ImageView panel) {
+		EditableMouseAdapter(ImageView panel) {
 			this.panel = panel;
-			index = 0;
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			if (panel.getImage() == null)
+				return;
 			requestFocus(true);
 			escPressed = false;
 			start = e.getPoint();
 			if (e.getButton() == MouseEvent.BUTTON1) {
-				if (markPanel.point3 != null && start.distance(markPanel.point3) <= 10) {
-					index = 1;
-					markPanel.flag = UNIFY;
-				} else if (markPanel.point4 != null && start.distance(markPanel.point4) <= 10) {
-					index = 2;
-					markPanel.flag = UNIFY;
-				} else {
-					markPanel.point1 = e.getPoint();
-					markPanel.flag = ROTATE;
-				}
+				markPanel.point1 = e.getPoint();
+				markPanel.flag = ROTATE;
 			} else if (e.getButton() == MouseEvent.BUTTON3) {
 				markPanel.point1 = e.getPoint();
 				markPanel.flag = CROP;
@@ -163,13 +168,7 @@ public class EditableImageView extends ImageView implements IImageBinder {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			if (markPanel.flag == UNIFY) {
-				index = 0;
-
-				unifyBinded();
-				return;
-			}
-			if (escPressed) {
+			if (panel.getImage() == null || escPressed) {
 				return;
 			}
 			Point end = e.getPoint();
@@ -216,6 +215,48 @@ public class EditableImageView extends ImageView implements IImageBinder {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			if (panel.getImage() == null || escPressed)
+				return;
+			markPanel.point2 = e.getPoint();
+			markPanel.repaint();
+
+		}
+
+	}
+	
+	class UnifiableMouseAdapter extends MouseAdapter {
+		Point start;
+		private int index = 0;
+
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			requestFocus(true);
+			start = e.getPoint();
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				if (markPanel.point3 != null && start.distance(markPanel.point3) <= 10) {
+					index = 1;
+					markPanel.flag = UNIFY;
+				} else if (markPanel.point4 != null && start.distance(markPanel.point4) <= 10) {
+					index = 2;
+					markPanel.flag = UNIFY;
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			if (markPanel.flag == UNIFY) {
+				index = 0;
+
+				unifyBinded();
+				return;
+			}
+			markPanel.repaint();
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
 			if (markPanel.flag == UNIFY) {
 				if (index == 0)
 					return;
@@ -224,11 +265,6 @@ public class EditableImageView extends ImageView implements IImageBinder {
 				markPanel.repaint();
 
 				return;
-			}
-			if (!escPressed) {
-				markPanel.point2 = e.getPoint();
-				markPanel.repaint();
-
 			}
 
 		}
@@ -289,7 +325,12 @@ public class EditableImageView extends ImageView implements IImageBinder {
 		double radius = bindedRadius - Math.atan2((p2.y - p1.y), (double) (p2.x - p1.x));
 		if (radius == 0d)
 			return;
-		imageBinder.rotate(-radius);
+		if (!binded) {
+			imageBinder.rotate(-radius);
+		} else {
+			this.rotate(radius);
+		}
+		
 	}
 
 	class MouseDoubleClickAdapter extends MouseAdapter {

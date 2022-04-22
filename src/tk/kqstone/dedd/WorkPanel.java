@@ -26,11 +26,11 @@ public class WorkPanel extends Container {
 	public static final int BASE_VIEW = 0;
 	public static final int FRONT_VIEW = 1;
 
-	public static final int STATUS_EDITIMAGE = 0;
+	public static final int STATUS_UNIFYIMAGE = 0;
 	public static final int STATUS_MARKTEETH = 1;
 	public static final int STATUS_ADJUSTTEETH = 2;
 	public static final int STATUS_MARKLIP = 3;
-	public static final int STATUS_LOADIMAGE = 4;
+	public static final int STATUS_EDITIMAGE = 4;
 
 	private int viewId;
 
@@ -102,7 +102,7 @@ public class WorkPanel extends Container {
 		adjustPanel.setBounds(0, 0, this.getWidth(), this.getHeight());
 		this.add(adjustPanel, 0);
 
-		status = WorkPanel.STATUS_LOADIMAGE;
+		status = WorkPanel.STATUS_EDITIMAGE;
 		
 		zoomInvoker = new ZoomInvoker();
 		zoomInvoker.addReceiver(imageView);
@@ -135,35 +135,35 @@ public class WorkPanel extends Container {
 		adjustPanel.initialize(adjustTeeth);
 	}
 
-	public void load() {
-		if (imageView == null)
-			return;
-		if (markLipPanel != null && markLipPanel.isVisible()) {
-			markLipPanel.setVisible(false);
-		}
-		imageView.setLoadable(true);
-		imageView.setEditable(false);
-		if (markPanel.isVisible())
-			markPanel.setVisible(false);
-		if (adjustPanel.isVisible())
-			adjustPanel.setVisible(false);
-		status = WorkPanel.STATUS_EDITIMAGE;
-	}
-
 	public void edit() {
 		if (imageView == null)
 			return;
 		if (markLipPanel != null && markLipPanel.isVisible()) {
 			markLipPanel.setVisible(false);
 		}
-		imageView.setLoadable(false);
-		if (imageView.isEditable() != true)
-			imageView.setEditable(true);
+		imageView.setEditable(true);
+		imageView.setUnifiable(false);
 		if (markPanel.isVisible())
 			markPanel.setVisible(false);
 		if (adjustPanel.isVisible())
 			adjustPanel.setVisible(false);
-		status = WorkPanel.STATUS_EDITIMAGE;
+		status = WorkPanel.STATUS_UNIFYIMAGE;
+	}
+
+	public void unify() {
+		if (imageView == null)
+			return;
+		if (markLipPanel != null && markLipPanel.isVisible()) {
+			markLipPanel.setVisible(false);
+		}
+		imageView.setEditable(false);
+		if (imageView.isUnifiable() != true)
+			imageView.setUnifiable(true);
+		if (markPanel.isVisible())
+			markPanel.setVisible(false);
+		if (adjustPanel.isVisible())
+			adjustPanel.setVisible(false);
+		status = WorkPanel.STATUS_UNIFYIMAGE;
 	}
 
 	public void marklip() {
@@ -175,7 +175,7 @@ public class WorkPanel extends Container {
 		if (adjustPanel.isVisible())
 			adjustPanel.setVisible(false);
 
-		((EditableImageView) imageView).setEditable(false);
+		((EditableImageView) imageView).setUnifiable(false);
 		status = WorkPanel.STATUS_MARKLIP;
 	}
 
@@ -188,7 +188,7 @@ public class WorkPanel extends Container {
 		if (adjustPanel.isVisible())
 			adjustPanel.setVisible(false);
 
-		((EditableImageView) imageView).setEditable(false);
+		((EditableImageView) imageView).setUnifiable(false);
 		status = WorkPanel.STATUS_MARKTEETH;
 	}
 
@@ -224,7 +224,7 @@ public class WorkPanel extends Container {
 			markPanel.setVisible(false);
 		if (!adjustPanel.isVisible())
 			adjustPanel.setVisible(true);
-		((EditableImageView) imageView).setEditable(false);
+		((EditableImageView) imageView).setUnifiable(false);
 		status = WorkPanel.STATUS_ADJUSTTEETH;
 	}
 
@@ -244,7 +244,7 @@ public class WorkPanel extends Container {
 			markPanel.setVisible(false);
 		if (!adjustPanel.isVisible())
 			adjustPanel.setVisible(true);
-		((EditableImageView) imageView).setEditable(false);
+		((EditableImageView) imageView).setUnifiable(false);
 		status = WorkPanel.STATUS_ADJUSTTEETH;
 //		addMaskToAdjustPanel();
 	}
@@ -283,8 +283,8 @@ public class WorkPanel extends Container {
 			if (modeChanged)
 				adjustPanel.changeMode(currentMode);
 			switch (currentStatus) {
-			case STATUS_EDITIMAGE:
-				edit();
+			case STATUS_UNIFYIMAGE:
+				unify();
 				break;
 			case STATUS_MARKTEETH:
 				mark();
