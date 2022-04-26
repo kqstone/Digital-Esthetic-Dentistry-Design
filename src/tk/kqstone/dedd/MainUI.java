@@ -54,7 +54,7 @@ import tk.kqstone.dedd.ui.IMethod;
 import tk.kqstone.dedd.ui.SuspendTip;
 import tk.kqstone.dedd.ui.TabEvent;
 import tk.kqstone.dedd.ui.TabPanel;
-import tk.kqstone.dedd.ui.TabPanel.IconButton;
+import tk.kqstone.dedd.ui.IconButton;
 import tk.kqstone.dedd.ui.TabStateChangeListener;
 import tk.kqstone.dedd.ui.TitleBar;
 

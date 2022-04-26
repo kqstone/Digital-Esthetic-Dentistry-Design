@@ -23,9 +23,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import tk.kqstone.dedd.ui.IconButton;
+import java.awt.Container;
+import java.awt.FlowLayout;
 
 /**
  * ImageView that can double clicked to open photo and drag to rotate or crop
@@ -34,6 +39,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  */
 public class EditableImageView extends ImageView implements IImageBinder {
+
+	private final static String URL_ROTATERIGHT = "/img/rotate_right_90.png";
+	private final static String URL_ROTATELEFT = "/img/rotate_left_90.png";
 
 	private static final int POINT_RADIUS = 4;
 
@@ -57,6 +65,9 @@ public class EditableImageView extends ImageView implements IImageBinder {
 	private MouseAdapter doubleClickAdapter;
 	private MouseAdapter unifiablemouseAdapter;
 	private EditableKeyAdapter keyAdapter;
+	
+	private IconButton rotateL90DButton;
+	private IconButton rotateR90DButton;
 
 	private boolean escPressed;
 
@@ -70,6 +81,34 @@ public class EditableImageView extends ImageView implements IImageBinder {
 		unifiable = false;
 		editable = false;
 		escPressed = false;
+		rotateL90DButton = new IconButton(Constant.ROTATE_LEFT_90D,
+				new ImageIcon(this.getClass().getResource(URL_ROTATELEFT)));
+		rotateR90DButton = new IconButton(Constant.ROTATE_RIGHT_90D,
+				new ImageIcon(this.getClass().getResource(URL_ROTATERIGHT)));
+		Container btnCtn = new Container();
+		btnCtn.setLayout(new FlowLayout(FlowLayout.CENTER));
+		btnCtn.add(rotateL90DButton);
+		btnCtn.add(rotateR90DButton);
+		
+		this.add(btnCtn, BorderLayout.SOUTH);
+		
+		MouseListener l = new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					Object source = e.getSource();
+					if (source.equals(rotateL90DButton)) {
+						rotate(- Math.PI / 2);
+					} else if(source.equals(rotateR90DButton)) {
+						rotate(Math.PI / 2);
+					} 
+				}
+			}
+			
+		};
+		rotateL90DButton.addMouseListener(l);
+		rotateR90DButton.addMouseListener(l);
 	}
 
 	public void bind(IImageBinder imageBinder) {
@@ -109,6 +148,8 @@ public class EditableImageView extends ImageView implements IImageBinder {
 			this.removeMouseMotionListener(editableMouseAdapter);
 			this.removeKeyListener(keyAdapter);
 		}
+		rotateL90DButton.setVisible(editable);
+		rotateR90DButton.setVisible(editable);
 		this.editable = editable;
 	}
 

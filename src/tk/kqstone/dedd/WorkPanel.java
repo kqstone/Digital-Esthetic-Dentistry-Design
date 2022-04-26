@@ -176,6 +176,7 @@ public class WorkPanel extends Container {
 			adjustPanel.setVisible(false);
 
 		((EditableImageView) imageView).setUnifiable(false);
+		imageView.setEditable(false);
 		status = WorkPanel.STATUS_MARKLIP;
 	}
 
@@ -189,6 +190,7 @@ public class WorkPanel extends Container {
 			adjustPanel.setVisible(false);
 
 		((EditableImageView) imageView).setUnifiable(false);
+		imageView.setEditable(false);
 		status = WorkPanel.STATUS_MARKTEETH;
 	}
 
@@ -245,6 +247,7 @@ public class WorkPanel extends Container {
 		if (!adjustPanel.isVisible())
 			adjustPanel.setVisible(true);
 		((EditableImageView) imageView).setUnifiable(false);
+		imageView.setEditable(false);
 		status = WorkPanel.STATUS_ADJUSTTEETH;
 //		addMaskToAdjustPanel();
 	}
