@@ -66,13 +66,8 @@
 # If your code contains serializable classes that have to be backward 
 # compatible, please refer to the manual.
 
--keepclassmembers class * implements java.io.Serializable {
+-keepclasseswithmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
-    static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
 }
 
 # Your application may contain more items that need to be preserved; 
