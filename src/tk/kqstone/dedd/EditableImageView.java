@@ -98,11 +98,14 @@ public class EditableImageView extends ImageView implements IImageBinder {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					Object source = e.getSource();
+					BufferedImage image = null;
 					if (source.equals(rotateL90DButton)) {
-						rotate(- Math.PI / 2);
+						image = ImageUtils.rotate90D(getImage(), "left");
 					} else if(source.equals(rotateR90DButton)) {
-						rotate(Math.PI / 2);
+						image = ImageUtils.rotate90D(getImage(), "right");
+						
 					} 
+					setImage(image);
 				}
 			}
 			

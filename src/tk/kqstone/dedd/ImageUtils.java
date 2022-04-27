@@ -11,20 +11,77 @@ import java.io.IOException;
 
 public class ImageUtils {
 
-	public static BufferedImage rotate(BufferedImage oriImage, double radians) {
+	public static BufferedImage rotate(BufferedImage oriImage, int angle, boolean adaptiveSize) {
 		if (oriImage == null) {
 			return null;
 		}
 
-		int imageWidth = oriImage.getWidth(null);
-		int imageHeight = oriImage.getHeight(null);
+		int src_width = oriImage.getWidth(null);
+		int src_height = oriImage.getHeight(null);
+		int dst_width = src_width;
+		int dst_height = src_height;
+		if (adaptiveSize) {
+			Rectangle rect_des = calculatorRotatedSize(new Rectangle(new Dimension(src_width, src_width)), angle);
+			dst_width = rect_des.width;
+			dst_height = rect_des.height;
+
+		}
 
 		int type = oriImage.getColorModel().getTransparency();
 		BufferedImage newImage = null;
-		newImage = new BufferedImage(imageWidth, imageHeight, type);
+		newImage = new BufferedImage(dst_width, dst_height, type);
 		Graphics2D graphics = newImage.createGraphics();
+		graphics.translate((dst_width - src_width) / 2, (dst_height - src_height) / 2);
 		// 旋转角度
-		graphics.rotate(radians, imageWidth / 2, imageHeight / 2);
+		graphics.rotate(Math.toRadians(angle), src_width / 2, src_height / 2);
+		// 绘图
+		graphics.drawImage(oriImage, null, null);
+		return newImage;
+	}
+	
+	public static BufferedImage rotate(BufferedImage oriImage, double radius) {
+		if (oriImage == null) {
+			return null;
+		}
+
+		int src_width = oriImage.getWidth(null);
+		int src_height = oriImage.getHeight(null);
+
+		int type = oriImage.getColorModel().getTransparency();
+		BufferedImage newImage = null;
+		newImage = new BufferedImage(src_width, src_height, type);
+		Graphics2D graphics = newImage.createGraphics();		
+		graphics.rotate(radius, src_width / 2, src_height / 2);
+		// 绘图
+		graphics.drawImage(oriImage, null, null);
+		return newImage;
+	}
+	
+	public static BufferedImage rotate90D(BufferedImage oriImage, String direction) {
+		if (oriImage == null)
+			return null;
+
+		double radius = 0d;
+		switch (direction) {
+		case "left":
+			radius = -Math.PI / 2;
+			break;
+		case "right":
+			radius = Math.PI / 2;
+			break;
+		}
+		int src_width = oriImage.getWidth(null);
+		int src_height = oriImage.getHeight(null);
+		int dst_width = src_height;
+		int dst_height = src_width;
+
+		int type = oriImage.getColorModel().getTransparency();
+		BufferedImage newImage = null;
+		newImage = new BufferedImage(dst_width, dst_height, type);
+		Graphics2D graphics = newImage.createGraphics();
+		graphics.translate((dst_width - src_width) / 2, (dst_height - src_height) / 2);
+		// 旋转角度
+		graphics.rotate(radius, src_width / 2, src_height / 2);
 		// 绘图
 		graphics.drawImage(oriImage, null, null);
 		return newImage;
@@ -207,5 +264,20 @@ public class ImageUtils {
 		int des_height = src.height + len_dalta_height * 2;
 		return new java.awt.Rectangle(new Dimension(des_width, des_height));
 	}
+	
+	private static Rectangle calculatorRotatedSize(Rectangle src, double radians) {
+		double r = Math.sqrt(src.height * src.height + src.width * src.width) / 2;
+		double len = 2 * Math.sin(radians / 2) * r;
+		double angel_alpha = (Math.PI - radians) / 2;
+		double angel_dalta_width = Math.atan((double) src.height / src.width);
+		double angel_dalta_height = Math.atan((double) src.width / src.height);
+
+		int len_dalta_width = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_width));
+		int len_dalta_height = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_height));
+		int des_width = src.width + len_dalta_width * 2;
+		int des_height = src.height + len_dalta_height * 2;
+		return new java.awt.Rectangle(new Dimension(des_width, des_height));
+	}
+
 
 }
