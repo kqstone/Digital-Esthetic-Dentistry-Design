@@ -367,7 +367,7 @@ public class WorkSpace extends Container implements IMenmento{
 		
 	}
 	
-	public void autoAdjust() {
+	public void autoAdjust() throws Exception {
 		TeethAdjustPanel baseAdjustPanel = basePanel.getAdjustPanel();
 		TeethAdjustPanel frontAdjustPanel = frontPanel.getAdjustPanel();
 		if (baseAdjustPanel != null)

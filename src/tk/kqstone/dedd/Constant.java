@@ -91,5 +91,7 @@ public final class Constant {
 	public static final String MENU_DESIGN = "设计";
 	public static final String RE_ADJUST = "重新设计";
 	public static final String UNIFYPLAN = "平行合平面";
+	public static final String CONNECTION_ERROR = "无法连接至服务器或服务器无响应，请稍后重试......";
+	public static final String ERROR = "错误";
 
 }

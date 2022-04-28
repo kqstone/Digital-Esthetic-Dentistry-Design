@@ -45,10 +45,10 @@ public class TeethOptimizer implements IOptimizer {
 	}
 
 	@Override
-	public void optimize() {};
+	public void optimize() throws Exception {};
 	
 	@Override
-	public void align() {};
+	public void align() throws Exception {};
 
 	@Override
 	public void analysis() {
