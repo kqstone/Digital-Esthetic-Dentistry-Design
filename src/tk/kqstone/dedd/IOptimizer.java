@@ -18,8 +18,8 @@ public interface IOptimizer {
 
 	void analysis();
 
-	void optimize();
+	void optimize() throws Exception;
 
-	void align();
+	void align() throws Exception;
 
 }

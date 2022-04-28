@@ -15,12 +15,12 @@ public class NetTeethOptimizer extends TeethOptimizer {
 	public static final int PORT = 12061;
 
 	@Override
-	public void optimize() {
+	public void optimize() throws Exception {
 		process(Teeth.FUNC_OPTIMIZE);
 	}
 
 	@Override
-	public void align() {
+	public void align() throws Exception {
 		process(Teeth.FUNC_ALIGN);
 	}
 
@@ -30,7 +30,7 @@ public class NetTeethOptimizer extends TeethOptimizer {
 
 	}
 
-	private void process(int function) {
+	private void process(int function) throws Exception {
 		try (Socket sock = new Socket(NET_ADRESS, PORT)) {
 			try (ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
 					ObjectInputStream ois = new ObjectInputStream(sock.getInputStream())) {
@@ -49,6 +49,7 @@ public class NetTeethOptimizer extends TeethOptimizer {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new Exception(e);
 		}
 	}
 

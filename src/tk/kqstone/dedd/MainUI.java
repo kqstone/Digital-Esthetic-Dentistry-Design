@@ -266,7 +266,7 @@ public class MainUI extends JFrame {
 				} else if (source.equals(redoButton)) {
 					workspace.redo();
 				} else if (source.equals(autoAdjustButton)) {
-					workspace.autoAdjust();
+					autoAdjust();
 				} else if (source.equals(regenAdjustButton)) {
 					workspace.reGenAdjustTeeth();
 				}
@@ -522,7 +522,7 @@ public class MainUI extends JFrame {
 			} else if (source.equals(undoMenuItem)) {
 				workspace.undo();
 			} else if (source.equals(autoAdjustMenuItem)) {
-				workspace.autoAdjust();
+				autoAdjust();
 			} else if (source.equals(regenAdjustMenuItem)) {
 				workspace.reGenAdjustTeeth();
 			}
@@ -734,4 +734,14 @@ public class MainUI extends JFrame {
 		this.setProjFile(null);
 		TeethMarkDataMemento.getInstance().clear();
 	}
+	
+	private void autoAdjust() {
+		try {
+			workspace.autoAdjust();
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, Constant.CONNECTION_ERROR, Constant.ERROR, JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 }
