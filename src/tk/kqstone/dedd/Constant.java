@@ -93,6 +93,8 @@ public final class Constant {
 	public static final String UNIFYPLAN = "平行合平面";
 	public static final String ROTATE_LEFT_90D = "向左旋转90°";
 	public static final String ROTATE_RIGHT_90D = "向右旋转90°";
-	public static final String CONNECTION_ERROR = "无法连接至服务器或服务器无响应，请稍后重试......";
+	public static final String CONNECTION_ERROR = "无法连接服务器，请重试!";
 	public static final String ERROR = "错误";
+	public static final String AUTO_ADJUSTING = "自动优化调整中...";
+	public static final String FINISH = "完成";
 }

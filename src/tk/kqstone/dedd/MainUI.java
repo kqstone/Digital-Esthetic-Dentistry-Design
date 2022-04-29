@@ -736,12 +736,16 @@ public class MainUI extends JFrame {
 	}
 	
 	private void autoAdjust() {
-		try {
-			workspace.autoAdjust();
-		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, Constant.CONNECTION_ERROR, Constant.ERROR, JOptionPane.ERROR_MESSAGE);
-		}
+		SuspendTip tip = new SuspendTip(this, Constant.AUTO_ADJUSTING, Constant.FINISH, Constant.CONNECTION_ERROR);
+		tip.addMethod(new IMethod() {
+
+			@Override
+			public void run() throws Exception {
+				workspace.autoAdjust();
+			}
+		});
+		tip.run();
+
 	}
 
 }

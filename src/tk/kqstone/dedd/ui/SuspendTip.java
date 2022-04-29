@@ -25,11 +25,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import tk.kqstone.dedd.Constant;
+
 public class SuspendTip extends JDialog {
 
 	private static final int DEFAULT_WIDTH = 200;
 	private static final int DEFAULT_HEIGHT = 120;
 	private final JLabel label;
+	private String finishMessage;
+	private String errorMessage;
 	private final GifPane gifPane;
 	private Thread thread;
 	private Runnable runnable;
@@ -64,12 +68,21 @@ public class SuspendTip extends JDialog {
 		root.add(Box.createVerticalStrut(10));
 
 		runnable = new CRunnable();
+		errorMessage = Constant.ERROR;
+		finishMessage = Constant.FINISH;
 
 	}
 
 	public SuspendTip(Frame owner, String tip) {
 		this(owner);
 		label.setText(tip);
+	}
+	
+	public SuspendTip(Frame owner, String tip, String finishMessage, String errorMessage) {
+		this(owner);
+		label.setText(tip);
+		this.finishMessage = finishMessage;
+		this.errorMessage = errorMessage;
 	}
 
 	public void addMethod(IMethod iMethod) {
@@ -88,6 +101,7 @@ public class SuspendTip extends JDialog {
 	}
 
 	class CRunnable implements Runnable {
+		boolean result = false;
 
 		@Override
 		public void run() {
@@ -102,16 +116,41 @@ public class SuspendTip extends JDialog {
 			});
 			try {
 				iMethod.run();
+				label.setText(finishMessage);
+				result = true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				label.setText(errorMessage);
 			} finally {
 				SwingUtilities.invokeLater(new Runnable() {
 
 					@Override
 					public void run() {
-						gifPane.stop();
-						SuspendTip.this.dispose();
+						gifPane.stop();						
 					}
 
 				});
+				Thread thread = new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(result ? 300 : 2000);
+							SwingUtilities.invokeLater(new Runnable() {
+
+								@Override
+								public void run() {
+									SuspendTip.this.dispose();
+									
+								}});
+							
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}});
+				thread.start();
+				
 			}
 
 		}
