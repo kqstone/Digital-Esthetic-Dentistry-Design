@@ -6,6 +6,10 @@ import java.io.Serializable;
 
 public abstract class Rect2D implements Serializable {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7423037584446128627L;
+	/**
 	 * NorthWest point flag
 	 */
 	public static final int POINT_NW = 1;
@@ -68,6 +72,10 @@ public abstract class Rect2D implements Serializable {
 	public static final int LINE_W = 14;
 
 	public static class Float extends Rect2D {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4125724573048564013L;
 		Point2D.Float point1;
 		Point2D.Float point4;
 

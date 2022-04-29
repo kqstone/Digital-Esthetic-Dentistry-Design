@@ -26,7 +26,7 @@ public class NetTeethOptimizer extends TeethOptimizer {
 
 	@Override
 	public void analysis() {
-		// TODO Auto-generated method stub
+		super.analysis();
 
 	}
 

@@ -66,13 +66,17 @@
 # If your code contains serializable classes that have to be backward 
 # compatible, please refer to the manual.
 
--keepclasseswithmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-}
+ -keepclassmembers class * implements java.io.Serializable {
+     static final long serialVersionUID;
+ }
 
 # Your application may contain more items that need to be preserved; 
 # typically classes that are dynamically created using Class.forName:
 
-# -keep public class com.example.MyClass
+-keep public class tk.kqstone.dedd.Teeth { *; }
+-keep public class tk.kqstone.dedd.Tooth { *; }
+-keep public class tk.kqstone.dedd.Rect2D { *; }
+-keep public class tk.kqstone.dedd.Rect2D$* { *; }
+
 # -keep public interface com.example.MyInterface
 # -keep public class * implements com.example.MyInterface
