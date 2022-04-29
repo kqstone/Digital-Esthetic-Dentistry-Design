@@ -17,6 +17,7 @@ public class TeethOptimizer implements IOptimizer {
 	List<Tooth> dstTeeth;
 
 	public TeethOptimizer() {
+		oriTeeth = new ArrayList<>();
 		dstTeeth = new ArrayList<>();
 	}
 
