@@ -27,13 +27,15 @@ import javax.swing.JPanel;
  *
  */
 public class TeethAdjustPanel extends ZoomableJPanel {
-	public static final int MODE_CONTOUR = 0;
-	public static final int MODE_REAL = 1;
+	public static final int MODE_CONTOUR = 1;
+	public static final int MODE_REAL = 2;
+	public static final int MODE_NONE = 0;
 	private Map<Integer, BufferedImage> teethContourImage;
 	private Map<Integer, BufferedImage> teethRealImage;
 	private List<ToothPanel> teethPanel;
 	private ImageView mask;
 	private int showMode;
+	private boolean showContour;
 	private boolean showBorderAndText;
 	private boolean dragable;
 
@@ -46,6 +48,7 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 		this.setOpaque(false);
 		teethPanel = new ArrayList<>();
 		showMode = MODE_CONTOUR;
+		showContour = true;
 		showBorderAndText = true;
 		dragable = true;
 		bright = 0;
@@ -129,8 +132,8 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON2) {
-				int mode = (showMode == MODE_REAL) ? MODE_CONTOUR : MODE_REAL;
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				int mode = (showMode == MODE_REAL) ? (showContour ? MODE_CONTOUR : MODE_NONE) : MODE_REAL;
 				changeMode(mode);
 			}
 		}
@@ -174,6 +177,7 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 		BufferedImage image;
 		boolean showBorder;
 		boolean showText;
+		boolean visible = true;
 
 		if (showMode == MODE_REAL) {
 			image = teethRealImage.get(site);
@@ -193,6 +197,9 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 		tp.setLabelVisable(showBorderAndText ? showText : false);
 		tp.getSimpleDrawableBorderRect().setDrawBorder(showBorderAndText ? showBorder : false);
 		tp.setImage(image);
+		if (showMode == MODE_NONE) 
+			visible = false;
+		tp.setVisible(visible);
 		for (ToothPanel tp1 : teethPanel) {
 			int tmpsite = tp1.getSite();
 			if (site != tmpsite && site % 10 == tmpsite % 10) {
@@ -305,34 +312,48 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 			return;
 		showMode = mode;
 		for (ToothPanel tooth : teethPanel) {
-			int site = tooth.getSite();
-			BufferedImage image;
-			boolean showBorder;
-			boolean showText;
-			if (mode == MODE_REAL) {
-				image = teethRealImage.get(site);
-				try {
-					image = ImageUtils.adjustBrightAndYellow(image, bright, yellow);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				showBorder = false;
-				showText = false;
+			if (mode == MODE_NONE) {
+				tooth.setVisible(false);
 			} else {
-				image = teethContourImage.get(site);
-				showBorder = true;
-				showText = true;
+				int site = tooth.getSite();
+				BufferedImage image;
+				boolean showBorder;
+				boolean showText;
+				if (mode == MODE_REAL) {
+					image = teethRealImage.get(site);
+					try {
+						image = ImageUtils.adjustBrightAndYellow(image, bright, yellow);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					showBorder = false;
+					showText = false;
+				} else {
+					image = teethContourImage.get(site);
+					showBorder = true;
+					showText = true;
+				}
+				tooth.setImage(image);
+				tooth.setLabelVisable(showBorderAndText ? showText : false);
+				tooth.getSimpleDrawableBorderRect().setDrawBorder(showBorderAndText ? showBorder : false);
+				tooth.setVisible(true);
+				tooth.repaint();
 			}
-			tooth.setImage(image);
-			tooth.setLabelVisable(showBorderAndText ? showText : false);
-			tooth.getSimpleDrawableBorderRect().setDrawBorder(showBorderAndText ? showBorder : false);
-			tooth.repaint();
+			
 		}
 	}
 
 	public int getMode() {
 		return this.showMode;
+	}
+
+	public void setShowMode(int showMode) {
+		this.showMode = showMode;
+	}
+
+	public void setShowContour(boolean showContour) {
+		this.showContour = showContour;
 	}
 
 	public void setDragable(boolean dragable) {

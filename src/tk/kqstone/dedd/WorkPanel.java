@@ -96,6 +96,8 @@ public class WorkPanel extends Container {
 			adjustPanel.setDragable(true);
 		} else {
 			adjustPanel = new TeethAdjustPanel(TeethImage.getTeethContour(), TeethImage.getTeethRealFront(), false);
+			adjustPanel.setShowMode(TeethAdjustPanel.MODE_REAL);
+			adjustPanel.setShowContour(false);
 			adjustPanel.setDragable(false);
 		}
 
