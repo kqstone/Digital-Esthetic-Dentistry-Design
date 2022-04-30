@@ -190,10 +190,14 @@ public class EditableImageView extends ImageView implements IImageBinder {
 				double scale = panel.getScale();
 				int scalType = panel.getScaleType();
 				Rect rect = new Rect(start, end);
-				int x1 = (int) (rect.getx1() / scale);
-				int y1 = (int) (rect.gety1() / scale);
-				int x2 = (int) (rect.getx2() / scale);
-				int y2 = (int) (rect.gety2() / scale);
+				int x1 = Math.round((start.x-panel.offsetX) / panel.proportion);
+				int y1 = Math.round((start.y-panel.offsetY) / panel.proportion);
+				int x2 = Math.round((end.x-panel.offsetX) / panel.proportion);
+				int y2 = Math.round((end.y-panel.offsetY) / panel.proportion);
+				x1 = (int) (x1 / scale);
+				y1 = (int) (y1 / scale);
+				x2 = (int) (x2 / scale);
+				y2 = (int) (y2 / scale);
 				if (scalType == ImageView.SCALE_ADAPT_WIDTH) {
 					int offset = (int) ((panel.getHeight() / scale - image.getHeight()) / 2);
 					y1 = y1 - offset;
@@ -203,12 +207,16 @@ public class EditableImageView extends ImageView implements IImageBinder {
 					x1 = x1 - offset;
 					x2 = x2 - offset;
 				}
+				
+				
 
 				Point p1 = new Point(x1, y1);
 				Point p2 = new Point(x2, y2);
 
+				
 				BufferedImage img = ImageUtils.crop(image, new Rect(p1, p2));
 				panel.setImage(img);
+				panel.zoom(1.0f, 0, 0);
 			} else if (markPanel.flag == EditableImageView.ROTATE) {
 				int width = end.x - start.x;
 				int height = end.y - start.y;
