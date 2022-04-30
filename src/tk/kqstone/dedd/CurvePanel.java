@@ -29,6 +29,7 @@ public class CurvePanel extends ZoomableJPanel {
 		this.setOpaque(false);
 		points = new ArrayList<>();
 		showPoints = new ArrayList<>();
+		showPath = new GeneralPath();
 		MouseAdapter adapter = new MouseActionAdapter();
 		this.addMouseListener(adapter);
 		this.addMouseMotionListener(adapter);
