@@ -43,9 +43,6 @@ import java.awt.FlowLayout;
  */
 public class EditableImageView extends ImageView implements IImageBinder {
 
-	private final static String URL_ROTATERIGHT = "/img/rotate_right_90.png";
-	private final static String URL_ROTATELEFT = "/img/rotate_left_90.png";
-
 	private static final int POINT_RADIUS = 4;
 
 	private static final int CROP = 0;
@@ -69,7 +66,7 @@ public class EditableImageView extends ImageView implements IImageBinder {
 	private MouseAdapter unifiablemouseAdapter;
 	private EditableKeyAdapter keyAdapter;
 	
-	private IconButtonPane iconButtons;
+//	private IconButtonPane iconButtons;
 
 	private boolean escPressed;
 
@@ -83,28 +80,6 @@ public class EditableImageView extends ImageView implements IImageBinder {
 		unifiable = false;
 		editable = false;
 		escPressed = false;
-		iconButtons = new IconButtonPane();
-		IconButton rotateL90DButton = new IconButton(Constant.ROTATE_LEFT_90D,
-				new ImageIcon(this.getClass().getResource(URL_ROTATELEFT)));
-		IconButton rotateR90DButton = new IconButton(Constant.ROTATE_RIGHT_90D,
-				new ImageIcon(this.getClass().getResource(URL_ROTATERIGHT)));
-		iconButtons.addButton(rotateL90DButton, new IMethod() {
-
-			@Override
-			public void run() throws Exception {
-				BufferedImage image = ImageUtils.rotate90D(getImage(), "left");
-				setImage(image);
-			}
-		});
-		iconButtons.addButton(rotateR90DButton, new IMethod() {
-
-			@Override
-			public void run() throws Exception {
-				BufferedImage image = ImageUtils.rotate90D(getImage(), "right");
-				setImage(image);
-			}
-		});
-		this.add(iconButtons, BorderLayout.SOUTH);
 	}
 
 	public void bind(IImageBinder imageBinder) {
@@ -144,7 +119,6 @@ public class EditableImageView extends ImageView implements IImageBinder {
 			this.removeMouseMotionListener(editableMouseAdapter);
 			this.removeKeyListener(keyAdapter);
 		}
-		iconButtons.setVisible(editable);
 		this.editable = editable;
 	}
 

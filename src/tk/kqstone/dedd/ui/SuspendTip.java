@@ -115,7 +115,7 @@ public class SuspendTip extends JDialog {
 
 			});
 			try {
-				iMethod.run();
+				iMethod.run(null);
 				label.setText(finishMessage);
 				result = true;
 			} catch (Exception e) {

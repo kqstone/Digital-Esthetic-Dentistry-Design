@@ -19,7 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
+import tk.kqstone.dedd.ui.IMethod;
+import tk.kqstone.dedd.ui.IconButton;
+import tk.kqstone.dedd.ui.IconButtonPane;
 
 public class WorkPanel extends Container {
 
@@ -38,6 +43,9 @@ public class WorkPanel extends Container {
 	private CurvePanel markLipPanel;
 	private TeethMarkPanel markPanel;
 	private TeethAdjustPanel adjustPanel;
+	
+	private IconButtonPane imageEditButtonPane;
+	private IconButtonPane teethAdjustButtonPane;
 
 	protected List<Tooth> markedTeeth;
 
@@ -104,6 +112,8 @@ public class WorkPanel extends Container {
 		adjustPanel.setBounds(0, 0, this.getWidth(), this.getHeight());
 		this.add(adjustPanel, 0);
 
+		initIconButtonPane();
+		
 		status = WorkPanel.STATUS_EDITIMAGE;
 		
 		zoomInvoker = new ZoomInvoker();
@@ -137,6 +147,57 @@ public class WorkPanel extends Container {
 		adjustPanel.initialize(adjustTeeth);
 	}
 
+	private void initIconButtonPane() {
+		imageEditButtonPane = new IconButtonPane();
+		this.add(imageEditButtonPane, 0);
+		imageEditButtonPane.setBounds(0, this.getHeight() - 50, this.getWidth(), this.getHeight());
+		final IconButton rotateL90DButton = new IconButton(Constant.ROTATE_LEFT_90D,
+				new ImageIcon(this.getClass().getResource(Resources.URL_ROTATELEFT)));
+		final IconButton rotateR90DButton = new IconButton(Constant.ROTATE_RIGHT_90D,
+				new ImageIcon(this.getClass().getResource(Resources.URL_ROTATERIGHT)));
+		imageEditButtonPane.addButton(rotateL90DButton);
+		imageEditButtonPane.addButton(rotateR90DButton);
+		imageEditButtonPane.addActions(new IMethod() {
+
+			@Override
+			public void run(Object obj) throws Exception {
+				if (obj.equals(rotateL90DButton)) {
+					BufferedImage image = ImageUtils.rotate90D(getImage(), "left");
+					imageView.setImage(image);
+				} else if (obj.equals(rotateR90DButton)) {
+					BufferedImage image = ImageUtils.rotate90D(getImage(), "right");
+					imageView.setImage(image);
+				}
+			}
+		});
+
+		teethAdjustButtonPane = new IconButtonPane();
+		this.add(teethAdjustButtonPane, 0);
+		teethAdjustButtonPane.setBounds(0, this.getHeight() - 50, this.getWidth(), this.getHeight());
+		final IconButton contourButton = new IconButton(Constant.SHOW_CONTOUR,
+				new ImageIcon(this.getClass().getResource(Resources.URL_MODE_CONTOUR)));
+		final IconButton realButton = new IconButton(Constant.SHOW_REAL,
+				new ImageIcon(this.getClass().getResource(Resources.URL_MODE_REAL)));
+		final IconButton noneButton = new IconButton(Constant.SHOW_NONE,
+				new ImageIcon(this.getClass().getResource(Resources.URL_MODE_NONE)));
+		teethAdjustButtonPane.addButton(contourButton);
+		teethAdjustButtonPane.addButton(realButton);
+		teethAdjustButtonPane.addButton(noneButton);
+		teethAdjustButtonPane.addActions(new IMethod() {
+
+			@Override
+			public void run(Object obj) throws Exception {
+				if (obj.equals(contourButton)) {
+					adjustPanel.changeMode(TeethAdjustPanel.MODE_CONTOUR);
+				} else if (obj.equals(realButton)) {
+					adjustPanel.changeMode(TeethAdjustPanel.MODE_REAL);
+				} else if (obj.equals(noneButton)) {
+					adjustPanel.changeMode(TeethAdjustPanel.MODE_NONE);
+				}
+			}
+		});
+	}
+
 	public void edit() {
 		if (imageView == null)
 			return;
@@ -149,6 +210,10 @@ public class WorkPanel extends Container {
 			markPanel.setVisible(false);
 		if (adjustPanel.isVisible())
 			adjustPanel.setVisible(false);
+		if (! imageEditButtonPane.isVisible())
+			imageEditButtonPane.setVisible(true);
+		if (teethAdjustButtonPane.isVisible())
+			teethAdjustButtonPane.setVisible(false);
 		status = WorkPanel.STATUS_UNIFYIMAGE;
 	}
 
@@ -165,6 +230,10 @@ public class WorkPanel extends Container {
 			markPanel.setVisible(false);
 		if (adjustPanel.isVisible())
 			adjustPanel.setVisible(false);
+		if (imageEditButtonPane.isVisible())
+			imageEditButtonPane.setVisible(false);
+		if (teethAdjustButtonPane.isVisible())
+			teethAdjustButtonPane.setVisible(false);
 		status = WorkPanel.STATUS_UNIFYIMAGE;
 	}
 
@@ -179,6 +248,10 @@ public class WorkPanel extends Container {
 
 		((EditableImageView) imageView).setUnifiable(false);
 		imageView.setEditable(false);
+		if (imageEditButtonPane.isVisible())
+			imageEditButtonPane.setVisible(false);
+		if (teethAdjustButtonPane.isVisible())
+			teethAdjustButtonPane.setVisible(false);
 		status = WorkPanel.STATUS_MARKLIP;
 	}
 
@@ -193,6 +266,10 @@ public class WorkPanel extends Container {
 
 		((EditableImageView) imageView).setUnifiable(false);
 		imageView.setEditable(false);
+		if (imageEditButtonPane.isVisible())
+			imageEditButtonPane.setVisible(false);
+		if (teethAdjustButtonPane.isVisible())
+			teethAdjustButtonPane.setVisible(false);
 		status = WorkPanel.STATUS_MARKTEETH;
 	}
 
@@ -250,6 +327,10 @@ public class WorkPanel extends Container {
 			adjustPanel.setVisible(true);
 		((EditableImageView) imageView).setUnifiable(false);
 		imageView.setEditable(false);
+		if (imageEditButtonPane.isVisible())
+			imageEditButtonPane.setVisible(false);
+		if (!teethAdjustButtonPane.isVisible())
+			teethAdjustButtonPane.setVisible(true);
 		status = WorkPanel.STATUS_ADJUSTTEETH;
 //		addMaskToAdjustPanel();
 	}

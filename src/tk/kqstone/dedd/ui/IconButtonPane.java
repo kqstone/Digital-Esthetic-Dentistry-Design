@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class IconButtonPane extends Container {
@@ -16,15 +17,24 @@ public class IconButtonPane extends Container {
 		buttons = new ArrayList<>();
 	}
 
-	public void addButton(IconButton button, final IMethod action) {
-		buttons.add(button);
-		this.add(button);
-		button.addMouseListener(new MouseListener() {
+	public void addButton(IconButton iconButton) {
+		this.buttons.add(iconButton);
+		this.add(iconButton);
+	}
+
+	public void addButtons(List<IconButton> buttons) {
+		for (IconButton b : buttons) {
+			this.addButton(b);
+		}
+	}
+	
+	public void addActions(final IMethod action) {
+		MouseListener l = new MouseListener() {
 
 			@Override
 			public void mouseClicked(MouseEvent event) {
 				try {
-					action.run();
+					action.run(event.getSource());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -46,6 +56,9 @@ public class IconButtonPane extends Container {
 			@Override
 			public void mouseExited(MouseEvent e) {
 			}
-		});
+		};
+		for (IconButton b:buttons) {
+			b.addMouseListener(l);
+		}
 	}
 }

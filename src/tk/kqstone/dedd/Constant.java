@@ -97,4 +97,7 @@ public final class Constant {
 	public static final String ERROR = "错误";
 	public static final String AUTO_ADJUSTING = "自动优化调整中...";
 	public static final String FINISH = "完成";
+	public static final String SHOW_CONTOUR = "显示轮廓";
+	public static final String SHOW_REAL = "显示牙冠";
+	public static final String SHOW_NONE = "隐藏显示";
 }

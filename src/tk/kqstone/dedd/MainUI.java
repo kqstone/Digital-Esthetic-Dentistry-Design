@@ -345,7 +345,7 @@ public class MainUI extends JFrame {
 				spt.addMethod(new IMethod() {
 
 					@Override
-					public void run() {
+					public void run(Object obj) {
 						basicInfo = info;
 						setProjFile(file);
 						newProj();
@@ -582,7 +582,7 @@ public class MainUI extends JFrame {
 				stip.addMethod(new IMethod() {
 
 					@Override
-					public void run() {
+					public void run(Object obj) {
 						ProjData data;
 						try {
 							data = controller.readData();
@@ -661,7 +661,7 @@ public class MainUI extends JFrame {
 			stip.addMethod(new IMethod() {
 
 				@Override
-				public void run() {
+				public void run(Object obj) {
 					try {
 						controller.saveData();
 					} catch (IOException e) {
@@ -681,7 +681,7 @@ public class MainUI extends JFrame {
 			stip.addMethod(new IMethod() {
 
 				@Override
-				public void run() {
+				public void run(Object obj) {
 					try {
 						controller.saveData();
 					} catch (IOException e) {
@@ -740,7 +740,7 @@ public class MainUI extends JFrame {
 		tip.addMethod(new IMethod() {
 
 			@Override
-			public void run() throws Exception {
+			public void run(Object obj) throws Exception {
 				workspace.autoAdjust();
 			}
 		});
