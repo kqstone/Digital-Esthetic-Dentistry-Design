@@ -28,7 +28,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import tk.kqstone.dedd.ui.IMethod;
 import tk.kqstone.dedd.ui.IconButton;
+import tk.kqstone.dedd.ui.IconButtonPane;
+
 import java.awt.Container;
 import java.awt.FlowLayout;
 
@@ -66,8 +69,7 @@ public class EditableImageView extends ImageView implements IImageBinder {
 	private MouseAdapter unifiablemouseAdapter;
 	private EditableKeyAdapter keyAdapter;
 	
-	private IconButton rotateL90DButton;
-	private IconButton rotateR90DButton;
+	private IconButtonPane iconButtons;
 
 	private boolean escPressed;
 
@@ -81,37 +83,28 @@ public class EditableImageView extends ImageView implements IImageBinder {
 		unifiable = false;
 		editable = false;
 		escPressed = false;
-		rotateL90DButton = new IconButton(Constant.ROTATE_LEFT_90D,
+		iconButtons = new IconButtonPane();
+		IconButton rotateL90DButton = new IconButton(Constant.ROTATE_LEFT_90D,
 				new ImageIcon(this.getClass().getResource(URL_ROTATELEFT)));
-		rotateR90DButton = new IconButton(Constant.ROTATE_RIGHT_90D,
+		IconButton rotateR90DButton = new IconButton(Constant.ROTATE_RIGHT_90D,
 				new ImageIcon(this.getClass().getResource(URL_ROTATERIGHT)));
-		Container btnCtn = new Container();
-		btnCtn.setLayout(new FlowLayout(FlowLayout.CENTER));
-		btnCtn.add(rotateL90DButton);
-		btnCtn.add(rotateR90DButton);
-		
-		this.add(btnCtn, BorderLayout.SOUTH);
-		
-		MouseListener l = new MouseAdapter() {
+		iconButtons.addButton(rotateL90DButton, new IMethod() {
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1) {
-					Object source = e.getSource();
-					BufferedImage image = null;
-					if (source.equals(rotateL90DButton)) {
-						image = ImageUtils.rotate90D(getImage(), "left");
-					} else if(source.equals(rotateR90DButton)) {
-						image = ImageUtils.rotate90D(getImage(), "right");
-						
-					} 
-					setImage(image);
-				}
+			public void run() throws Exception {
+				BufferedImage image = ImageUtils.rotate90D(getImage(), "left");
+				setImage(image);
 			}
-			
-		};
-		rotateL90DButton.addMouseListener(l);
-		rotateR90DButton.addMouseListener(l);
+		});
+		iconButtons.addButton(rotateR90DButton, new IMethod() {
+
+			@Override
+			public void run() throws Exception {
+				BufferedImage image = ImageUtils.rotate90D(getImage(), "right");
+				setImage(image);
+			}
+		});
+		this.add(iconButtons, BorderLayout.SOUTH);
 	}
 
 	public void bind(IImageBinder imageBinder) {
@@ -151,8 +144,7 @@ public class EditableImageView extends ImageView implements IImageBinder {
 			this.removeMouseMotionListener(editableMouseAdapter);
 			this.removeKeyListener(keyAdapter);
 		}
-		rotateL90DButton.setVisible(editable);
-		rotateR90DButton.setVisible(editable);
+		iconButtons.setVisible(editable);
 		this.editable = editable;
 	}
 
