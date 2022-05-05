@@ -193,7 +193,6 @@ public class EditableImageView extends ImageView implements IImageBinder {
 				BufferedImage image = panel.getImage();
 				double scale = panel.getScale();
 				int scalType = panel.getScaleType();
-				Rect rect = new Rect(start, end);
 				int x1 = Math.round((start.x-panel.offsetX) / panel.proportion);
 				int y1 = Math.round((start.y-panel.offsetY) / panel.proportion);
 				int x2 = Math.round((end.x-panel.offsetX) / panel.proportion);
