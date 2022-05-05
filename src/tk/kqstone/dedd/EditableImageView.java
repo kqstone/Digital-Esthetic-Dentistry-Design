@@ -162,6 +162,8 @@ public class EditableImageView extends ImageView implements IImageBinder {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON2)
+				return;
 			if (panel.getImage() == null)
 				return;
 			requestFocus(true);
@@ -178,6 +180,8 @@ public class EditableImageView extends ImageView implements IImageBinder {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON2)
+				return;
 			if (panel.getImage() == null || escPressed) {
 				return;
 			}
@@ -233,6 +237,8 @@ public class EditableImageView extends ImageView implements IImageBinder {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON2)
+				return;
 			if (panel.getImage() == null || escPressed)
 				return;
 			markPanel.point2 = e.getPoint();
