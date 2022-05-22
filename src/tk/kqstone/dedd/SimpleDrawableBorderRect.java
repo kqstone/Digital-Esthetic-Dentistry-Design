@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.geom.Point2D;
 
 /**
  * SimpleDrawableBorderRect inherited from DrawableBorderRect, but rect
@@ -43,6 +44,13 @@ public class SimpleDrawableBorderRect extends DrawableBorderRect {
 					(int) Math.round(getWidth()), (int) Math.round(getHeight()), null);
 		}
 
+	}
+	
+	public BorderRect getInRect() {
+		int border = this.getBorder();
+		return new BorderRect(new Point2D.Float(border / 2, border / 2), new Point2D.Float(
+				(float) (this.getX2() - this.getX1() + border / 2),
+				(float) (this.getY2() - this.getY1() + border / 2)));
 	}
 
 }

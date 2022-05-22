@@ -182,13 +182,13 @@ public class DrawableBorderRect extends BorderRect {
 		int border = getBorder();
 		g.setColor(pitColor);
 		g.fillRect(x1 - border / 2, y1 - border / 2, border, border);
-		g.fillRect((x1 + x2) / 2 - border / 2, y1 - border / 2, border, border);
+//		g.fillRect((x1 + x2) / 2 - border / 2, y1 - border / 2, border, border);
 		g.fillRect(x2 - border / 2, y1 - border / 2, border, border);
-		g.fillRect(x2 - border / 2, (y1 + y2) / 2 - border / 2, border, border);
+//		g.fillRect(x2 - border / 2, (y1 + y2) / 2 - border / 2, border, border);
 		g.fillRect(x2 - border / 2, y2 - border / 2, border, border);
-		g.fillRect((x1 + x2) / 2 - border / 2, y2 - border / 2, border, border);
+//		g.fillRect((x1 + x2) / 2 - border / 2, y2 - border / 2, border, border);
 		g.fillRect(x1 - border / 2, y2 - border / 2, border, border);
-		g.fillRect(x1 - border / 2, (y1 + y2) / 2 - border / 2, border, border);
+//		g.fillRect(x1 - border / 2, (y1 + y2) / 2 - border / 2, border, border);
 	}
 
 	@Deprecated
@@ -198,13 +198,13 @@ public class DrawableBorderRect extends BorderRect {
 		int border = getBorder();
 		g.setColor(pitColor);
 		g.fillRect(x1 - border / 2, y1 - border / 2, border, border);
-		g.fillRect((x1 + x2) / 2 - border / 2, y1 - border / 2, border, border);
+//		g.fillRect((x1 + x2) / 2 - border / 2, y1 - border / 2, border, border);
 		g.fillRect(x2 - border / 2, y1 - border / 2, border, border);
-		g.fillRect(x2 - border / 2, (y1 + y2) / 2 - border / 2, border, border);
+//		g.fillRect(x2 - border / 2, (y1 + y2) / 2 - border / 2, border, border);
 		g.fillRect(x2 - border / 2, y2 - border / 2, border, border);
-		g.fillRect((x1 + x2) / 2 - border / 2, y2 - border / 2, border, border);
+//		g.fillRect((x1 + x2) / 2 - border / 2, y2 - border / 2, border, border);
 		g.fillRect(x1 - border / 2, y2 - border / 2, border, border);
-		g.fillRect(x1 - border / 2, (y1 + y2) / 2 - border / 2, border, border);
+//		g.fillRect(x1 - border / 2, (y1 + y2) / 2 - border / 2, border, border);
 
 	}
 

@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
 import java.util.List;
+import java.awt.Cursor;
 
 /**
  * MouseAdapter for Dragable Rects
@@ -23,7 +24,7 @@ public class DragRectsAdapter extends MouseAdapter {
 	Point start;
 	Point end;
 	int index = 0;
-	int flag;
+	int flag = BorderRect.POINT_OUT_RECT;
 	int function = FUNCTION_NULL;
 
 	// initial position for rect
@@ -35,6 +36,54 @@ public class DragRectsAdapter extends MouseAdapter {
 	DragRectsAdapter(BasicDrawablePanel content, List<DrawableBorderRect> listPanel) {
 		this.content = content;
 		this.listRects = listPanel;
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		Point p = e.getPoint();
+		System.out.println("MouseMoved:" + p);
+		int tmpFlag = BorderRect.POINT_OUT_RECT;
+		for (int i = 0; i < listRects.size(); i++) {
+			tmpFlag = listRects.get(i).getPointFlag(p);
+			if (tmpFlag != BorderRect.POINT_OUT_RECT)
+				break;
+		}
+		if (tmpFlag == flag)
+			return;
+		flag = tmpFlag;
+		System.out.println("MouseMoved:" + flag);
+		switch (flag) {
+		case BorderRect.POINT_OUT_RECT:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			break;
+		case BorderRect.POINT_NW:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
+			break;
+		case BorderRect.POINT_NE:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+			break;
+		case BorderRect.POINT_SW:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
+			break;
+		case BorderRect.POINT_SE:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+			break;
+		case BorderRect.POINT_ON_NB:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+			break;
+		case BorderRect.POINT_ON_SB:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+			break;
+		case BorderRect.POINT_ON_WB:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+			break;
+		case BorderRect.POINT_ON_EB:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+			break;
+		case BorderRect.POINT_IN_RECT:
+			content.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+			break;
+		}
 	}
 
 	@Override

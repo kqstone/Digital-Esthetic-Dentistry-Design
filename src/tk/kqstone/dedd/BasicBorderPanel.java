@@ -1,6 +1,7 @@
 package tk.kqstone.dedd;
 
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -143,6 +144,48 @@ public class BasicBorderPanel extends JPanel {
 		DragAdapter(Container content) {
 			this.content = content;
 		}
+		
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			Point p = e.getPoint();
+			int tmpFlag = simpleDrawableBorderRect.getInRect().getPointFlag(p);
+			if (tmpFlag == flag)
+				return;
+			flag = tmpFlag;
+			System.out.println("MouseMoved:" + flag);
+			switch (flag) {
+			case BorderRect.POINT_OUT_RECT:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				break;
+			case BorderRect.POINT_NW:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
+				break;
+			case BorderRect.POINT_NE:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+				break;
+			case BorderRect.POINT_SW:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
+				break;
+			case BorderRect.POINT_SE:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+				break;
+			case BorderRect.POINT_ON_NB:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+				break;
+			case BorderRect.POINT_ON_SB:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+				break;
+			case BorderRect.POINT_ON_WB:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+				break;
+			case BorderRect.POINT_ON_EB:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+				break;
+			case BorderRect.POINT_IN_RECT:
+				content.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				break;
+			}
+		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
@@ -150,11 +193,7 @@ public class BasicBorderPanel extends JPanel {
 				return;
 			inDrag = true;
 			start = e.getLocationOnScreen();
-			int border = simpleDrawableBorderRect.getBorder();
-
-			inRect = new BorderRect(new Point2D.Float(border / 2, border / 2), new Point2D.Float(
-					(float) (simpleDrawableBorderRect.getX2() - simpleDrawableBorderRect.getX1() + border / 2),
-					(float) (simpleDrawableBorderRect.getY2() - simpleDrawableBorderRect.getY1() + border / 2)));
+			inRect = simpleDrawableBorderRect.getInRect();
 			flag = inRect.getPointFlag(e.getPoint());
 
 			p1 = simpleDrawableBorderRect.getPoint(Rect.POINT_NW);
