@@ -18,6 +18,7 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -110,6 +111,31 @@ public class TitleBar extends JPanel {
 				}
 			}
 		});
+		MouseAdapter adapter = new MouseAdapter() {
+			Point start;
+			Point startLocation;
+			
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				start = e.getLocationOnScreen();
+				startLocation = jFrame.getLocationOnScreen();
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				Point p = e.getLocationOnScreen();
+				int x = startLocation.x + p.x-start.x;
+				int y = startLocation.y + p.y-start.y;
+				jFrame.setLocation(x,y);			}
+			
+		};
+		this.addMouseListener(adapter);
+		this.addMouseMotionListener(adapter);
 	}
 
 	public TitleBar(JFrame jFrame) {
