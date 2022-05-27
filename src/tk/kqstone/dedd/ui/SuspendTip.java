@@ -46,8 +46,8 @@ public class SuspendTip extends JDialog {
 		this.setUndecorated(true);
 		this.setBackground(new Color(0, 0, 0, 0));
 		this.setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+		this.setLocationRelativeTo(owner);
 		Shape roundRect = new RoundRectangle2D.Float(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, 20, 20);
-		this.setLocation((owner.getWidth() - DEFAULT_WIDTH) / 2, (owner.getHeight() - DEFAULT_HEIGHT) / 2);
 		getContentPane().setLayout(new BorderLayout());
 		RoundRectPanel root = new RoundRectPanel();
 		root.roundRect = roundRect;
