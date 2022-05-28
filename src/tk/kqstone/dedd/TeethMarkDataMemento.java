@@ -32,8 +32,16 @@ public class TeethMarkDataMemento {
 		}
 	}
 	
+	public void replace(int index, TeethMarkData teethMarkData) throws IndexOutOfBoundsException{
+		if(index  > listTeethMarkData.size() - 1) 
+			throw new IndexOutOfBoundsException();
+		this.index = index;
+		listTeethMarkData.set(index, teethMarkData);
+	}
+	
 	public void clear() {
 		listTeethMarkData.clear();
+		index = -1;
 	}
 	
 	public TeethMarkData getPrevious() throws IndexOutOfBoundsException{
