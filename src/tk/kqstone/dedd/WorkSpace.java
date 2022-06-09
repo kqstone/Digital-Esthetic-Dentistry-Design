@@ -387,4 +387,11 @@ public class WorkSpace extends Container implements IMenmento{
 			basePanel.getAdjustPanel().bind(frontPanel.getAdjustPanel());
 	}
 
+	public void detectTeeth() {
+		TeethMarkPanel baseMarkPanel = basePanel.getMarkPanel();
+		BufferedImage image = basePanel.genFullPreImage();
+		baseMarkPanel.detectTeeth(image);
+		
+	}
+
 }

@@ -6,8 +6,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
@@ -17,6 +19,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import tk.kqstone.dedd.TeethMarkData.MarkDatum;
+import tk.kqstone.djl.djlyolov5.App;
 
 public class TeethMarkPanel extends BasicDrawablePanel {
 	private static final int TEXT_FIELD_WIDTH = 50;
@@ -35,6 +38,30 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 		listTextTooth = new ArrayList<>();
 		listTextLength = new ArrayList<>();
 		listPanelTooth = super.getBorderPanelList();
+	}
+
+	protected void detectTeeth(BufferedImage image) {
+		List<Map> rects = App.detect(image);
+		for (Map rect:rects) {
+			float x1 = (int)rect.get("x1") * proportion + offsetX;
+			float x2 = (int) rect.get("x2") * proportion + offsetX;
+			float y1 = (int) rect.get("y1") * proportion + offsetY;
+			float y2 = (int) rect.get("y2") * proportion + offsetY;
+			Rect2D.Float tmpRect = new Rect2D.Float(x1, y1, x2, y2);
+			DrawableBorderRect dbr = new DrawableBorderRect();
+			dbr.setRect(tmpRect);
+			listPanelTooth.add(dbr);
+
+			NumberField tt = new TextTooth();
+			listTextTooth.add(tt);
+			NumberField tl = new TextLength();
+			listTextLength.add(tl);
+			this.add(tt);
+			this.add(tl);
+//			this.setTextFieldLocation(i, tmpRect);
+		}
+		this.repaint();
+		
 	}
 
 	public void initialize(List<Tooth> teeth) {

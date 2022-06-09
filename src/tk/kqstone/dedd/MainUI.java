@@ -102,6 +102,7 @@ public class MainUI extends JFrame {
 	private IconButton redoButton;
 	private IconButton autoAdjustButton;
 	private IconButton regenAdjustButton;
+	private IconButton detectTeethButton;
 
 	private IController controller;
 
@@ -254,7 +255,10 @@ public class MainUI extends JFrame {
 		undoButton.setVisible(false);
 		redoButton = new IconButton(Constant.REDO, new ImageIcon(this.getClass().getResource(URL_REDO)));
 		redoButton.setVisible(false);
-		tabPanel.addIconButton(autoAdjustButton).addIconButton(regenAdjustButton).addIconButton(undoButton)
+		detectTeethButton = new IconButton(Constant.AUTO_ADJUST,
+				new ImageIcon(this.getClass().getResource(URL_AUTOADJUST)));
+		detectTeethButton.setVisible(true);
+		tabPanel.addIconButton(autoAdjustButton).addIconButton(detectTeethButton).addIconButton(regenAdjustButton).addIconButton(undoButton)
 				.addIconButton(redoButton);
 		MouseListener listener = new MouseAdapter() {
 
@@ -269,6 +273,8 @@ public class MainUI extends JFrame {
 					autoAdjust();
 				} else if (source.equals(regenAdjustButton)) {
 					workspace.reGenAdjustTeeth();
+				} else if (source.equals(detectTeethButton)) {
+					workspace.detectTeeth();
 				}
 			}
 
@@ -277,6 +283,7 @@ public class MainUI extends JFrame {
 		regenAdjustButton.addMouseListener(listener);
 		undoButton.addMouseListener(listener);
 		redoButton.addMouseListener(listener);
+		detectTeethButton.addMouseListener(listener);
 	}
 
 	public File getProjFile() {
