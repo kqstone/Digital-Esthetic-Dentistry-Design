@@ -35,7 +35,7 @@ public class NetImageDetection implements IImageDetection {
 				oos.flush();
 
 				String s = ois.readUTF();
-				List<Rectangle> rects = JSON.parseObject("...", new TypeReference<List<Rectangle>>() {})
+				List<Rectangle> rects = JSON.parseObject("...", new TypeReference<List<Rectangle>>() {});
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
