@@ -11,6 +11,6 @@
 			<attribute name="javadoc_location" value="file:/D:/Program%20Files/commons-net/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/djlyolov5"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TeethDetectionServer"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
