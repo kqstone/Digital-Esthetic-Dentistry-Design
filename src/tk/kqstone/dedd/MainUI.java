@@ -274,7 +274,7 @@ public class MainUI extends JFrame {
 				} else if (source.equals(regenAdjustButton)) {
 					workspace.reGenAdjustTeeth();
 				} else if (source.equals(detectTeethButton)) {
-					workspace.detectTeeth();
+					detectTeeth();
 				}
 			}
 
@@ -754,5 +754,19 @@ public class MainUI extends JFrame {
 		tip.run();
 
 	}
+	
+	private void detectTeeth() {
+		SuspendTip tip = new SuspendTip(this, Constant.AUTO_ADJUSTING, Constant.FINISH, Constant.CONNECTION_ERROR);
+		tip.addMethod(new IMethod() {
+
+			@Override
+			public void run(Object obj) throws Exception {
+				workspace.detectTeeth();;
+			}
+		});
+		tip.run();
+
+	}
+
 
 }

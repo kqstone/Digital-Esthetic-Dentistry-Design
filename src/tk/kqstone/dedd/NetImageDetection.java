@@ -1,52 +1,70 @@
 package tk.kqstone.dedd;
 
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+
 public class NetImageDetection implements IImageDetection {
 
 	private static final String NET_ADRESS = "kqstone.myqnapcloud.com";
-//	private static final String NET_ADRESS ="localhost";
-	public static final int PORT = 12061;
-	
+	private static final String LOCAL_NET_ADRESS = "localhost";
+	private static final File tmpFile = new File("/tmp/tmp.jpg");
+	public static final int PORT = 12062;
+
 	private String netaddress;
 	private int port;
-	private Socket sock;
 
 	public NetImageDetection() {
-		netaddress = NET_ADRESS;
+		netaddress = LOCAL_NET_ADRESS;
 		port = PORT;
 	}
-	
+
 	public NetImageDetection(String netaddress, int port) {
 		this.netaddress = netaddress;
 		this.port = port;
 	}
-	
+
 	@Override
-	public List<Rectangle> detectTeeth(BufferedImage image) {
-		try (Socket sock = new Socket(NET_ADRESS, PORT)) {
-			try (ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
+	public List<Rectangle> detectTeeth(BufferedImage image) throws Exception {
+		List<Rectangle> rects = null;
+		try (Socket sock = new Socket(netaddress, port)) {
+			try (BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
 					ObjectInputStream ois = new ObjectInputStream(sock.getInputStream())) {
-				oos.writeObject(image);
-				oos.flush();
+				File tmpFile = File.createTempFile("tmp_pic", ".jpg");
+				ImageIO.write(image, "jpg", tmpFile);
+				FileInputStream fis = new FileInputStream(tmpFile);
+				int len = 0;
+		        byte[] bytes = new byte[1024];
+		        while ((len = fis.read(bytes))!= -1){
+		            bos.write(bytes,0,len);
+		        }
+		        fis.close();
+				bos.flush();
+				sock.shutdownOutput();
 
 				String s = ois.readUTF();
-				List<Rectangle> rects = JSON.parseObject("...", new TypeReference<List<Rectangle>>() {});
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				rects = JSONObject.parseArray(s, Rectangle.class);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new Exception(e);
 		}
-		return null;
+		return rects;
 	}
-	
 
 }
