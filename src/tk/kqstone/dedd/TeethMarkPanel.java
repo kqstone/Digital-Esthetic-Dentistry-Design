@@ -35,10 +35,6 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 	}
 
 	protected void detectTeeth(BufferedImage image) throws Exception {
-		this.removeAll();
-		this.listPanelTooth.clear();
-		this.listTextLength.clear();
-		this.listTextTooth.clear();
 		
 		IImageDetection imgDtection = new NetImageDetection();		
 		List<Rectangle> rects = imgDtection.detectTeeth(image);
@@ -62,6 +58,12 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 			this.add(tl);
 			this.setTextFieldLocation(i, tmpRect);
 		}
+		
+		this.removeAll();
+		this.listPanelTooth.clear();
+		this.listTextLength.clear();
+		this.listTextTooth.clear();
+		
 		this.repaint();
 		
 	}
