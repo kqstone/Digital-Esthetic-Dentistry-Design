@@ -1,9 +1,5 @@
 package tk.kqstone.dedd;
 
-import java.awt.Component;
-
-import javax.swing.Icon;
-
 public final class Constant {
 
 	public static final String VERSION = "v3.6";
@@ -100,4 +96,6 @@ public final class Constant {
 	public static final String SHOW_CONTOUR = "显示轮廓";
 	public static final String SHOW_REAL = "显示牙冠";
 	public static final String SHOW_NONE = "隐藏显示";
+	public static final String TEETH_DETECTION = "AI检测中...";
+	public static final String AI_DETECTION = "AI检测";
 }

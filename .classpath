@@ -11,7 +11,6 @@
 			<attribute name="javadoc_location" value="file:/D:/Program%20Files/commons-net/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/TeethDetectionServer"/>
-	<classpathentry kind="lib" path="lib/fastjson-2.0.6.jar"/>
+	<classpathentry kind="lib" path="lib/fastjson-1.2.60.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

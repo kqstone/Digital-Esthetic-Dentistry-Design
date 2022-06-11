@@ -3,20 +3,16 @@ package tk.kqstone.dedd;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 
 public class NetImageDetection implements IImageDetection {
 
@@ -29,7 +25,7 @@ public class NetImageDetection implements IImageDetection {
 	private int port;
 
 	public NetImageDetection() {
-		netaddress = LOCAL_NET_ADRESS;
+		netaddress = NET_ADRESS;
 		port = PORT;
 	}
 

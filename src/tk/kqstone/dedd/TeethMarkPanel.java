@@ -1,26 +1,19 @@
 package tk.kqstone.dedd;
 
-import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import tk.kqstone.dedd.TeethMarkData.MarkDatum;
-import tk.kqstone.djl.djlyolov5.ServerImageDetection;
 
 public class TeethMarkPanel extends BasicDrawablePanel {
 	private static final int TEXT_FIELD_WIDTH = 50;
@@ -42,10 +35,16 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 	}
 
 	protected void detectTeeth(BufferedImage image) throws Exception {
+		this.removeAll();
+		this.listPanelTooth.clear();
+		this.listTextLength.clear();
+		this.listTextTooth.clear();
+		
 		IImageDetection imgDtection = new NetImageDetection();		
 		List<Rectangle> rects = imgDtection.detectTeeth(image);
 		System.out.println(rects);
-		for (Rectangle rect:rects) {
+		for (int i=0; i<rects.size();i++) {
+			Rectangle rect = rects.get(i);
 			float x1 = (int)rect.x * proportion + offsetX;
 			float y1 = (int) rect.y * proportion + offsetY;
 			float x2 = (int) (rect.x+rect.width) * proportion + offsetX;
@@ -61,7 +60,7 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 			listTextLength.add(tl);
 			this.add(tt);
 			this.add(tl);
-//			this.setTextFieldLocation(i, tmpRect);
+			this.setTextFieldLocation(i, tmpRect);
 		}
 		this.repaint();
 		
@@ -216,7 +215,7 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 		}
 		this.repaint();
 	}
-
+	
 	class NumberField extends JTextField {
 		private boolean dotEnable = false;
 		

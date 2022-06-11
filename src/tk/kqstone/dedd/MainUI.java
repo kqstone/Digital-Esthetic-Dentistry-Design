@@ -2,48 +2,35 @@ package tk.kqstone.dedd;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InvalidClassException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.time.LocalDate;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -51,16 +38,12 @@ import org.xml.sax.SAXException;
 
 import tk.kqstone.dedd.ProjDataHelper.DataCheckException;
 import tk.kqstone.dedd.ui.IMethod;
+import tk.kqstone.dedd.ui.IconButton;
 import tk.kqstone.dedd.ui.SuspendTip;
 import tk.kqstone.dedd.ui.TabEvent;
 import tk.kqstone.dedd.ui.TabPanel;
-import tk.kqstone.dedd.ui.IconButton;
 import tk.kqstone.dedd.ui.TabStateChangeListener;
 import tk.kqstone.dedd.ui.TitleBar;
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import java.awt.Toolkit;
 
 /**
  * 
@@ -76,6 +59,7 @@ public class MainUI extends JFrame {
 	private final static String URL_UNDO = "/img/undo.png";
 	private final static String URL_AUTOADJUST = "/img/auto_adjust.png";
 	private final static String URL_REGENADJUST = "/img/regen_adjust.png";
+	private final static String URL_TEETHDETECTION = "/img/ai_detection.png";
 
 	private JMenuBar menuBar;
 	private Container root; // Root Container
@@ -255,9 +239,9 @@ public class MainUI extends JFrame {
 		undoButton.setVisible(false);
 		redoButton = new IconButton(Constant.REDO, new ImageIcon(this.getClass().getResource(URL_REDO)));
 		redoButton.setVisible(false);
-		detectTeethButton = new IconButton(Constant.AUTO_ADJUST,
-				new ImageIcon(this.getClass().getResource(URL_AUTOADJUST)));
-		detectTeethButton.setVisible(true);
+		detectTeethButton = new IconButton(Constant.AI_DETECTION,
+				new ImageIcon(this.getClass().getResource(URL_TEETHDETECTION)));
+		detectTeethButton.setVisible(false);
 		tabPanel.addIconButton(autoAdjustButton).addIconButton(detectTeethButton).addIconButton(regenAdjustButton).addIconButton(undoButton)
 				.addIconButton(redoButton);
 		MouseListener listener = new MouseAdapter() {
@@ -433,6 +417,7 @@ public class MainUI extends JFrame {
 				undoMenuItem.setEnabled(true);
 				undoButton.setVisible(true);
 				redoButton.setVisible(true);
+				detectTeethButton.setVisible(true);
 				break;
 			case Constant.ADJUSTTEETH:
 				if (!workspace.isVisible()) {
@@ -486,6 +471,7 @@ public class MainUI extends JFrame {
 				undoMenuItem.setEnabled(false);
 				undoButton.setVisible(false);
 				redoButton.setVisible(false);
+				detectTeethButton.setVisible(false);
 				break;
 			case Constant.ADJUSTTEETH:
 				autoAdjustMenuItem.setEnabled(false);
@@ -756,7 +742,7 @@ public class MainUI extends JFrame {
 	}
 	
 	private void detectTeeth() {
-		SuspendTip tip = new SuspendTip(this, Constant.AUTO_ADJUSTING, Constant.FINISH, Constant.CONNECTION_ERROR);
+		SuspendTip tip = new SuspendTip(this, Constant.TEETH_DETECTION, Constant.FINISH, Constant.CONNECTION_ERROR);
 		tip.addMethod(new IMethod() {
 
 			@Override

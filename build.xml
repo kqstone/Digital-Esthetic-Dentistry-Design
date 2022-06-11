@@ -52,6 +52,7 @@
 			<classpath>
 				<fileset dir="${dir.root}/lib">
 					<include name="commons-net-3.7.1.jar" />
+					<include name="fastjson-2.0.6.jar" />
 				</fileset>
 			</classpath>
 		</javac>

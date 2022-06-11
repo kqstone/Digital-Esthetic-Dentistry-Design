@@ -1,26 +1,18 @@
 package tk.kqstone.dedd;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 
 public class WorkSpace extends Container implements IMenmento{
 	private WorkPanel basePanel;
@@ -389,8 +381,11 @@ public class WorkSpace extends Container implements IMenmento{
 
 	public void detectTeeth() throws Exception {
 		TeethMarkPanel baseMarkPanel = basePanel.getMarkPanel();
-		BufferedImage image = basePanel.genFullPreImage();
-		baseMarkPanel.detectTeeth(image);
+		TeethMarkPanel frontMarkPanel = frontPanel.getMarkPanel();
+		BufferedImage baseImage = basePanel.genFullPreImage();
+		baseMarkPanel.detectTeeth(baseImage);
+		BufferedImage frontImage = frontPanel.genFullPreImage();
+		frontMarkPanel.detectTeeth(frontImage);
 		
 	}
 
