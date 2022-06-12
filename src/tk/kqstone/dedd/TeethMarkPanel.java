@@ -39,6 +39,12 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 		IImageDetection imgDtection = new NetImageDetection();		
 		List<Rectangle> rects = imgDtection.detectTeeth(image);
 		System.out.println(rects);
+		
+		this.removeAll();
+		this.listPanelTooth.clear();
+		this.listTextLength.clear();
+		this.listTextTooth.clear();
+		
 		for (int i=0; i<rects.size();i++) {
 			Rectangle rect = rects.get(i);
 			float x1 = (int)rect.x * proportion + offsetX;
@@ -58,11 +64,6 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 			this.add(tl);
 			this.setTextFieldLocation(i, tmpRect);
 		}
-		
-		this.removeAll();
-		this.listPanelTooth.clear();
-		this.listTextLength.clear();
-		this.listTextTooth.clear();
 		
 		this.repaint();
 		
