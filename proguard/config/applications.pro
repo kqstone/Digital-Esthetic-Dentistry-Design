@@ -78,6 +78,13 @@
 -keep public class tk.kqstone.dedd.Tooth { *; }
 -keep public class tk.kqstone.dedd.Rect2D { *; }
 -keep public class tk.kqstone.dedd.Rect2D$* { *; }
+-keep class tk.kqstone.dedd.NetImageDetection$* { *; }
+-keep class tk.kqstone.dedd.NetImageDetection { *; }
 
 # -keep public interface com.example.MyInterface
 # -keep public class * implements com.example.MyInterface
+
+#gson
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class sun.misc.Unsafe { *; }
