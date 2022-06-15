@@ -17,6 +17,7 @@
 # As of Java 9, the runtime classes are packaged in modular jmod files.
 #-libraryjars <java.home>/jmods/java.base.jmod(!**.jar;!module-info.class)
 -libraryjars D:\Program Files\Java\jdk-18/jmods/
+-libraryjars ../../lib/
 
 #-libraryjars junit.jar
 #-libraryjars servlet.jar
