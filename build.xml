@@ -30,12 +30,12 @@
 				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
 				<attribute name="Rsrc-Main-Class" value="tk.kqstone.dedd.Splash"/>
 				<attribute name="Class-Path" value="."/>
-				<attribute name="Rsrc-Class-Path" value="./ commons-net-3.7.1.jar fastjson-1.2.60.jar"/>
+				<attribute name="Rsrc-Class-Path" value="./ commons-net-3.7.1.jar gson-2.9.0.jar"/>
 			</manifest>
 			<zipfileset src="jar-in-jar-loader.zip"/>
 			<fileset dir="${dir.root}/bin"/>
 			<zipfileset dir="${dir.root}/lib" includes="commons-net-3.7.1.jar"/>
-			<zipfileset dir="${dir.root}/lib" includes="fastjson-1.2.60.jar"/>
+			<zipfileset dir="${dir.root}/lib" includes="gson-2.9.0.jar"/>
 		</jar>
 		<copy todir="${dir.export}" file="${dir.classes}/build_prop" />
 		<delete dir="${dir.classes}" />
