@@ -11,6 +11,6 @@
 			<attribute name="javadoc_location" value="file:/D:/Program%20Files/commons-net/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fastjson-1.2.60.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

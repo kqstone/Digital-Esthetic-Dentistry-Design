@@ -7,12 +7,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.reflect.Type;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class NetImageDetection implements IImageDetection {
 
@@ -53,7 +56,9 @@ public class NetImageDetection implements IImageDetection {
 				sock.shutdownOutput();
 
 				String s = ois.readUTF();
-				rects = JSONObject.parseArray(s, Rectangle.class);
+				Gson gson = new Gson();
+				Type type = new TypeToken<ArrayList<Rectangle>>(){}.getType();
+				rects = gson.fromJson(s, type);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
