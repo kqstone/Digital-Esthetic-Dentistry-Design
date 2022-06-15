@@ -6,15 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import org.apache.commons.net.tftp.TFTP;
 import org.apache.commons.net.tftp.TFTPClient;
 
-public class TFTPUtil {
+public class TFTPADapter {
 	private static final int DEFAULT_TIMEOUT = 10000;
 	private static final String DEFAULT_HOST = "kqstone.myqnapcloud.com";
 	private static final int DEFAULT_PORT = 69;
@@ -22,14 +20,14 @@ public class TFTPUtil {
 	private String hostname;
 	private int port;
 
-	public TFTPUtil() {
+	public TFTPADapter() {
 		tftp = new TFTPClient();
 		tftp.setMaxTimeouts(DEFAULT_TIMEOUT);
 		this.hostname = DEFAULT_HOST;
 		this.port = DEFAULT_PORT;
 	}
 
-	public TFTPUtil(String hostname, int port) {
+	public TFTPADapter(String hostname, int port) {
 		this();
 		this.hostname = hostname;
 		this.port = port;

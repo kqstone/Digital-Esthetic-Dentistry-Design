@@ -1,31 +1,26 @@
 package tk.kqstone.dedd;
 
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import com.alibaba.fastjson.JSON;
+import java.time.LocalDate;
+import java.util.List;
 
 public class MarkDataUpload {
 
 	private static final String NET_ADRESS = "kqstone.myqnapcloud.com";
 	private static final String LOCAL_NET_ADRESS = "localhost";
-	private static final File tmpFile = new File("/tmp/tmp.jpg");
+	private static final File tmpDir = new File("/tmp/");
 	public static final int PORT = 12069;
 
 	private String netaddress;
 	private int port;
 	private BufferedImage image;
-	private Map<String, Rectangle2D> markdata;
+	private List<String> markdata;
+	private String id;
 
 	public MarkDataUpload() {
 		netaddress = NET_ADRESS;
@@ -41,35 +36,35 @@ public class MarkDataUpload {
 		this.image = image;
 	}
 
-	public void setMarkdata(Map<String, Rectangle2D> markdata) {
+	public void setMarkdata(List<String> markdata) {
 		this.markdata = markdata;
 	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+
 
 	public void upload() {
-		try (Socket sock = new Socket(netaddress, port)) {
-			try (OutputStream os = sock.getOutputStream()) {
-				File tmpFile = File.createTempFile("tmp_pic", ".jpg");
-				ImageIO.write(image, "jpg", tmpFile);
-				FileInputStream fis = new FileInputStream(tmpFile);
-				int len = 0;
-				byte[] bytes = new byte[1024];
-				BufferedOutputStream bos = new BufferedOutputStream(os);
-				while ((len = fis.read(bytes)) != -1) {
-					bos.write(bytes, 0, len);
-				}
-				fis.close();
-				bos.flush();
-				
-				String str = JSON.toJSONString(markdata);
-				ObjectOutputStream oos = new ObjectOutputStream(os);
-				oos.writeUTF(str);
-				oos.flush();
-				sock.shutdownOutput();
+		String date = LocalDate.now().toString();
+		String filenamePrefix = Utils.getLocalMac() + LocalDate.now().toString() + id;
+		File labelFile = new File(tmpDir + filenamePrefix + ".txt");
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter(labelFile))) {
+			for (String s:markdata) {
+				bw.write(s);
+				bw.newLine();
+				bw.flush();
 			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			
 		}
+		
 	}
 
 }

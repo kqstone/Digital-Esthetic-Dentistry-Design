@@ -1,29 +1,19 @@
 package tk.kqstone.dedd;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
 
 import tk.kqstone.dedd.ui.IMethod;
 import tk.kqstone.dedd.ui.IconButton;
@@ -455,26 +445,27 @@ public class WorkPanel extends Container {
 		this.adjustPanel.setMask(image);
 	}
 	
-	private Map<String, Rectangle2D> getMarkTeethRectData4Yolo() {
+	private List<String> getMarkData4Yolo() {
 		Rectangle drawRect = this.getImageView().getDrawRect();
 		List<Tooth> teeth = this.getMarkedTeeth();
-		Map<String, Rectangle2D> result = new HashMap<>();
-		for(Tooth tooth:teeth) {
-			String name = "T" + (tooth.site() % 10);
+		List<String> result = new ArrayList<>();
+		for (Tooth tooth : teeth) {
+			String name = String.valueOf((tooth.site() % 10) - 1);
 			Rect2D rect = tooth.rect();
 			double x = (rect.getX1() - drawRect.x + rect.getWidth() / 2) / drawRect.width;
-			double y = (rect.getY1() - drawRect.y + rect.getHeight() / 2)  / drawRect.height;
+			double y = (rect.getY1() - drawRect.y + rect.getHeight() / 2) / drawRect.height;
 			double width = rect.getWidth() / drawRect.width;
 			double height = rect.getHeight() / drawRect.height;
-			Rectangle2D rect2d = new Rectangle2D.Double(x,y,width,height);
-			result.put(name, rect2d);
+			String s = String.join(name, " ", String.valueOf(x), " ", String.valueOf(y), " ", String.valueOf(width),
+					" ", String.valueOf(height));
+			result.add(s);
 		}
 		return result;
 	}
 	
 	public void uploadData() {
 		markDataUpload.setImage(this.genPreImage());
-		markDataUpload.setMarkdata(getMarkTeethRectData4Yolo());
+		markDataUpload.setMarkdata(getMarkData4Yolo());
 	}
 
 }
