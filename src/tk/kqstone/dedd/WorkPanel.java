@@ -14,9 +14,12 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -52,11 +55,14 @@ public class WorkPanel extends Container {
 	private int status;
 	
 	private ZoomInvoker zoomInvoker;
+	
+	private MarkDataUpload markDataUpload;
 
 	public WorkPanel() {
 		super();
 		this.setLayout(null);
 		this.viewId = BASE_VIEW;
+		markDataUpload = new MarkDataUpload();
 	}
 
 	public WorkPanel(int viewId) {
@@ -447,6 +453,28 @@ public class WorkPanel extends Container {
 			return;
 		BufferedImage image = imageView.genImageFromView(path);
 		this.adjustPanel.setMask(image);
+	}
+	
+	private Map<String, Rectangle2D> getMarkTeethRectData4Yolo() {
+		Rectangle drawRect = this.getImageView().getDrawRect();
+		List<Tooth> teeth = this.getMarkedTeeth();
+		Map<String, Rectangle2D> result = new HashMap<>();
+		for(Tooth tooth:teeth) {
+			String name = "T" + (tooth.site() % 10);
+			Rect2D rect = tooth.rect();
+			double x = (rect.getX1() - drawRect.x + rect.getWidth() / 2) / drawRect.width;
+			double y = (rect.getY1() - drawRect.y + rect.getHeight() / 2)  / drawRect.height;
+			double width = rect.getWidth() / drawRect.width;
+			double height = rect.getHeight() / drawRect.height;
+			Rectangle2D rect2d = new Rectangle2D.Double(x,y,width,height);
+			result.put(name, rect2d);
+		}
+		return result;
+	}
+	
+	public void uploadData() {
+		markDataUpload.setImage(this.genPreImage());
+		markDataUpload.setMarkdata(getMarkTeethRectData4Yolo());
 	}
 
 }
