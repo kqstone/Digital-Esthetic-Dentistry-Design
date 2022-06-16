@@ -7,29 +7,28 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import tk.kqstone.dedd.utils.TFTPADapter;
 
 public class MarkDataUpload {
 
-	private static final String NET_ADRESS = "kqstone.myqnapcloud.com";
-	private static final String LOCAL_NET_ADRESS = "localhost";
-	private static final File tmpDir = new File("/tmp/");
-	public static final int PORT = 12069;
+	private static final String tmpDir = "tmp";
+	private static final String remoteDir = "\\marked_teeth";
 
-	private String netaddress;
-	private int port;
 	private BufferedImage image;
 	private List<String> markdata;
 	private String id;
 
-	public MarkDataUpload() {
-		netaddress = NET_ADRESS;
-		port = PORT;
-	}
+	private String fileNamePrefix;
+	private TFTPADapter tFTPADapter;
 
-	public MarkDataUpload(String netaddress, int port) {
-		this.netaddress = netaddress;
-		this.port = port;
+	public MarkDataUpload() {
+		fileNamePrefix = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + Utils.getLocalMac();
+		tFTPADapter = new TFTPADapter();
 	}
 
 	public void setImage(BufferedImage image) {
@@ -39,22 +38,27 @@ public class MarkDataUpload {
 	public void setMarkdata(List<String> markdata) {
 		this.markdata = markdata;
 	}
-	
+
 	public void setId(String id) {
 		this.id = id;
 	}
 
-
 	public void upload() {
-		String date = LocalDate.now().toString();
-		String filenamePrefix = Utils.getLocalMac() + LocalDate.now().toString() + id;
-		File labelFile = new File(tmpDir + filenamePrefix + ".txt");
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter(labelFile))) {
-			for (String s:markdata) {
+		uploadImage();
+		uploadLabel();
+	}
+
+	private void uploadLabel() {
+		String labelFileName = fileNamePrefix + id + ".txt";
+		String localFile = tmpDir + File.separator + labelFileName;
+		String remoteFile = remoteDir + File.separator + labelFileName;
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(localFile))) {
+			for (String s : markdata) {
 				bw.write(s);
 				bw.newLine();
-				bw.flush();
 			}
+			bw.flush();
+			tFTPADapter.uploadFile(remoteFile, localFile);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -64,7 +68,20 @@ public class MarkDataUpload {
 		} finally {
 			
 		}
-		
+
+	}
+
+	private void uploadImage() {
+		String imgFileName = fileNamePrefix + id + ".jpg";
+		String localFile = tmpDir + File.separator + imgFileName;
+		String remoteFile = remoteDir + File.separator + imgFileName;
+		try {
+			ImageIO.write(image, "jpg", new File(localFile));
+			tFTPADapter.uploadFile(remoteFile, localFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

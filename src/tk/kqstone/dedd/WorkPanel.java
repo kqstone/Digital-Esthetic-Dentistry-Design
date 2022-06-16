@@ -456,9 +456,10 @@ public class WorkPanel extends Container {
 			double y = (rect.getY1() - drawRect.y + rect.getHeight() / 2) / drawRect.height;
 			double width = rect.getWidth() / drawRect.width;
 			double height = rect.getHeight() / drawRect.height;
-			String s = String.join(name, " ", String.valueOf(x), " ", String.valueOf(y), " ", String.valueOf(width),
-					" ", String.valueOf(height));
-			result.add(s);
+			StringBuilder sb = new StringBuilder();
+			sb.append(name).append(" ").append(String.valueOf(x)).append(" ").append(String.valueOf(y)).append(" ")
+					.append(String.valueOf(width)).append(" ").append(String.valueOf(height));
+			result.add(sb.toString());
 		}
 		return result;
 	}
@@ -466,6 +467,17 @@ public class WorkPanel extends Container {
 	public void uploadData() {
 		markDataUpload.setImage(this.genPreImage());
 		markDataUpload.setMarkdata(getMarkData4Yolo());
+		String s = "UNKONW";
+		switch(viewId) {
+		case BASE_VIEW:
+			s = "INTROORAL";
+			break;
+		case FRONT_VIEW:
+			s = "FACE";
+			break;
+		}
+		markDataUpload.setId(s);
+		markDataUpload.upload();
 	}
 
 }

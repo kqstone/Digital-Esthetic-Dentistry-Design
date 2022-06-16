@@ -454,6 +454,7 @@ public class MainUI extends JFrame {
 
 				workspace.setVisible(false);
 				resultPanel.setVisible(true);
+				uploadMarkData();//上传标记牙位数据
 				break;
 			}
 
@@ -754,5 +755,16 @@ public class MainUI extends JFrame {
 
 	}
 
+	private void uploadMarkData() {
+		Thread thread = new Thread() {
+
+			@Override
+			public void run() {
+				workspace.uploadMarkData();
+			}
+			
+		};
+		thread.start();;
+	}
 
 }

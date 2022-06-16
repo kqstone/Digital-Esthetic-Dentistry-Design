@@ -388,5 +388,11 @@ public class WorkSpace extends Container implements IMenmento{
 		frontMarkPanel.detectTeeth(frontImage);
 		
 	}
+	
+	public void uploadMarkData() {
+		basePanel.uploadData();
+		frontPanel.uploadData();
+		
+	}
 
 }
