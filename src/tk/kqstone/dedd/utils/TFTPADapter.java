@@ -12,10 +12,12 @@ import java.net.UnknownHostException;
 import org.apache.commons.net.tftp.TFTP;
 import org.apache.commons.net.tftp.TFTPClient;
 
+import tk.kqstone.dedd.Configuration;
+
 public class TFTPADapter {
 	private static final int DEFAULT_TIMEOUT = 10000;
-	private static final String DEFAULT_HOST = "kqstone.myqnapcloud.com";
-	private static final int DEFAULT_PORT = 69;
+	private static final String DEFAULT_HOST = Configuration.SERVER_ADDR;
+	private static final int DEFAULT_PORT = Configuration.TFTP_PORT;
 	private TFTPClient tftp;
 	private String hostname;
 	private int port;
@@ -143,8 +145,20 @@ public class TFTPADapter {
 		return success;
 	}
 
+	public boolean uploadFileWithRuntimeProcess(String remoteFilename, String localFilename) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(Configuration.BINDIR).append(File.separator).append(Configuration.TFTP_EXE).append(" -i ").append(hostname).append(" put ").append(localFilename).append(" ").append(remoteFilename);
+		String cmd = sb.toString();
+		try {			
+		    Process process = Runtime.getRuntime().exec(cmd);
+		    return true;
+		} catch (IOException e) {
+		    e.printStackTrace();
+		    return false;
+		}
+	}
+	
 	public boolean uploadFile(String remoteFilename, String localFilename) {
-
 		FileInputStream fileInput = null;
 		try {
 			fileInput = new FileInputStream(localFilename);
@@ -157,11 +171,11 @@ public class TFTPADapter {
 
 	public boolean uploadDir(String remoteDir, String localDir) {
 		File dir = new File(localDir);
-		File[] files = dir.listFiles(); //
+		File[] files = dir.listFiles(); 
 		boolean result = true;
 		for (File file : files) {
 			String filename = file.getAbsolutePath();
-			if (!uploadFile(remoteDir + filename, filename))
+			if (!uploadFileWithRuntimeProcess(remoteDir + filename, filename))
 				result = false;
 		}
 		return result;

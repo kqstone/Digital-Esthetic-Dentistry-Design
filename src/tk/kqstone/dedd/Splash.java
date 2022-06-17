@@ -1,20 +1,20 @@
 package tk.kqstone.dedd;
 
-import java.awt.Image;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import tk.kqstone.dedd.utils.FTPConnector;
 
 public final class Splash extends JWindow {
 	private static final int WIDTH = 500;
@@ -99,7 +99,57 @@ public final class Splash extends JWindow {
 			}
 		});
 		thread.start();
+		Thread downloadThread = new Thread() {
+
+			@Override
+			public void run() {
+				downloadTftpExe();
+			}
+			
+		};
+		downloadThread.start();
 	}
+	
+
+	private static void downloadTftpExe() {
+		String tftpExePath = Configuration.BINDIR + File.separator + Configuration.TFTP_EXE;
+		File file = new File(tftpExePath);
+		if (file.exists() && file.length() == 16896)
+			return;
+		FTPConnector connector = new FTPConnector(Configuration.SERVER_ADDR, String.valueOf(Configuration.FTP_PORT),
+				new String(Configuration.BYTES_USER_NAME), new String(Configuration.BYTES_USER_PWD)) {
+
+			@Override
+			protected void downloadBegain() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			protected void downloading(int percent) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			protected void downloadFinished() {
+				// TODO Auto-generated method stub
+
+			}
+		};
+		connector.connect();
+		try {
+			connector.downloadFile(Configuration.REMOTE_BINDIR, Configuration.TFTP_EXE, Configuration.BINDIR,
+					Configuration.TFTP_EXE, false);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			connector.disconnect();
+		}
+
+	}
+
 
 	public static void main(String[] args) {
 		Splash splash = new Splash();

@@ -50,38 +50,43 @@ public class MarkDataUpload {
 
 	private void uploadLabel() {
 		String labelFileName = fileNamePrefix + id + ".txt";
-		String localFile = tmpDir + File.separator + labelFileName;
+//		String localFile = tmpDir + File.separator + labelFileName;
 		String remoteFile = remoteDir + File.separator + labelFileName;
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(localFile))) {
-			for (String s : markdata) {
-				bw.write(s);
-				bw.newLine();
+		try {
+			File tmpFile = File.createTempFile(labelFileName, ".txt");
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(tmpFile))) {
+				for (String s : markdata) {
+					bw.write(s);
+					bw.newLine();
+				}
+				bw.flush();
+				tFTPADapter.uploadFileWithRuntimeProcess(remoteFile, tmpFile.getAbsolutePath());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			bw.flush();
-			tFTPADapter.uploadFile(remoteFile, localFile);
-		} catch (FileNotFoundException e) {
+		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			
+			e1.printStackTrace();
 		}
 
 	}
 
 	private void uploadImage() {
 		String imgFileName = fileNamePrefix + id + ".jpg";
-		String localFile = tmpDir + File.separator + imgFileName;
+//		String localFile = tmpDir + File.separator + imgFileName;
 		String remoteFile = remoteDir + File.separator + imgFileName;
 		try {
-			ImageIO.write(image, "jpg", new File(localFile));
-			tFTPADapter.uploadFile(remoteFile, localFile);
+			File tmpFile = File.createTempFile(imgFileName, ".jpg");
+			ImageIO.write(image, "jpg", tmpFile);
+			tFTPADapter.uploadFileWithRuntimeProcess(remoteFile, tmpFile.getAbsolutePath());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 	}
 
 }
