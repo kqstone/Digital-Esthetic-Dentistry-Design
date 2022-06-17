@@ -80,6 +80,11 @@ public class WorkPanel extends Container {
 		return markLipPanel;
 	}
 
+	
+	public MarkDataUpload getMarkDataUpload() {
+		return markDataUpload;
+	}
+
 	public void init() {
 		imageView = new EditableImageView();
 		imageView.setText("双击选择照片文件！");
@@ -465,6 +470,10 @@ public class WorkPanel extends Container {
 	}
 	
 	public void uploadData() {
+		Rectangle rect = imageView.getDrawRect();
+		if (rect.width == 0 || rect.height == 0) {
+			return;
+		} 
 		markDataUpload.setImage(this.genPreImage());
 		markDataUpload.setMarkdata(getMarkData4Yolo());
 		String s = "UNKONW";

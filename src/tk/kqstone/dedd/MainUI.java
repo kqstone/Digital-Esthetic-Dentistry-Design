@@ -760,6 +760,9 @@ public class MainUI extends JFrame {
 
 			@Override
 			public void run() {
+				String uniName = Utils.cnToUnicode(basicInfo.name);
+				workspace.getFrontPanel().getMarkDataUpload().setName(uniName);
+				workspace.getBasePanel().getMarkDataUpload().setName(uniName);
 				workspace.uploadMarkData();
 			}
 			

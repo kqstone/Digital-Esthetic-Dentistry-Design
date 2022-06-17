@@ -1,6 +1,5 @@
 package tk.kqstone.dedd;
 
-import java.awt.Point;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -8,7 +7,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +14,6 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.text.DecimalFormat;
@@ -26,7 +23,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
 public class Utils {
@@ -173,5 +169,17 @@ public class Utils {
 		}
 		return null;
 	}
+	
+	public static String cnToUnicode(String cn) {
+		if (cn == null || cn == "") {
+			return "null";
+		}
+        char[] chars = cn.toCharArray();
+        StringBuilder returnStr = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+            returnStr.append(Integer.toString(chars[i], 16));
+        }
+        return returnStr.toString();
+    }
 
 }

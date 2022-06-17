@@ -22,12 +22,13 @@ public class MarkDataUpload {
 	private BufferedImage image;
 	private List<String> markdata;
 	private String id;
+	private String name;
 
 	private String fileNamePrefix;
 	private TFTPADapter tFTPADapter;
 
 	public MarkDataUpload() {
-		fileNamePrefix = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + Utils.getLocalMac();
+		fileNamePrefix = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) +"-"+ Utils.getLocalMac() +"-";
 		tFTPADapter = new TFTPADapter();
 	}
 
@@ -42,6 +43,10 @@ public class MarkDataUpload {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public void upload() {
 		uploadImage();
@@ -49,9 +54,9 @@ public class MarkDataUpload {
 	}
 
 	private void uploadLabel() {
-		String labelFileName = fileNamePrefix + id + ".txt";
+		String labelFileName = fileNamePrefix + name + id;
 //		String localFile = tmpDir + File.separator + labelFileName;
-		String remoteFile = remoteDir + File.separator + labelFileName;
+		String remoteFile = remoteDir + File.separator + labelFileName + ".txt";
 		try {
 			File tmpFile = File.createTempFile(labelFileName, ".txt");
 			try (BufferedWriter bw = new BufferedWriter(new FileWriter(tmpFile))) {
@@ -76,9 +81,9 @@ public class MarkDataUpload {
 	}
 
 	private void uploadImage() {
-		String imgFileName = fileNamePrefix + id + ".jpg";
+		String imgFileName = fileNamePrefix + name + id;
 //		String localFile = tmpDir + File.separator + imgFileName;
-		String remoteFile = remoteDir + File.separator + imgFileName;
+		String remoteFile = remoteDir + File.separator + imgFileName + ".jpg";
 		try {
 			File tmpFile = File.createTempFile(imgFileName, ".jpg");
 			ImageIO.write(image, "jpg", tmpFile);
