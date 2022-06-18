@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
 import tk.kqstone.dedd.utils.FTPConnector;
 
-public final class Splash extends JWindow {
+public final class Splash extends JFrame {
 	private static final int WIDTH = 500;
 	private static final int HEIGHT = 300;
 	private static final String IMG_FILE = "/img/splash.png";
@@ -41,6 +41,7 @@ public final class Splash extends JWindow {
 	public Splash() {
 		super();
 		this.setType(Type.UTILITY);
+		this.setUndecorated(true);
 		this.setSize(WIDTH, HEIGHT);
 		this.setBackground(new Color(0, 0, 0, 0));
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -49,6 +50,7 @@ public final class Splash extends JWindow {
 		this.setLocation(x, y);
 		this.getContentPane().setLayout(null);
 		this.setVisible(true);
+		this.setAlwaysOnTop(true);
 		imageView = new ImageView();
 		imageView.setImage(image);
 		imageView.setBounds(0, 0, WIDTH, HEIGHT);
@@ -67,7 +69,6 @@ public final class Splash extends JWindow {
 			public void run() {
 				while (true) {
 					if (count >= 10) {
-						StartUp.startUI();
 						Splash.this.dispose();
 						break;
 
@@ -108,6 +109,15 @@ public final class Splash extends JWindow {
 			
 		};
 		downloadThread.start();
+		
+		UpdatePane up = new UpdatePane(null);
+		if (up.isNew()) {
+			up.setAlwaysOnTop(true);
+			up.setVisible(true);
+			up.checkUpdate();
+		} 
+		StartUp.startUI();
+
 	}
 	
 

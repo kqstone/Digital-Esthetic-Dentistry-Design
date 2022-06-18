@@ -162,6 +162,7 @@ public final class StartUp extends JFrame {
 			if (r == JOptionPane.YES_OPTION) {
 
 				UpdatePane up = new UpdatePane(null);
+				up.setVisible(true);
 				up.checkUpdate();
 			}
 			return;

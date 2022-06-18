@@ -100,7 +100,7 @@ public class UpdatePane extends JDialog {
 		panel.add(lblLatestVer);
 		pack();
 		this.setLocationRelativeTo(owner);
-		this.setVisible(true);
+//		this.setVisible(true);
 
 		ButtonListener bl = new ButtonListener();
 		btnUpdate.addActionListener(bl);
@@ -209,7 +209,7 @@ public class UpdatePane extends JDialog {
 	}
 	
 
-	private boolean isNew() {
+	protected boolean isNew() {
 		boolean is = false;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String currentBuild=BuildInfo.getBuildDate();
