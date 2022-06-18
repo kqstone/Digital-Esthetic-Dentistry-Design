@@ -474,7 +474,7 @@ public class WorkPanel extends Container {
 		if (rect.width == 0 || rect.height == 0) {
 			return;
 		} 
-		markDataUpload.setImage(this.genPreImage());
+		markDataUpload.setImage(imageView.getImage());
 		markDataUpload.setMarkdata(getMarkData4Yolo());
 		String s = "UNKONW";
 		switch(viewId) {
