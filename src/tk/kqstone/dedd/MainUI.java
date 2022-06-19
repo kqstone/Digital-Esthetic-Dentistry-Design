@@ -554,7 +554,7 @@ public class MainUI extends JFrame {
 	}
 
 	private void checkUpdate() {
-		UpdatePane updatePane = new UpdatePane(this);
+		Updater updatePane = new Updater(this);
 		updatePane.setVisible(true);
 		updatePane.checkUpdate();
 	}

@@ -33,7 +33,7 @@ import tk.kqstone.dedd.utils.FTPConnector;
 import javax.swing.Box;
 import java.awt.Color;
 
-public class UpdatePane extends JDialog {
+public class Updater extends JDialog {
 	private static final String ADDR = "kqstone.myqnapcloud.com";
 	private static final int PORT = 12021;
 //	private static final String USER_NAME = "ftp_user";
@@ -44,7 +44,7 @@ public class UpdatePane extends JDialog {
 	private static final String TMP_PATH = "tmp";
 	private static final String BIN_FILE = "dedd.bin";
 	private static final String BIN_PATH = "bin";
-
+	
 	private JLabel lblUpdate;
 	private JLabel lblLatestVer;
 	private JButton btnUpdate;
@@ -58,7 +58,7 @@ public class UpdatePane extends JDialog {
 	
 	private String currentVersion = BuildInfo.getVersion();
 
-	public UpdatePane(Frame owner) {
+	public Updater(Frame owner) {
 		super(owner);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setType(Type.POPUP);
@@ -162,7 +162,7 @@ public class UpdatePane extends JDialog {
 						public void run() {
 							lblLatestVer.setText(Constant.LATEST_VERSION);
 							lblUpdate.setText(Constant.CONNECT_FAIL);
-							UpdatePane.this.pack();
+							Updater.this.pack();
 						}
 
 					});
@@ -279,7 +279,7 @@ public class UpdatePane extends JDialog {
 				}).start();
 
 			} else if (source.equals(btnCancel)) {
-				UpdatePane.this.dispose();
+				Updater.this.dispose();
 			}
 		}
 	}

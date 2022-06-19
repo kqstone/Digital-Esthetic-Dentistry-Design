@@ -68,7 +68,7 @@ public final class Splash extends JFrame {
 			@Override
 			public void run() {
 				while (true) {
-					if (count >= 10) {
+					if (count >= 6) {
 						Splash.this.dispose();
 						break;
 
@@ -110,7 +110,7 @@ public final class Splash extends JFrame {
 		};
 		downloadThread.start();
 		
-		UpdatePane up = new UpdatePane(null);
+		Updater up = new Updater(null);
 		if (up.isNew()) {
 			up.setAlwaysOnTop(true);
 			up.setVisible(true);
