@@ -135,6 +135,7 @@ public class EditableImageView extends ImageView implements IImageBinder {
 		} else {
 			this.removeMouseListener(unifiablemouseAdapter);
 			this.removeMouseMotionListener(unifiablemouseAdapter);
+			this.markPanel.clear();
 		}
 
 		this.unifiable = unifiable;

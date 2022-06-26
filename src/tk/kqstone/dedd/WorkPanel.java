@@ -249,6 +249,7 @@ public class WorkPanel extends Container {
 
 		((EditableImageView) imageView).setUnifiable(false);
 		imageView.setEditable(false);
+		imageView.setUnifiable(false);
 		if (imageEditButtonPane.isVisible())
 			imageEditButtonPane.setVisible(false);
 		if (teethAdjustButtonPane.isVisible())
@@ -267,6 +268,7 @@ public class WorkPanel extends Container {
 
 		((EditableImageView) imageView).setUnifiable(false);
 		imageView.setEditable(false);
+		imageView.setUnifiable(false);
 		if (imageEditButtonPane.isVisible())
 			imageEditButtonPane.setVisible(false);
 		if (teethAdjustButtonPane.isVisible())
@@ -328,6 +330,7 @@ public class WorkPanel extends Container {
 			adjustPanel.setVisible(true);
 		((EditableImageView) imageView).setUnifiable(false);
 		imageView.setEditable(false);
+		imageView.setUnifiable(false);
 		if (imageEditButtonPane.isVisible())
 			imageEditButtonPane.setVisible(false);
 		if (!teethAdjustButtonPane.isVisible())
