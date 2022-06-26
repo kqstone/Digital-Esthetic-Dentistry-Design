@@ -12,6 +12,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import tk.kqstone.dedd.utils.FTPConnector;
@@ -109,6 +110,11 @@ public final class Splash extends JFrame {
 			
 		};
 		downloadThread.start();
+		
+		if (!Utils.isConnectToInternet()) {
+			JOptionPane.showMessageDialog(null, "无法连接至网络，请确认是否连接至因特网！", "错误", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		
 		Updater up = new Updater(null);
 		if (up.isNew()) {

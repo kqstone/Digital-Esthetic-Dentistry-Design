@@ -15,7 +15,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.NetworkInterface;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
@@ -181,5 +184,21 @@ public class Utils {
         }
         return returnStr.toString();
     }
+	
+	public static boolean isConnectToInternet() {
+		boolean r = false;
+		try {
+	         URL url = new URL("https://www.baidu.com");
+	         URLConnection connection = url.openConnection();
+	         connection.connect();
+	         System.out.println("Internet is connected");
+	         r = true;
+	      } catch (MalformedURLException e) {
+	         System.out.println("Internet is not connected");
+	      } catch (IOException e) {
+	         System.out.println("Internet is not connected");
+	      }
+		return r;
+	}
 
 }
