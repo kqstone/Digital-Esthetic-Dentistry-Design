@@ -166,6 +166,19 @@ public class MainUI extends JFrame {
 								break;
 						}
 					}
+					if(((KeyEvent)event).getKeyCode() == KeyEvent.VK_B) {
+						System.out.println("MainUI: " + "B pressed!!!!!!!!!!!!!");
+						EnvVar.sPressed_VK_B = true;				
+					}
+					
+				}
+				
+				if (((KeyEvent)event).getID() == KeyEvent.KEY_RELEASED) {
+					
+					if(((KeyEvent)event).getKeyCode() == KeyEvent.VK_B) {
+						System.out.println("MainUI: " + "B released!!!!!!!!!!!!!");
+						EnvVar.sPressed_VK_B = false;				
+					}
 					
 				}
 				

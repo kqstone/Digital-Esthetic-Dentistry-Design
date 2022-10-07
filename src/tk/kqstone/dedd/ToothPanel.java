@@ -30,6 +30,8 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 
 	private boolean labelVisable;
 	
+	private boolean bindVertical = false;
+	
 	private float proportion;
 	private int offsetX;
 	private int offsetY;
@@ -189,7 +191,7 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 		super.setBounds();
 		if (bindedToothPanel != null)
 			update();
-		if (bindedToothPanelV != null)
+		if (bindedToothPanelV != null && EnvVar.sPressed_VK_B)
 			updateV();
 		if (bindedToothPanelHR != null)
 			updateHR();
@@ -217,6 +219,10 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 
 	public Rect2D getInitRect() {
 		return initRect;
+	}
+	
+	public void setBindVertical(boolean b) {
+		this.bindVertical = b;
 	}
 	
 }
