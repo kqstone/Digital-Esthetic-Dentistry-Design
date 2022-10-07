@@ -57,7 +57,7 @@ public final class Constant {
 	public static final String TOOTH_LENGTH = "冠长";
 	public static final String TOOTH_RATIO = "宽长比";
 	public static final String AUTO_ADJUST = "自动优化";
-	public static final String MARKLIP = "标记上唇线";
+	public static final String MARKLIP = "标记唇线";
 	public static final String STARTING = "启动中";
 	public static final String INITIALIZE_UI = "初始化工作界面...";
 	public static final String CONFIRM_EXIT = "数据未保存，是否保存数据后再退出？";
