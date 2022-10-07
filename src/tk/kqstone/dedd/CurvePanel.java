@@ -104,13 +104,22 @@ public class CurvePanel extends ZoomableJPanel {
 		Point c2;
 		List<Point> tmpPoints = new ArrayList<>();
 		tmpPoints.addAll(points);		
-		tmpPoints.add(points.get(0));
-		tmpPoints.add(points.get(1));
+//		tmpPoints.add(points.get(0));
+//		tmpPoints.add(points.get(1));
 		
-		for (int i = 0; i < tmpPoints.size() - 2; i++) {
-			Point p0 = tmpPoints.get(i);
-			Point p1 = tmpPoints.get(i + 1);
-			Point p2 = tmpPoints.get(i + 2);
+		for (int i = 0; i < tmpPoints.size() ; i++) {
+			Point p0, p1, p2;
+			if (i == 0) {
+				p0 = tmpPoints.get(tmpPoints.size()-1);
+				p2 = tmpPoints.get(i + 1);
+			} else if (i == tmpPoints.size()-1) {
+				p2 = tmpPoints.get(0);
+				p0 = tmpPoints.get(i-1);
+			} else {
+				p0 = tmpPoints.get(i-1);
+				p2 = tmpPoints.get(i + 1);
+			}			
+			p1 = tmpPoints.get(i);
 			double d1 = p1.distance(p0);
 			double d2 = p1.distance(p2);
 			double t = d1 / (d1 + d2);
@@ -125,15 +134,15 @@ public class CurvePanel extends ZoomableJPanel {
 			int offsetY = p1.y - sy;
 			c1 = new Point(mx + offsetX, my + offsetY);
 			c2 = new Point(nx + offsetX, ny + offsetY);
-			if (i == 0) {
-				c0 = p0;
-			}
-			Point[] tmp = { c0, c1 };
+//			if (i == 0) {
+//				c0 = p0;
+//			}
+			Point[] tmp = { c1, c2 };
 			ctlPoints.add(tmp);
-			c0 = c2;
+//			c0 = c2;
 		}
-		Point[] tmp = { c0, tmpPoints.get(points.size() - 1) };
-		ctlPoints.add(tmp);
+//		Point[] tmp = { c0, tmpPoints.get(points.size() - 1) };
+//		ctlPoints.add(tmp);
 		return ctlPoints;
 	}
 
@@ -153,14 +162,20 @@ public class CurvePanel extends ZoomableJPanel {
 			if (size == 2) {
 				path.lineTo(points.get(1).x, points.get(1).y);
 			} else {
-				for (int i = 0; i < points.size() ; i++) {
-					Point c0 = controlPoints.get(i)[0];
-					Point c1 = controlPoints.get(i)[1];
+				for (int i = 1; i <= points.size() ; i++) {
+					Point c0,c1;
+					if(i==points.size()) {
+						c0 = controlPoints.get(controlPoints.size()-1)[1];
+						c1 =  controlPoints.get(0)[0];
+					}else {
+						c0 = controlPoints.get(i-1)[1];
+						c1 =  controlPoints.get(i)[0];
+					}
 					Point p1;
-					if (i == points.size()-1) {
+					if (i == points.size()) {
 						p1 = points.get(0);
 					} else {
-						p1 = points.get(i + 1);
+						p1 = points.get(i);
 					}
 					path.curveTo(c0.x, c0.y, c1.x, c1.y, p1.x, p1.y);
 				}
