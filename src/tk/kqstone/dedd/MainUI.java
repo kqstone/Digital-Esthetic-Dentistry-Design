@@ -631,6 +631,7 @@ public class MainUI extends JFrame {
 		if (frontImage != null) {
 			workspace.setImage(WorkPanel.FRONT_VIEW, frontImage);
 			Rectangle frontContentRect = workspace.getContentRect(WorkPanel.FRONT_VIEW);
+			workspace.setLipPathClosed(data.getLipPathClosed());
 			List<Point> lipPoints = Controller.convert2P(data.getLipPoints(), frontContentRect);
 			workspace.setLipPoints(WorkPanel.FRONT_VIEW, lipPoints);
 			List<Tooth> frontMarkedTeeth = Controller.convert2Teeth(data.getFrontMarkedTeeth(), frontContentRect);

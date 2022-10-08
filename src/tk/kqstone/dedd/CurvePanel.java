@@ -24,6 +24,7 @@ public class CurvePanel extends ZoomableJPanel {
 	private GeneralPath path; //实际路径
 	private GeneralPath showPath; //显示路径，随缩放和位移变化
 	private GeneralPath outputPath;
+	private boolean isClosed = false;
 
 	public CurvePanel() {
 		this.setOpaque(false);
@@ -39,7 +40,7 @@ public class CurvePanel extends ZoomableJPanel {
 	}
 
 	public GeneralPath getPath() {
-		genPath();
+		genPath(isClosed);
 		return path;
 	}
 
@@ -47,14 +48,17 @@ public class CurvePanel extends ZoomableJPanel {
 		if (points.size() < 2)
 			return null;
 		genCtlPoints();
-		genPath();
+		genPath(isClosed);
+		if (isClosed) {
+			return path;
+		}
 		outputPath = (GeneralPath) path.clone();
-//		int x1 = points.get(0).x;
-//		int x2 = points.get(points.size() - 1).x;
-//		int y = this.getHeight();
-//		outputPath.lineTo(x2, y);
-//		outputPath.lineTo(x1, y);
-//		outputPath.closePath();
+		int x1 = points.get(0).x;
+		int x2 = points.get(points.size() - 1).x;
+		int y = this.getHeight();
+		outputPath.lineTo(x2, y);
+		outputPath.lineTo(x1, y);
+		outputPath.closePath();
 		return outputPath;
 	}
 
@@ -63,7 +67,7 @@ public class CurvePanel extends ZoomableJPanel {
 		
 		showPoints = zoomPoints(points, proportion, offsetX, offsetY);
 		genShowCtlPoints();
-		genShowPath();
+		genShowPath(isClosed);
 		super.zoom(proportion, offsetX, offsetY);
 	}
 
@@ -154,7 +158,7 @@ public class CurvePanel extends ZoomableJPanel {
 		this.showControlPoints = genCtlPoints(showPoints);
 	}
 	
-	private static GeneralPath genPath(List<Point> points, List<Point[]> controlPoints) {
+	private static GeneralPath genPath(List<Point> points, List<Point[]> controlPoints, boolean close) {
 		GeneralPath path = new GeneralPath();
 		int size = points.size();
 		if (size >= 2) {
@@ -162,21 +166,33 @@ public class CurvePanel extends ZoomableJPanel {
 			if (size == 2) {
 				path.lineTo(points.get(1).x, points.get(1).y);
 			} else {
-				for (int i = 1; i <= points.size() ; i++) {
+				for (int i = 1; i <= points.size() -1; i++) {
 					Point c0,c1;
-					if(i==points.size()) {
-						c0 = controlPoints.get(controlPoints.size()-1)[1];
-						c1 =  controlPoints.get(0)[0];
+					if (i == 1) {
+						if (!close) {
+							c0 = points.get(0);
+						} else {
+							c0 = controlPoints.get(0)[1];
+						}						
+						c1 =  controlPoints.get(1)[0];
+					} else if(i==points.size()-1) {
+						if (!close) {
+							c1 = points.get(i);
+						} else {
+							c1 = controlPoints.get(i)[0];
+						}						
+						c0 =  controlPoints.get(i-1)[1];
 					}else {
 						c0 = controlPoints.get(i-1)[1];
-						c1 =  controlPoints.get(i)[0];
+						c1 = controlPoints.get(i)[0];
 					}
-					Point p1;
-					if (i == points.size()) {
-						p1 = points.get(0);
-					} else {
-						p1 = points.get(i);
-					}
+					Point p1 = points.get(i);
+					path.curveTo(c0.x, c0.y, c1.x, c1.y, p1.x, p1.y);
+				}
+				if (close) {
+					Point p1 = points.get(0);
+					Point c0 = controlPoints.get(controlPoints.size()-1)[1];
+					Point c1 = controlPoints.get(0)[0];
 					path.curveTo(c0.x, c0.y, c1.x, c1.y, p1.x, p1.y);
 				}
 			}
@@ -185,13 +201,13 @@ public class CurvePanel extends ZoomableJPanel {
 	}
 
 
-	private void genPath() {
-		path = genPath(points, controlPoints);
+	private void genPath(boolean close) {
+		path = genPath(points, controlPoints, close);
 
 	}
 	
-	private void genShowPath() {		
-		showPath = genPath(showPoints, showControlPoints);
+	private void genShowPath(boolean close) {		
+		showPath = genPath(showPoints, showControlPoints, close);
 	}
 
 	class MouseActionAdapter extends MouseAdapter {
@@ -211,18 +227,29 @@ public class CurvePanel extends ZoomableJPanel {
 					points.add(restoreZoomPoint(point, proportion, offsetX, offsetY));
 				} else {
 					if (paintMode) {
-						for (int i = 0; i < points.size() - 1; i++) {
+						if (showPoints.get(0).distance(point) < PT_RADIUS && !isClosed) {
+							pointIndex = 0;
+							paintMode = false;
+							isClosed = true;
+							return;
+						}
+						for (int i = 1; i < points.size() - 1; i++) {
 							if (showPoints.get(i).distance(point) < PT_RADIUS) {
 								return;
 							}
 						}
 						
 					} else {
+						if (showPoints.get(showPoints.size()-1).distance(point) < PT_RADIUS && !isClosed) {
+							pointIndex = showPoints.size();
+							paintMode = true;
+							return;
+						}
 						return;
 					}
 					genShowCtlPoints();
 				}
-				genShowPath();
+				genShowPath(isClosed);
 				repaint();
 				pointIndex = showPoints.size();
 				break;
@@ -237,7 +264,7 @@ public class CurvePanel extends ZoomableJPanel {
 							showPoints.remove(i);
 							points.remove(i);
 							genShowCtlPoints();
-							genShowPath();
+							genShowPath(isClosed);
 							repaint();
 							break;
 						}
@@ -280,7 +307,7 @@ public class CurvePanel extends ZoomableJPanel {
 			showPoints.get(pointIndex).setLocation(point);
 			points.get(pointIndex).setLocation(restoreZoomPoint(point, proportion, offsetX, offsetY));
 			genShowCtlPoints();
-			genShowPath();
+			genShowPath(isClosed);
 			repaint();
 		}
 
@@ -290,17 +317,34 @@ public class CurvePanel extends ZoomableJPanel {
 				return;
 			Point point = e.getPoint();
 			
-			if (pointIndex >= points.size()) {
+			if (showPoints.get(0).distance(point) < PT_RADIUS) {
+				if (pointIndex != -1) {
+					showPoints.remove(showPoints.size() - 1);
+					points.remove(points.size() - 1);
+					pointIndex = -1;
+					genShowCtlPoints();
+					genShowPath(true);
+					repaint();
+				}
+				return;
+			} else {
+				if (pointIndex >= points.size()) {
 					showPoints.add(point);
 					points.add(restoreZoomPoint(point, proportion, offsetX, offsetY));
-				
-				
+
+				} else if (pointIndex == -1) {
+					pointIndex = points.size();
+					showPoints.add(point);
+					points.add(restoreZoomPoint(point, proportion, offsetX, offsetY));
+				}
+
+				showPoints.get(pointIndex).setLocation(point);
+				points.get(pointIndex).setLocation(restoreZoomPoint(point, proportion, offsetX, offsetY));
+				genShowCtlPoints();
+				genShowPath(isClosed);
+
+				repaint();
 			}
-			showPoints.get(pointIndex).setLocation(point);
-			points.get(pointIndex).setLocation(restoreZoomPoint(point, proportion, offsetX, offsetY));
-			genShowCtlPoints();
-			genShowPath();
-			repaint();
 		}
 
 	}
@@ -310,7 +354,7 @@ public class CurvePanel extends ZoomableJPanel {
 		this.showPoints = zoomPoints(points, proportion, offsetX, offsetY);
 		genShowCtlPoints();
 		genCtlPoints();
-		genShowPath();
+		genShowPath(isClosed);
 		repaint();
 	}
 
@@ -320,6 +364,17 @@ public class CurvePanel extends ZoomableJPanel {
 		return this.points;
 
 	}
+	
+	public boolean isClosed() {
+		return this.isClosed;
+
+	}
+	
+	public void setClosed(boolean closed) {
+		this.isClosed = closed;
+
+	}
+	
 	
 	private static Point zoomPoint(Point point ,float proportion, int offsetX, int offsetY) {
 		int x = Math.round(point.x * proportion + offsetX);

@@ -398,4 +398,15 @@ public class WorkSpace extends Container implements IMenmento{
 		
 	}
 
+	public boolean getLipPathClosed() {
+		// TODO Auto-generated method stub
+		return frontPanel.getMarkLipPanel().isClosed();
+	}
+	
+	public void setLipPathClosed(boolean closed) {
+			if (frontPanel.getMarkLipPanel() != null) {
+				frontPanel.getMarkLipPanel().setClosed(closed);
+			}
+	}
+
 }

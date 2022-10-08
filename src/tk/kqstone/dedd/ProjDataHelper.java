@@ -39,6 +39,7 @@ public class ProjDataHelper {
 	private static final String TAG_POINT_ID = "id";
 	private static final String TAG_X = "x";
 	private static final String TAG_Y = "y";
+	private static final String TAG_CLOSED = "closed";
 	private static final String TAG_WORKPANEL = "workpanel";
 	private static final String TAG_WORKPANEL_ID = "id";
 	private static final String FRONT = "front";
@@ -113,6 +114,8 @@ public class ProjDataHelper {
 				DomHelper.addTextNode(elmPoint, TAG_X, String.valueOf(lipPoints.get(i).x));
 				DomHelper.addTextNode(elmPoint, TAG_Y, String.valueOf(lipPoints.get(i).y));
 			}
+			boolean closed = projData.getLipPathClosed();
+			DomHelper.addTextNode(root, TAG_CLOSED, String.valueOf(closed));
 		}
 
 		Element elmFrontWorkPanel = doc.createElement(TAG_WORKPANEL);
@@ -196,6 +199,7 @@ public class ProjDataHelper {
 
 		projData.setBasicInfo(getBasicInfoFromXML(doc));
 		projData.setLipPoints(getLipPointsFromXML(doc));
+		projData.setLipPathClosed(getLipPathClosed(doc));
 
 		projData.setBaseMarkedTeeth(getTeethData(doc, BASE, TAG_MARK_TEETH));
 		projData.setBaseAdjustedTeeth(getTeethData(doc, BASE, TAG_ADJUST_TEETH));
@@ -219,6 +223,14 @@ public class ProjDataHelper {
 			}
 		}
 		return value;
+	}
+	
+	private static boolean getLipPathClosed(Document document) {
+		NodeList nodelist = document.getChildNodes();
+		String s = DomHelper.getChildText(nodelist.item(0), TAG_CLOSED);
+		boolean closed = Boolean.valueOf(s);
+		System.out.println("LipPathClosed:" + "[" + closed + "]" );
+		return closed;
 	}
 
 	private static List<ToothData> getTeethData(Document document, String workPanelId, String teethType) {

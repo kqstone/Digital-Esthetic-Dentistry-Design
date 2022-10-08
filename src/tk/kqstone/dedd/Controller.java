@@ -84,6 +84,7 @@ public class Controller implements IController {
 			List<Point2D.Float> lipPoints = convert2Float(workspace.getLipPoints(WorkPanel.FRONT_VIEW),
 					frontContentRect);
 			data.setLipPoints(lipPoints);
+			data.setLipPathClosed(workspace.getLipPathClosed());
 
 			List<ToothData> frontMarkedTeeth = convert2TeethData(workspace.getMarkedTeeth(WorkPanel.FRONT_VIEW),
 					frontContentRect);

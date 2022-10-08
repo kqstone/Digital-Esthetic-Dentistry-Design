@@ -67,6 +67,8 @@ public class ProjData implements Serializable {
 
 	private List<Point2D.Float> lipPoints;
 
+	private boolean lipPathClosed;
+
 	public BasicInfo getBasicInfo() {
 		return basicInfo;
 	}
@@ -166,5 +168,14 @@ public class ProjData implements Serializable {
 	public void setLipPoints(List<Point2D.Float> lipPoints) {
 		this.lipPoints = lipPoints;
 	}
+	
+	public void setLipPathClosed(boolean closed) {
+		this.lipPathClosed = closed;
+	}
+	
+	public boolean getLipPathClosed() {
+		return this.lipPathClosed;
+	}
+
 
 }
