@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NetTeethOptimizer extends TeethOptimizer {
-	private static final String NET_ADRESS = "kqstone.myqnapcloud.com";
+	private static final String NET_ADRESS = Constant.DEFAULT_SERVER;
 //	private static final String NET_ADRESS ="localhost";
 	public static final int PORT = 12061;
 

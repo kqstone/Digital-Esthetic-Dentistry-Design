@@ -19,7 +19,7 @@ import com.google.gson.reflect.TypeToken;
 
 public class NetImageDetection implements IImageDetection {
 
-	private static final String NET_ADRESS = "kqstone.myqnapcloud.com";
+	private static final String NET_ADRESS = Constant.DEFAULT_SERVER;
 	private static final String LOCAL_NET_ADRESS = "localhost";
 	private static final File tmpFile = new File("/tmp/tmp.jpg");
 	public static final int PORT = 12062;
