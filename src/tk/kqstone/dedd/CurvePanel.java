@@ -262,6 +262,8 @@ public class CurvePanel extends ZoomableJPanel {
 					for(int i=0; i<showPoints.size(); i++) {
 						if (showPoints.get(i).distance(point) < PT_RADIUS) {
 							showPoints.remove(i);
+							if (showPoints.size() <=2)
+								isClosed = false;
 							points.remove(i);
 							genShowCtlPoints();
 							genShowPath(isClosed);
@@ -313,11 +315,13 @@ public class CurvePanel extends ZoomableJPanel {
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
+			if (showPoints.size() == 0)
+				return;
 			if (!paintMode)
 				return;
 			Point point = e.getPoint();
 			
-			if (showPoints.get(0).distance(point) < PT_RADIUS) {
+			if (showPoints.size() != 1 && showPoints.get(0).distance(point) < PT_RADIUS) {
 				if (pointIndex != -1) {
 					showPoints.remove(showPoints.size() - 1);
 					points.remove(points.size() - 1);
