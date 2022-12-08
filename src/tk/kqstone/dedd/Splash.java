@@ -7,7 +7,12 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -18,6 +23,8 @@ import javax.swing.SwingUtilities;
 import tk.kqstone.dedd.utils.FTPConnector;
 
 public final class Splash extends JFrame {
+	private final static LocalDate EXPIRE_DATE = LocalDate.of(2022, 10, 31);
+	private static final String HASHCODE_UNEXPIRED_FILE_NAME = "e57875bfd30099af4eaf236dc6fd20cffd3e2596a298cb904ec7208d68c70dae";
 	private static final int WIDTH = 500;
 	private static final int HEIGHT = 300;
 	private static final String IMG_FILE = "/img/splash.png";
@@ -116,8 +123,20 @@ public final class Splash extends JFrame {
 			return;
 		}
 		
+		boolean showUpdatePane = false;	
+		
+		if (!expirationDate(EXPIRE_DATE) && !unexpired()) {
+			int r = JOptionPane.showConfirmDialog(null, Constant.EXPIRE_MESSAGE, Constant.PROG_NAME,
+					JOptionPane.YES_NO_OPTION);			
+			if (r == JOptionPane.YES_OPTION) {
+				showUpdatePane = true;
+			} else {
+				return;
+			}
+		}
+		
 		Updater up = new Updater(null);
-		if (up.isNew()) {
+		if (showUpdatePane || up.isNew()) {
 			up.setAlwaysOnTop(true);
 			up.setVisible(true);
 			up.checkUpdate();
@@ -165,7 +184,43 @@ public final class Splash extends JFrame {
 		}
 
 	}
+	
+	private static boolean expirationDate(LocalDate expireDate) {
+		LocalDate dateNow = LocalDate.now();
+		if (dateNow.isAfter(expireDate)) {
+			return false;
+		} else {
+			return true;
+		}
 
+	}
+	
+	
+	private static boolean unexpired() {
+		boolean unexpired = false;
+		String[] filenames = new File(EnvVar.CONFIG_DIR).list();		
+		for (String s:filenames) {
+			if (!s.equals("aggrement.xml")) {
+					String hashcode;
+					try {
+						hashcode = getHashCode(s);
+						unexpired = hashcode.equals(HASHCODE_UNEXPIRED_FILE_NAME);
+					} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+			}	
+		}
+		return unexpired;
+	}
+
+	private static String getHashCode(String input) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(input.getBytes("UTF-8"));
+        byte[] result = md.digest(); 
+        return new BigInteger(1, result).toString(16);
+	}
 
 	public static void main(String[] args) {
 		Splash splash = new Splash();

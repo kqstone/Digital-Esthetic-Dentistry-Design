@@ -43,14 +43,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public final class StartUp extends JFrame {
-	private final static LocalDate EXPIRE_DATE = LocalDate.of(2023, 10, 31);
 
 	private static final String AGREMENT_FILE_PATH = "/text/aggrement";
-	private static final String CONFIG_DIR = "config";
 	private static final String AGGREMENT_FILE_NAME = "aggrement.xml";
-	private static final File AGGREMENT_FILE = new File(CONFIG_DIR + File.separator + AGGREMENT_FILE_NAME);
+	private static final File AGGREMENT_FILE = new File(EnvVar.CONFIG_DIR + File.separator + AGGREMENT_FILE_NAME);
 	
-	private static final String HASHCODE_UNEXPIRED_FILE_NAME = "e57875bfd30099af4eaf236dc6fd20cffd3e2596a298cb904ec7208d68c70dae";
 
 	public StartUp() {
 		super();
@@ -156,17 +153,7 @@ public final class StartUp extends JFrame {
 	}
 
 	public static void startUI() {
-		if (!expirationDate(EXPIRE_DATE) && !unexpired()) {
-			int r = JOptionPane.showConfirmDialog(null, Constant.EXPIRE_MESSAGE, Constant.PROG_NAME,
-					JOptionPane.YES_NO_OPTION);
-			if (r == JOptionPane.YES_OPTION) {
 
-				Updater up = new Updater(null);
-				up.setVisible(true);
-				up.checkUpdate();
-			}
-			return;
-		}
 		boolean agreed = false;
 		if (AGGREMENT_FILE.exists()) {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -193,42 +180,5 @@ public final class StartUp extends JFrame {
 		}
 
 	}
-
-	private static boolean expirationDate(LocalDate expireDate) {
-		LocalDate dateNow = LocalDate.now();
-		if (dateNow.isAfter(expireDate)) {
-			return false;
-		} else {
-			return true;
-		}
-
-	}
-	
-	private static String getHashCode(String input) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(input.getBytes("UTF-8"));
-        byte[] result = md.digest(); 
-        return new BigInteger(1, result).toString(16);
-	}
-	
-	private static boolean unexpired() {
-		boolean unexpired = false;
-		String[] filenames = new File(CONFIG_DIR).list();		
-		for (String s:filenames) {
-			if (s != "aggrement.xml") {
-					String hashcode;
-					try {
-						hashcode = getHashCode(s);
-						unexpired = hashcode.equals(HASHCODE_UNEXPIRED_FILE_NAME);
-					} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-			}	
-		}
-		return unexpired;
-	}
-
 
 }
