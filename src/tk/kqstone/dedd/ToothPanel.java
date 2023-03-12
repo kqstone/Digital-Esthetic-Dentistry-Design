@@ -1,6 +1,9 @@
 package tk.kqstone.dedd;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
@@ -8,6 +11,8 @@ import java.util.List;
 import javax.swing.JLabel;
 
 import tk.kqstone.dedd.Rect2D.Float;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ToothPanel extends BasicBorderPanel implements BindImpl {
 	private static final int LABEL_WIDTH = 80;
@@ -30,6 +35,9 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 
 	private boolean labelVisable;
 	
+	private boolean transparant;
+	private BufferedImage tmpImage; //非透明状态下显示的图像
+	
 	private boolean bindVertical = false;
 	
 	private float proportion;
@@ -47,6 +55,18 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 		proportion = 1.0f;
 		offsetX = 0;
 		offsetY = 0;
+		this.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton() != MouseEvent.BUTTON3)
+					return;
+				boolean transparant = !ToothPanel.this.transparant;
+				ToothPanel.this.setTransparant(transparant, false);
+				bindedToothPanel.setTransparant(transparant, false);
+			}
+			
+		});
 	}
 
 	public void setScale(double scale) {
@@ -75,6 +95,38 @@ public class ToothPanel extends BasicBorderPanel implements BindImpl {
 		this.labelVisable = labelVisable;
 		toothLength.setVisible(labelVisable);
 		toothRatio.setVisible(labelVisable);
+	}
+	
+	/**
+	 * @param transparant 透明
+	 * @param force 是否强制设置透明而不关心之前的状态
+	 */
+	public void setTransparant(boolean transparant, boolean force) {
+		if (!force && this.transparant == transparant)
+			return;
+		BufferedImage image;
+		if (transparant) {
+			this.tmpImage = this.getImage();
+			image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);	
+			Graphics2D g2d = image.createGraphics();
+			g2d.setComposite(AlphaComposite.Clear);
+			g2d.fillRect(0, 0, 1, 1);
+			g2d.setComposite(AlphaComposite.SrcOver);
+			g2d.dispose();
+		} else {
+			image = this.tmpImage;
+		}
+		this.setImage(image);
+		this.repaint();
+		this.transparant = transparant;
+	}
+	
+	public boolean isTransparant() {
+		return transparant;
+	}
+
+	public void setTmpImage(BufferedImage tmpImage) {
+		this.tmpImage = tmpImage;
 	}
 
 	@Override

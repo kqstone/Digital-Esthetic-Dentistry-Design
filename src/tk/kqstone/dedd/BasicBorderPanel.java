@@ -119,6 +119,15 @@ public class BasicBorderPanel extends JPanel {
 	public void setImage(BufferedImage image) {
 		((DrawableBorderRect) simpleDrawableBorderRect).setImage(image);
 	}
+	
+	/**
+	 * get image for BorderPanel
+	 * 
+	 * @return image that showed
+	 */
+	public BufferedImage getImage() {
+		return simpleDrawableBorderRect.getImage();
+	}
 
 	/**
 	 * Mouse Drag Adapter

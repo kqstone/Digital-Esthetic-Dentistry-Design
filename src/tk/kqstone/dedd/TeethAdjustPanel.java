@@ -197,6 +197,10 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 		tp.setLabelVisable(showBorderAndText ? showText : false);
 		tp.getSimpleDrawableBorderRect().setDrawBorder(showBorderAndText ? showBorder : false);
 		tp.setImage(image);
+		tp.setTmpImage(image);
+		if(tp.isTransparant()) {
+			tp.setTransparant(true, true);
+		}
 		if (showMode == MODE_NONE) 
 			visible = false;
 		tp.setVisible(visible);
@@ -277,6 +281,10 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 			try {
 				image = ImageUtils.lumAdjustment(image, bright);
 				tooth.setImage(image);
+				tooth.setTmpImage(image);
+				if(tooth.isTransparant()) {
+					tooth.setTransparant(true, true);
+				}
 				tooth.repaint();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -296,6 +304,10 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 			try {
 				image = ImageUtils.adjustBrightAndYellow(image, bright, yellow);
 				tooth.setImage(image);
+				tooth.setTmpImage(image);
+				if(tooth.isTransparant()) {
+					tooth.setTransparant(true, true);
+				}
 				tooth.repaint();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -335,6 +347,10 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 					showText = true;
 				}
 				tooth.setImage(image);
+				tooth.setTmpImage(image);
+				if(tooth.isTransparant()) {
+					tooth.setTransparant(true, true);
+				}
 				tooth.setLabelVisable(showBorderAndText ? showText : false);
 				tooth.getSimpleDrawableBorderRect().setDrawBorder(showBorderAndText ? showBorder : false);
 				tooth.setVisible(true);
