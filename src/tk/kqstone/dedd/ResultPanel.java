@@ -165,45 +165,6 @@ public class ResultPanel extends JScrollPane {
 		frontImageAfter.setBorder(border);
 
 		contentPane.add(Box.createVerticalStrut(15));
-
-		buttonPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) buttonPanel.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		contentPane.add(buttonPanel);
-
-		final JButton saveButton = new JButton(Constant.SAVE);
-		saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		saveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				chooser.setSelectedFile(new File(GlobalVariables.sWorkingDir + " "));
-				chooser.setFileFilter(new FileNameExtensionFilter("图片文件(.jpg)", "jpg"));
-				int result = chooser.showSaveDialog(contentPane);
-				if (result == JFileChooser.APPROVE_OPTION) {
-					GlobalVariables.sWorkingDir = chooser.getSelectedFile().getParent() + File.separator;
-					String path;
-					try {
-						path = chooser.getSelectedFile().getCanonicalPath();
-						if (!path.endsWith(".jpg"))
-							path += ".jpg";
-						saveButton.setVisible(false);
-						BufferedImage image = new BufferedImage(contentPane.getWidth(), contentPane.getHeight(),
-								BufferedImage.TYPE_INT_RGB);
-						Graphics g = image.getGraphics();
-						contentPane.print(g);
-						g.dispose();
-						saveButton.setVisible(true);
-						ImageIO.write(image, "jpg", new File(path));
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-			}
-		});
-		buttonPanel.add(saveButton);
-
 	}
 
 	public void init() {
@@ -276,6 +237,33 @@ public class ResultPanel extends JScrollPane {
 
 	public void setPhone(String phone) {
 		this.phoneNumber.setText(Constant.PHONE + ": " + phone);
+	}
+	
+	public void saveToFile() {
+
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setSelectedFile(new File(GlobalVariables.sWorkingDir + " "));
+		chooser.setFileFilter(new FileNameExtensionFilter("图片文件(.jpg)", "jpg"));
+		int result = chooser.showSaveDialog(this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			GlobalVariables.sWorkingDir = chooser.getSelectedFile().getParent() + File.separator;
+			String path;
+			try {
+				path = chooser.getSelectedFile().getCanonicalPath();
+				if (!path.endsWith(".jpg"))
+					path += ".jpg";
+				BufferedImage image = new BufferedImage(contentPane.getWidth(), contentPane.getHeight(),
+						BufferedImage.TYPE_INT_RGB);
+				Graphics g = image.getGraphics();
+				contentPane.print(g);
+				g.dispose();
+				ImageIO.write(image, "jpg", new File(path));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
 
 }

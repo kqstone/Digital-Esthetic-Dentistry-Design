@@ -100,4 +100,5 @@ public final class Constant {
 	public static final String SHOW_NONE = "隐藏显示";
 	public static final String TEETH_DETECTION = "AI检测中...";
 	public static final String AI_DETECTION = "AI检测";
+	public static final String EXPORT_DESIGN_TO_FILE = "AI检测";
 }

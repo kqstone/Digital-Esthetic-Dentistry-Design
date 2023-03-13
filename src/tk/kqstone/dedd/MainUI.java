@@ -60,6 +60,7 @@ public class MainUI extends JFrame {
 	private final static String URL_AUTOADJUST = "/img/auto_adjust.png";
 	private final static String URL_REGENADJUST = "/img/regen_adjust.png";
 	private final static String URL_TEETHDETECTION = "/img/ai_detection.png";
+	private final static String URL_EXPORTDESIGNTOFILE = "/img/export_design_to_file.png";
 
 	private JMenuBar menuBar;
 	private Container root; // Root Container
@@ -87,6 +88,7 @@ public class MainUI extends JFrame {
 	private IconButton autoAdjustButton;
 	private IconButton regenAdjustButton;
 	private IconButton detectTeethButton;
+	private IconButton exportDesignToFileButton;
 
 	private IController controller;
 
@@ -255,8 +257,11 @@ public class MainUI extends JFrame {
 		detectTeethButton = new IconButton(Constant.AI_DETECTION,
 				new ImageIcon(this.getClass().getResource(URL_TEETHDETECTION)));
 		detectTeethButton.setVisible(false);
+		exportDesignToFileButton = new IconButton(Constant.EXPORT_DESIGN_TO_FILE,
+				new ImageIcon(this.getClass().getResource(URL_EXPORTDESIGNTOFILE)));
+		exportDesignToFileButton.setVisible(false);
 		tabPanel.addIconButton(autoAdjustButton).addIconButton(detectTeethButton).addIconButton(regenAdjustButton).addIconButton(undoButton)
-				.addIconButton(redoButton);
+				.addIconButton(redoButton).addIconButton(exportDesignToFileButton);
 		MouseListener listener = new MouseAdapter() {
 
 			@Override
@@ -272,6 +277,8 @@ public class MainUI extends JFrame {
 					workspace.reGenAdjustTeeth();
 				} else if (source.equals(detectTeethButton)) {
 					detectTeeth();
+				} else if (source.equals(exportDesignToFileButton)) {
+					resultPanel.saveToFile();;
 				}
 			}
 
@@ -281,6 +288,7 @@ public class MainUI extends JFrame {
 		undoButton.addMouseListener(listener);
 		redoButton.addMouseListener(listener);
 		detectTeethButton.addMouseListener(listener);
+		exportDesignToFileButton.addMouseListener(listener);
 	}
 
 	public File getProjFile() {
@@ -430,6 +438,7 @@ public class MainUI extends JFrame {
 				undoMenuItem.setEnabled(true);
 				undoButton.setVisible(true);
 				redoButton.setVisible(true);
+				detectTeethButton.setEnabled(true);
 				detectTeethButton.setVisible(true);
 				break;
 			case Constant.ADJUSTTEETH:
@@ -467,6 +476,8 @@ public class MainUI extends JFrame {
 
 				workspace.setVisible(false);
 				resultPanel.setVisible(true);
+				exportDesignToFileButton.setEnabled(true);
+				exportDesignToFileButton.setVisible(true);
 				uploadMarkData();//上传标记牙位数据
 				break;
 			}
@@ -485,6 +496,7 @@ public class MainUI extends JFrame {
 				undoMenuItem.setEnabled(false);
 				undoButton.setVisible(false);
 				redoButton.setVisible(false);
+				detectTeethButton.setEnabled(false);
 				detectTeethButton.setVisible(false);
 				break;
 			case Constant.ADJUSTTEETH:
@@ -492,6 +504,10 @@ public class MainUI extends JFrame {
 				regenAdjustMenuItem.setEnabled(false);
 				autoAdjustButton.setVisible(false);
 				regenAdjustButton.setVisible(false);
+				break;
+			case Constant.EXPORTDESIGN:
+				exportDesignToFileButton.setEnabled(false);
+				exportDesignToFileButton.setVisible(false);
 				break;
 			}
 
