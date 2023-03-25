@@ -36,7 +36,15 @@ public class TeethMarkPanel extends BasicDrawablePanel {
 
 	protected void detectTeeth(BufferedImage image) throws Exception {
 		
-		IImageDetection imgDtection = new NetImageDetection();		
+		ITeethDetection imgDtection = new NetTeethDetection();	
+		switch (viewId) {
+		case WorkPanel.BASE_VIEW:
+			((NetTeethDetection)imgDtection).setType("intraoral");
+			break;
+		case WorkPanel.FRONT_VIEW:
+			((NetTeethDetection)imgDtection).setType("face");
+			break;
+		}
 		List<Rectangle> rects = imgDtection.detectTeeth(image);
 		System.out.println(rects);
 		

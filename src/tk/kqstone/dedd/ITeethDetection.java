@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public interface IImageDetection {
+public interface ITeethDetection {
 	
 	List<Rectangle> detectTeeth(BufferedImage image) throws Exception;
 }
