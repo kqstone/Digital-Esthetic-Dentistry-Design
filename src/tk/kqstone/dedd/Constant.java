@@ -7,7 +7,7 @@ public final class Constant {
 	public static final String PROG_NAME = "数字化美学牙科分析与设计";
 	public static final String PROG_NAME_ENG = "Digital Esthetic Dentistry Design System";
 	
-	public static final String DEFAULT_SERVER = "104.243.30.241";
+	public static final String DEFAULT_SERVER = "kqstone.myqnapcloud.com";
 
 	public static final String PROJ_DIR = "DeddProjects";
 	public static final String PROJ_FILE_SUFFIX = "depx";
