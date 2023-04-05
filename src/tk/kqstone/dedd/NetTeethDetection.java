@@ -31,7 +31,7 @@ public class NetTeethDetection implements ITeethDetection {
 	private String type;//图片种类，口内照(intraoral)、面部照(face)
 
 	public NetTeethDetection() {
-		netaddress = LOCAL_NET_ADRESS;
+		netaddress = NET_ADRESS;
 		port = PORT;
 	}
 
