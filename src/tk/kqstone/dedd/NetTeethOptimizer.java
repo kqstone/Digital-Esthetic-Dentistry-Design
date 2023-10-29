@@ -8,11 +8,14 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class NetTeethOptimizer extends TeethOptimizer {
 	private static final String NET_ADRESS = Constant.DEFAULT_SERVER;
 //	private static final String NET_ADRESS ="localhost";
 	public static final int PORT = 12061;
+	
+	private Preferences userPreferences = Preferences.userRoot().node("/config/settings");
 
 	@Override
 	public void optimize() throws Exception {
@@ -31,7 +34,12 @@ public class NetTeethOptimizer extends TeethOptimizer {
 	}
 
 	private void process(int function) throws Exception {
-		try (Socket sock = new Socket(NET_ADRESS, PORT)) {
+		String netaddress = NET_ADRESS;
+		String savedServerType = userPreferences.get("serverType", "default");
+		if (!savedServerType.equals("default")) {
+			netaddress = userPreferences.get("customServerAddress", NET_ADRESS);
+        } 
+		try (Socket sock = new Socket(netaddress, PORT)) {
 			try (ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
 					ObjectInputStream ois = new ObjectInputStream(sock.getInputStream())) {
 				Teeth teeth = new Teeth();

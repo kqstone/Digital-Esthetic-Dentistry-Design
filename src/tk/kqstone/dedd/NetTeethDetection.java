@@ -13,6 +13,7 @@ import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
@@ -29,9 +30,17 @@ public class NetTeethDetection implements ITeethDetection {
 	private String netaddress;
 	private int port;
 	private String type;//图片种类，口内照(intraoral)、面部照(face)
+	
+	private Preferences userPreferences = Preferences.userRoot().node("/config/settings");
+
 
 	public NetTeethDetection() {
-		netaddress = NET_ADRESS;
+		String savedServerType = userPreferences.get("serverType", "default");
+		if (!savedServerType.equals("default")) {
+			netaddress = userPreferences.get("customServerAddress", NET_ADRESS);
+        } else {
+        	netaddress = NET_ADRESS;
+        }
 		port = PORT;
 	}
 

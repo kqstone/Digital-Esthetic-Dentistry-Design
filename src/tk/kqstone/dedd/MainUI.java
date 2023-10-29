@@ -37,6 +37,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import tk.kqstone.dedd.ProjDataHelper.DataCheckException;
+import tk.kqstone.dedd.setting.Settings;
 import tk.kqstone.dedd.ui.IMethod;
 import tk.kqstone.dedd.ui.IconButton;
 import tk.kqstone.dedd.ui.SuspendTip;
@@ -82,6 +83,7 @@ public class MainUI extends JFrame {
 	private JMenuItem undoMenuItem;
 	private JMenuItem autoAdjustMenuItem;
 	private JMenuItem regenAdjustMenuItem;
+	private JMenuItem settingsMenuItem;
 	
 	private IconButton undoButton;
 	private IconButton redoButton;
@@ -215,6 +217,7 @@ public class MainUI extends JFrame {
 		autoAdjustMenuItem.setEnabled(false);
 		regenAdjustMenuItem = new JMenuItem(Constant.RE_ADJUST);
 		regenAdjustMenuItem.setEnabled(false);
+		settingsMenuItem = new JMenuItem(Constant.SETTINGS);
 		fileMenu.add(newMenuItem);
 		fileMenu.add(readFromMenuItem);
 		fileMenu.add(saveMenuItem);
@@ -225,6 +228,7 @@ public class MainUI extends JFrame {
 		aboutMenu.add(aboutMenuItem);
 		editMenu.add(undoMenuItem);
 		editMenu.add(redoMenuItem);
+		editMenu.add(settingsMenuItem);
 		designMenu.add(autoAdjustMenuItem);
 		designMenu.add(regenAdjustMenuItem);
 
@@ -240,6 +244,7 @@ public class MainUI extends JFrame {
 		redoMenuItem.addActionListener(l);
 		autoAdjustMenuItem.addActionListener(l);
 		regenAdjustMenuItem.addActionListener(l);
+		settingsMenuItem.addActionListener(l);
 
 	}
 	
@@ -548,7 +553,9 @@ public class MainUI extends JFrame {
 				autoAdjust();
 			} else if (source.equals(regenAdjustMenuItem)) {
 				workspace.reGenAdjustTeeth();
-			}
+			} else if (source.equals(settingsMenuItem)) {
+				new Settings().setVisible(true);;
+			} 
 
 		}
 
