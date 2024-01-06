@@ -23,7 +23,7 @@ import javax.swing.SwingUtilities;
 import tk.kqstone.dedd.utils.FTPConnector;
 
 public final class Splash extends JFrame {
-	private final static LocalDate EXPIRE_DATE = LocalDate.of(2023, 10, 31);
+	private final static LocalDate EXPIRE_DATE = LocalDate.of(2025, 10, 31);
 	private static final String HASHCODE_UNEXPIRED_FILE_NAME = "e57875bfd30099af4eaf236dc6fd20cffd3e2596a298cb904ec7208d68c70dae";
 	private static final int WIDTH = 500;
 	private static final int HEIGHT = 300;
