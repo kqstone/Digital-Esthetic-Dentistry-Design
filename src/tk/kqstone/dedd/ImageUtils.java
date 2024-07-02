@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.awt.image.MultiResolutionImage;
+import java.awt.Color;
 import java.io.IOException;
 
 public class ImageUtils {
@@ -201,6 +202,38 @@ public class ImageUtils {
 		g2d.dispose();
 		return dst;
 	}
+	
+	public static BufferedImage resizeUnscaledImage(BufferedImage originalImage, int width, int height) {
+        int originalWidth = originalImage.getWidth();
+        int originalHeight = originalImage.getHeight();
+
+        double aspectRatio = (double) originalWidth / originalHeight;
+
+        int newWidth, newHeight;
+
+        if (aspectRatio > (double) width / height) {
+            newWidth = width;
+            newHeight = (int) (width / aspectRatio);
+        } else {
+            newHeight = height;
+            newWidth = (int) (height * aspectRatio);
+        }
+
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+
+        // Fill background with black color
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(0, 0, width, height);
+
+        // Draw the resized image centered
+        int x = (width - newWidth) / 2;
+        int y = (height - newHeight) / 2;
+        g2d.drawImage(originalImage, x, y, newWidth, newHeight, null);
+        g2d.dispose();
+
+        return resizedImage;
+    }
 
 	private static int clamp(int rgb) {
 		if (rgb > 255)

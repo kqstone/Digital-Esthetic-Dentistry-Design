@@ -408,17 +408,13 @@ public class WorkPanel extends Container {
 	
 	public BufferedImage genFullPreImage() {
 		zoom(1.0f, 0, 0);
-		BufferedImage image;
-		Rectangle rect = imageView.getDrawRect();
-		if (rect.width == 0 || rect.height == 0) {
-			image = genErrorImage();
-		} else {
-			image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
-			Graphics g = image.getGraphics();
-			imageView.print(g);
-			g.dispose();
+		BufferedImage image =imageView.getImage();
+		if (image == null) {
+			return genErrorImage();
 		}
-		return image;
+		int width = this.getWidth();
+		int height = this.getHeight();
+		return ImageUtils.resizeUnscaledImage(image, width, height);
 	}
 
 	private BufferedImage genErrorImage() {
