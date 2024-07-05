@@ -30,12 +30,12 @@
 				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
 				<attribute name="Rsrc-Main-Class" value="tk.kqstone.dedd.Splash"/>
 				<attribute name="Class-Path" value="."/>
-				<attribute name="Rsrc-Class-Path" value="./ commons-net-3.7.1.jar gson-2.9.0.jar"/>
+				<attribute name="Rsrc-Class-Path" value="./ commons-net-3.7.1.jar commons-logging-1.3.0.jar gson-2.9.0.jar 
+					httpclient-4.5.13.jar httpcore-4.4.13.jar httpmime-4.5.13.jar"/>
 			</manifest>
 			<zipfileset src="jar-in-jar-loader.zip"/>
 			<fileset dir="${dir.root}/bin"/>
-			<zipfileset dir="${dir.root}/lib" includes="commons-net-3.7.1.jar"/>
-			<zipfileset dir="${dir.root}/lib" includes="gson-2.9.0.jar"/>
+			<zipfileset dir="${dir.root}/lib" includes="*.jar"/>
 		</jar>
 		<copy todir="${dir.export}" file="${dir.classes}/build_prop" />
 		<delete dir="${dir.classes}" />
@@ -55,8 +55,7 @@
 		<javac srcdir="${dir.src}" destdir="${dir.classes}" target="1.7">
 			<classpath>
 				<fileset dir="${dir.root}/lib">
-					<include name="commons-net-3.7.1.jar" />
-					<include name="gson-2.9.0.jar" />
+					<include name="*.jar" />
 				</fileset>
 			</classpath>
 		</javac>

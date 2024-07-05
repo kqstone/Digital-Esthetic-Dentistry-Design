@@ -467,7 +467,7 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 	}
 	
 	public void optimize() throws Exception {
-		IOptimizer op = new NetTeethOptimizer();
+		IOptimizer op = new LocalTeethOptimizer();
 		op.setSrc(getCurrentTeeth());
 		op.analysis();
 		try {
@@ -499,7 +499,7 @@ public class TeethAdjustPanel extends ZoomableJPanel {
 	}
 	
 	public void align() throws Exception {
-		IOptimizer op = new NetTeethOptimizer();
+		IOptimizer op = new LocalTeethOptimizer();
 		op.setSrc(getCurrentTeeth());
 		op.analysis();
 		try {
