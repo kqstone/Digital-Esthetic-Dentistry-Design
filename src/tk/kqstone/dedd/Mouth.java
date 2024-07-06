@@ -1,3 +1,4 @@
+package tk.kqstone.dedd;
 import java.io.Serializable;
 
 import tk.kqstone.dedd.ui.IMethod;
