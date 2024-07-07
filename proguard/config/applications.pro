@@ -80,6 +80,9 @@
 -keep public class tk.kqstone.dedd.Rect2D$* { *; }
 -keep class tk.kqstone.dedd.NetImageDetection$* { *; }
 -keep class tk.kqstone.dedd.NetImageDetection { *; }
+-keep public class tk.kqstone.dedd.Face { *; }
+-keep public class tk.kqstone.dedd.Mouth { *; }
+-keep public class tk.kqstone.dedd.Eyes { *; }
 
 # -keep public interface com.example.MyInterface
 # -keep public class * implements com.example.MyInterface
