@@ -382,27 +382,40 @@ public class WorkSpace extends Container implements IMenmento{
 			basePanel.getAdjustPanel().bind(frontPanel.getAdjustPanel());
 	}
 
-	public void detectTeeth() throws Exception {
+	public void detectTeeth() {
 		TeethMarkPanel baseMarkPanel = basePanel.getMarkPanel();
 		TeethMarkPanel frontMarkPanel = frontPanel.getMarkPanel();
 		BufferedImage baseImage = basePanel.genFullPreImage();
-		baseMarkPanel.detectTeeth(baseImage);
+		try {
+			baseMarkPanel.detectTeeth(baseImage);
+			basePanel.getAdjustPanel().clearTeeth();;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		BufferedImage frontImage = frontPanel.genFullPreImage();
-		frontMarkPanel.detectTeeth(frontImage);
-		TeethAdjustPanel baseAdjustPanel = basePanel.getAdjustPanel();
-		TeethAdjustPanel frontAdjustPanel = frontPanel.getAdjustPanel();
-		baseAdjustPanel.clearTeeth();
-		frontAdjustPanel.clearTeeth();
+		try {
+			frontMarkPanel.detectTeeth(frontImage);
+			frontPanel.getAdjustPanel().clearTeeth();;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	public void faceAnalysis() throws IOException {
+	public void faceAnalysis() {
 		BufferedImage frontImage;
 		frontImage = frontPanel.genFullPreImage();
-		double radius = detectEyeRadius(frontImage);
-		frontPanel.getImageView().rotate(radius);
-		frontImage = frontPanel.genFullPreImage();
-		Face face = detectFace(frontImage);
-		frontPanel.getImageView().corp(face.x, face.y, face.x + face.w, face.y + face.h);
+		try {
+			double radius = detectEyeRadius(frontImage);
+			frontPanel.getImageView().rotate(radius);
+			frontImage = frontPanel.genFullPreImage();
+			Face face = detectFace(frontImage);
+			frontPanel.getImageView().corp(face.x, face.y, face.x + face.w, face.y + face.h);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private static double detectEyeRadius(BufferedImage image) throws IOException {

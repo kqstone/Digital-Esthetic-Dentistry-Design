@@ -105,4 +105,6 @@ public final class Constant {
 	public static final String EXPORT_DESIGN_TO_FILE = "保存至文件";
 	public static final String SETTINGS = "设置";
 	public static final String FACE_ANALYSIS = "人脸分析";
+	public static final String NOFACE_ERROR = "未检测到人脸，请手动调整";
+	public static final String NOTOOTH_ERROR = "未检测到牙齿，请手动标注";
 }

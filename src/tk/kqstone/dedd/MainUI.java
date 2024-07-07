@@ -791,7 +791,7 @@ public class MainUI extends JFrame {
 	}
 	
 	private void detectTeeth() {
-		SuspendTip tip = new SuspendTip(this, Constant.TEETH_DETECTION, Constant.FINISH, Constant.CONNECTION_ERROR);
+		SuspendTip tip = new SuspendTip(this, Constant.TEETH_DETECTION, Constant.FINISH, Constant.NOTOOTH_ERROR);
 		tip.addMethod(new IMethod() {
 
 			@Override
@@ -804,7 +804,7 @@ public class MainUI extends JFrame {
 	}
 	
 	private void autoAnalysis() {
-		SuspendTip tip = new SuspendTip(this, Constant.FACE_ANALYSIS, Constant.FINISH, Constant.CONNECTION_ERROR);
+		SuspendTip tip = new SuspendTip(this, Constant.FACE_ANALYSIS, Constant.FINISH, Constant.NOFACE_ERROR);
 		tip.addMethod(new IMethod() {
 
 			@Override
