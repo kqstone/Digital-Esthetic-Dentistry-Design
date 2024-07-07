@@ -90,8 +90,8 @@ public class NetTeethDetection implements ITeethDetection {
 				HttpEntity responseEntity = response.getEntity();
 				if (responseEntity != null) {
 					String result = EntityUtils.toString(responseEntity);
-					StringBuilder sb = new StringBuilder(result);
-					result = sb.substring(1, sb.length() - 1).replace("\\", "");
+//					StringBuilder sb = new StringBuilder(result);
+//					result = sb.substring(1, sb.length() - 1).replace("\\", "");
 					System.out.println(result);
 					Gson gson = new Gson();
 					Type type = new TypeToken<ArrayList<Rectangle>>() {

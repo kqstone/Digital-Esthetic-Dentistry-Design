@@ -434,10 +434,10 @@ public class WorkSpace extends Container implements IMenmento{
 		String str = detector.detect(image);
 		Gson gson = new Gson();
 		Face face = gson.fromJson(str, Face.class);
-		face.x = face.x - face.w / 5;
-		face.y = face.y - face.h / 5;
-		face.w = face.w + 2 * face.w / 5;
-		face.h = face.h + 2 * face.h / 5;
+		face.x = face.x - face.w / 3;
+		face.y = face.y - face.h / 3;
+		face.w = face.w + 2 * face.w / 3;
+		face.h = face.h + 2 * face.h / 3;
 		return face;
 	}
 	
