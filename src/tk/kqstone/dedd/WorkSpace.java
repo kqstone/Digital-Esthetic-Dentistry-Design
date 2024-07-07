@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+
+import com.google.gson.Gson;
 
 public class WorkSpace extends Container implements IMenmento{
 	private WorkPanel basePanel;
@@ -390,6 +393,39 @@ public class WorkSpace extends Container implements IMenmento{
 		TeethAdjustPanel frontAdjustPanel = frontPanel.getAdjustPanel();
 		baseAdjustPanel.clearTeeth();
 		frontAdjustPanel.clearTeeth();
+	}
+	
+	public void faceAnalysis() throws IOException {
+		BufferedImage frontImage;
+		frontImage = frontPanel.genFullPreImage();
+		double radius = detectEyeRadius(frontImage);
+		frontPanel.getImageView().rotate(radius);
+		frontImage = frontPanel.genFullPreImage();
+		Face face = detectFace(frontImage);
+		frontPanel.getImageView().corp(face.x, face.y, face.x + face.w, face.y + face.h);
+	}
+	
+	private static double detectEyeRadius(BufferedImage image) throws IOException {
+		DetectorAdapter detector = new DetectorAdapter("/detect_eyes");
+		String str = detector.detect(image);
+		Gson gson = new Gson();
+		Eyes eyes = gson.fromJson(str, Eyes.class);
+		int width = eyes.x2 - eyes.x1;
+		int height = eyes.y2 - eyes.y1;
+		return -Math.atan(height / (double) width);
+	}
+	
+	
+	private static Face detectFace(BufferedImage image) throws IOException {
+		DetectorAdapter detector = new DetectorAdapter("/detect_face");
+		String str = detector.detect(image);
+		Gson gson = new Gson();
+		Face face = gson.fromJson(str, Face.class);
+		face.x = face.x - face.w / 5;
+		face.y = face.y - face.h / 5;
+		face.w = face.w + 2 * face.w / 5;
+		face.h = face.h + 2 * face.h / 5;
+		return face;
 	}
 	
 	public void uploadMarkData() {

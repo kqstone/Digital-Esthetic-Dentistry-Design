@@ -104,4 +104,5 @@ public final class Constant {
 	public static final String AI_DETECTION = "AI检测";
 	public static final String EXPORT_DESIGN_TO_FILE = "保存至文件";
 	public static final String SETTINGS = "设置";
+	public static final String FACE_ANALYSIS = "人脸分析";
 }

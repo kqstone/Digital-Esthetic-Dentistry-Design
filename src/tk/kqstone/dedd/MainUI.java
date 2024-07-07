@@ -87,6 +87,7 @@ public class MainUI extends JFrame {
 	
 	private IconButton undoButton;
 	private IconButton redoButton;
+	private IconButton autoAnalysisButton; //自动分析人脸并对齐
 	private IconButton autoAdjustButton;
 	private IconButton regenAdjustButton;
 	private IconButton detectTeethButton;
@@ -249,6 +250,9 @@ public class MainUI extends JFrame {
 	}
 	
 	private void initIconButton() {
+		autoAnalysisButton = new IconButton(Constant.FACE_ANALYSIS,
+				new ImageIcon(this.getClass().getResource(URL_AUTOADJUST)));
+		autoAnalysisButton.setVisible(true);
 		autoAdjustButton = new IconButton(Constant.AUTO_ADJUST,
 				new ImageIcon(this.getClass().getResource(URL_AUTOADJUST)));
 		autoAdjustButton.setVisible(false);
@@ -265,7 +269,7 @@ public class MainUI extends JFrame {
 		exportDesignToFileButton = new IconButton(Constant.EXPORT_DESIGN_TO_FILE,
 				new ImageIcon(this.getClass().getResource(URL_EXPORTDESIGNTOFILE)));
 		exportDesignToFileButton.setVisible(false);
-		tabPanel.addIconButton(autoAdjustButton).addIconButton(detectTeethButton).addIconButton(regenAdjustButton).addIconButton(undoButton)
+		tabPanel.addIconButton(autoAnalysisButton).addIconButton(autoAdjustButton).addIconButton(detectTeethButton).addIconButton(regenAdjustButton).addIconButton(undoButton)
 				.addIconButton(redoButton).addIconButton(exportDesignToFileButton);
 		MouseListener listener = new MouseAdapter() {
 
@@ -276,6 +280,8 @@ public class MainUI extends JFrame {
 					workspace.undo();
 				} else if (source.equals(redoButton)) {
 					workspace.redo();
+				} else if (source.equals(autoAnalysisButton)) {
+					autoAnalysis();
 				} else if (source.equals(autoAdjustButton)) {
 					autoAdjust();
 				} else if (source.equals(regenAdjustButton)) {
@@ -288,6 +294,7 @@ public class MainUI extends JFrame {
 			}
 
 		};
+		autoAnalysisButton.addMouseListener(listener);
 		autoAdjustButton.addMouseListener(listener);
 		regenAdjustButton.addMouseListener(listener);
 		undoButton.addMouseListener(listener);
@@ -413,6 +420,7 @@ public class MainUI extends JFrame {
 				workspace.edit();
 				if (resultPanel.isVisible())
 					resultPanel.setVisible(false);
+				autoAnalysisButton.setVisible(true);
 				break;
 			case Constant.UNIFYPLAN:
 				if (!workspace.isVisible())
@@ -493,6 +501,9 @@ public class MainUI extends JFrame {
 		public void unFocused(TabEvent e) {
 			String cmd = e.getTabLabel();
 			switch (cmd) {
+			case Constant.EDITPICT:
+				autoAnalysisButton.setVisible(false);
+				break;
 			case Constant.MARKLIP:
 				workspace.addLipMaskToAdjustPanel();
 				break;
@@ -786,6 +797,19 @@ public class MainUI extends JFrame {
 			@Override
 			public void run(Object obj) throws Exception {
 				workspace.detectTeeth();;
+			}
+		});
+		tip.run();
+
+	}
+	
+	private void autoAnalysis() {
+		SuspendTip tip = new SuspendTip(this, Constant.FACE_ANALYSIS, Constant.FINISH, Constant.CONNECTION_ERROR);
+		tip.addMethod(new IMethod() {
+
+			@Override
+			public void run(Object obj) throws Exception {
+				workspace.faceAnalysis();
 			}
 		});
 		tip.run();

@@ -38,6 +38,15 @@ public class DetectorAdapter implements IDetector {
 		port = PORT;
 	}
 
+	public DetectorAdapter(String urlSuffix) {
+		this();
+		this.urlSuffix = urlSuffix;
+	}
+
+	public void setUrlSuffix(String urlSuffix) {
+		this.urlSuffix = urlSuffix;
+	}
+
 	@Override
 	public String detect(BufferedImage image) throws IOException {
 		File tmpFile = File.createTempFile("tmp_pic", ".jpg");
@@ -65,8 +74,6 @@ public class DetectorAdapter implements IDetector {
 				HttpEntity responseEntity = response.getEntity();
 				if (responseEntity != null) {
 					String result = EntityUtils.toString(responseEntity);
-					StringBuilder sb = new StringBuilder(result);
-					result = sb.substring(1, sb.length() - 1).replace("\\", "");
 					System.out.println(result);
 					return result;
 				}

@@ -308,6 +308,32 @@ public class EditableImageView extends ImageView implements IImageBinder {
 		}
 
 	}
+	
+	public void corp(int x1, int y1, int x2, int y2) {
+		BufferedImage image = this.getImage();
+		double scale = this.getScale();
+		int scalType = this.getScaleType();
+		int nx1 = Math.round((x1-this.offsetX) / this.proportion);
+		int ny1 = Math.round((y1-this.offsetY) / this.proportion);
+		int nx2 = Math.round((x2-this.offsetX) / this.proportion);
+		int ny2 = Math.round((y2-this.offsetY) / this.proportion);
+		nx1 = (int) (nx1 / scale);
+		ny1 = (int) (ny1 / scale);
+		nx2 = (int) (nx2 / scale);
+		ny2 = (int) (ny2 / scale);
+		if (scalType == ImageView.SCALE_ADAPT_WIDTH) {
+			int offset = (int) ((this.getHeight() / scale - image.getHeight()) / 2);
+			ny1 = ny1 - offset;
+			ny2 = ny2 - offset;
+		} else if (scalType == ImageView.SCALE_ADAPT_HEIGHT) {
+			int offset = (int) ((this.getWidth() / scale - image.getWidth()) / 2);
+			nx1 = nx1 - offset;
+			nx2 = nx2 - offset;
+		}		
+				
+		BufferedImage img = ImageUtils.crop(image, new Rect(nx1,ny1,nx2,ny2));
+		this.setImage(img);
+	} 
 
 	@Override
 	public void rotate(double radius) {
