@@ -117,7 +117,7 @@ public final class StartUp extends JFrame {
 		getContentPane().add(upperPanel, BorderLayout.NORTH);
 		upperPanel.setLayout(new BorderLayout());
 
-		JLabel titleAgreement = new JLabel(Constant.USER_AGREMENT);
+		JLabel titleAgreement = new JLabel(Constant.USER_AGREEMENT);
 		titleAgreement.setHorizontalAlignment(SwingConstants.CENTER);
 		titleAgreement.setFont(new Font("等线", Font.BOLD, 18));
 		upperPanel.add(titleAgreement);
