@@ -208,12 +208,15 @@ public class Updater extends JDialog {
 	
 
 	protected boolean isNew() {
+		String remote = getRemoteBuildDate();
+		if (remote == null || remote.isEmpty())
+			return false;
 		boolean is = false;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String currentBuild=BuildInfo.getBuildDate();
 		try {
 			Date currentBuildDate = sdf.parse(currentBuild);
-			Date remoteBuildDate = sdf.parse(getRemoteBuildDate());
+			Date remoteBuildDate = sdf.parse(remote);
 			is = remoteBuildDate.after(currentBuildDate);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
