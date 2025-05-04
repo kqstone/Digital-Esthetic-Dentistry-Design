@@ -53,3 +53,7 @@ java -jar dedd.jar
 
 - **姓名**：kqstone
 - **邮箱**：kqstone@163.com
+
+## 许可证
+
+本项目采用 [Apache 2.0 许可证](LICENSE)。
