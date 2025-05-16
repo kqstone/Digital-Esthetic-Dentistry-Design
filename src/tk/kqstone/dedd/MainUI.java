@@ -491,7 +491,6 @@ public class MainUI extends JFrame {
 				resultPanel.setVisible(true);
 				exportDesignToFileButton.setEnabled(true);
 				exportDesignToFileButton.setVisible(true);
-				uploadMarkData();//上传标记牙位数据
 				break;
 			}
 
@@ -814,21 +813,6 @@ public class MainUI extends JFrame {
 		});
 		tip.run();
 
-	}
-
-	private void uploadMarkData() {
-		Thread thread = new Thread() {
-
-			@Override
-			public void run() {
-				String uniName = Utils.cnToUnicode(basicInfo.name);
-				workspace.getFrontPanel().getMarkDataUpload().setName(uniName);
-				workspace.getBasePanel().getMarkDataUpload().setName(uniName);
-				workspace.uploadMarkData();
-			}
-			
-		};
-		thread.start();;
 	}
 
 }

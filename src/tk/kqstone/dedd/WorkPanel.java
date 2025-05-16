@@ -45,14 +45,11 @@ public class WorkPanel extends Container {
 	private int status;
 	
 	private ZoomInvoker zoomInvoker;
-	
-	private MarkDataUpload markDataUpload;
 
 	public WorkPanel() {
 		super();
 		this.setLayout(null);
 		this.viewId = BASE_VIEW;
-		markDataUpload = new MarkDataUpload();
 	}
 
 	public WorkPanel(int viewId) {
@@ -78,11 +75,6 @@ public class WorkPanel extends Container {
 
 	public CurvePanel getMarkLipPanel() {
 		return markLipPanel;
-	}
-
-	
-	public MarkDataUpload getMarkDataUpload() {
-		return markDataUpload;
 	}
 
 	public void init() {
@@ -468,24 +460,4 @@ public class WorkPanel extends Container {
 		return result;
 	}
 	
-	public void uploadData() {
-		Rectangle rect = imageView.getDrawRect();
-		if (rect.width == 0 || rect.height == 0) {
-			return;
-		} 
-		markDataUpload.setImage(imageView.getImage());
-		markDataUpload.setMarkdata(getMarkData4Yolo());
-		String s = "UNKONW";
-		switch(viewId) {
-		case BASE_VIEW:
-			s = "INTROORAL";
-			break;
-		case FRONT_VIEW:
-			s = "FACE";
-			break;
-		}
-		markDataUpload.setId(s);
-		markDataUpload.upload();
-	}
-
 }

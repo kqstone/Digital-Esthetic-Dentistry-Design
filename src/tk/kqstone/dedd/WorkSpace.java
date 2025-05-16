@@ -441,12 +441,6 @@ public class WorkSpace extends Container implements IMenmento{
 		return face;
 	}
 	
-	public void uploadMarkData() {
-		basePanel.uploadData();
-		frontPanel.uploadData();
-		
-	}
-
 	public boolean getLipPathClosed() {
 		// TODO Auto-generated method stub
 		return frontPanel.getMarkLipPanel().isClosed();

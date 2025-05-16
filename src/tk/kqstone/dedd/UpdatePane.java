@@ -36,9 +36,7 @@ import java.awt.Color;
 public class UpdatePane extends JDialog {
 	private static final String ADDR = "kqstone.myqnapcloud.com";
 	private static final int PORT = 12021;
-//	private static final String USER_NAME = "ftp_user";
 	private static final byte[] BYTES_USER_NAME = {102,116,112,95,117,115,101,114};
-//	private static final String USER_PWD = "ftp_415703";
 	private static final byte[] BYTES_USER_PWD = {102,116,112,95,52,49,53,55,48,51};
 	private static final String REMOTE_PATH = "//dedd";
 	private static final String TMP_PATH = "tmp";

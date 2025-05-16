@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="upload_to_server">
+<project default="create_run_jar">
 	<!--ANT 1.7 is required                                        -->
 	<!--define folder properties-->
 	<property name="dir.root" value="." />
 	<property name="dir.src" value="${dir.root}/src" />
 	<property name="dir.classes" value="${dir.root}/bin" />
-	<property name="dir.export" value="${dir.root}/.export" />
-	<property name="dir.remote" value="//kqstone-nas/ftp/dedd" />
-
-	<target name="upload_to_server" depends="obfuscate">
-		<copydir src="${dir.export}" dest="${dir.remote}" />
-		<delete dir="${dir.export}" />
-	</target>
-
-	<target name="obfuscate" depends="create_run_jar">
-		<taskdef resource="proguard/ant/task.properties" classpath="${dir.root}/proguard/lib/proguard-ant.jar" />
-		<proguard configuration="${dir.root}/proguard/config/applications.pro" />
-		<rename src="${dir.export}/dedd_pg.jar" dest="${dir.export}/dedd.bin"/>
-		<delete file="${dir.export}/dedd.jar"></delete>
-	</target>
+	<property name="dir.export" value="${dir.root}/.export" />	
 	
 	<target name="create_run_jar" depends="gen_build_info">
 		<copydir src="${dir.src}/img" dest="${dir.classes}/img">
